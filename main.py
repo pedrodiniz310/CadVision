@@ -2,7 +2,7 @@
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from pydantic import BaseModel
 from typing import Optional, List, Dict
 import sqlite3
@@ -19,6 +19,7 @@ from google.oauth2 import service_account
 import cv2
 import numpy as np
 import logging
+
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -69,8 +70,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Servir arquivos estáticos da pasta atual
-app.mount("/static", StaticFiles(directory="."), name="static")
+# A LINHA INCORRETA "app.mount("/static", ...)" FOI REMOVIDA DAQUI
 
 # --------------------- BANCO DE DADOS ---------------------
 
@@ -102,9 +102,13 @@ def init_db():
 
     conn.commit()
     conn.close()
+    logger.info("✓ Banco de dados inicializado com sucesso.")
 
 
-init_db()
+@app.on_event("startup")
+async def startup_event():
+    """Função que executa ao iniciar a aplicação."""
+    init_db()
 
 # --------------------- BANCO DE DADOS DE PRODUTOS COMUNS ---------------------
 COMMON_PRODUCTS_DB = {
@@ -390,15 +394,16 @@ def clean_text(text: str) -> str:
 # --------------------- MODELOS PYDANTIC ---------------------
 
 
-class ProductOut(BaseModel):
-    gtin: Optional[str] = None
-    title: Optional[str] = None
-    brand: Optional[str] = None
-    category: Optional[str] = None
-    price: Optional[float] = None
-    ncm: Optional[str] = None
-    cest: Optional[str] = None
-    confidence: float
+# --- MODELOS DE DADOS (PYDANTIC) ---
+class Product(BaseModel):
+    id: int
+    name: Optional[str]
+    brand: Optional[str]
+    gtin: Optional[str]
+    price: Optional[float]
+    image_path: Optional[str]
+    ocr_text: Optional[str]
+    created_at: datetime
 
 
 class SaveIn(BaseModel):
@@ -545,6 +550,15 @@ async def test_api():
         "google_vision": "Ativo" if vision_client else "Inativo",
         "timestamp": datetime.now().isoformat()
     }
+
+
+@app.get("/", include_in_schema=False)
+async def read_index():
+    return FileResponse('index.html')
+
+# IMPORTANTE: Deve vir DEPOIS de todas as outras rotas da API
+app.mount("/", StaticFiles(directory="."), name="root-static")
+
 
 if __name__ == "__main__":
     import uvicorn

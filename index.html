@@ -8,6 +8,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
@@ -16,7 +22,6 @@
     <aside class="sidebar" id="sidebar">
       <div class="brand">
         <div class="logo"></div>
-        <div class="title">CadVision</div>
         <div class="subtitle">O SEU CADASTRO VISUAL</div>
       </div>
       <nav class="nav">
@@ -117,52 +122,55 @@
                 <button id="btnIdentify" disabled>
                   <i class="fas fa-robot"></i> Identificar com IA
                 </button>
-              </div>
-            </div>
-
-            <div class="card">
-              <h2 class="h2">Detalhes do Produto</h2>
-              <div class="chip" id="aiStatus">
-                <i class="fas fa-clock"></i> Aguardando análise
+                <button id="btnRemoveImage" class="danger" style="display: none;">
+                  <i class="fas fa-trash"></i> Remover Imagem
+                </button>
               </div>
 
-              <form id="productForm">
-                <label for="productName">Nome do Produto *</label>
-                <input type="text" id="productName" placeholder="Ex: Arroz Integral Tipo 1" required>
-
-                <label for="productBrand">Marca *</label>
-                <input type="text" id="productBrand" placeholder="Ex: Tio João" required>
-
-                <label for="productGTIN">GTIN/EAN</label>
-                <input type="text" id="productGTIN" placeholder="Ex: 7891000315507" pattern="[0-9]{13}" maxlength="13">
-
-                <label for="productCategory">Categoria *</label>
-                <select id="productCategory" required>
-                  <option value="">Selecione uma categoria</option>
-                  <option value="Alimentos">Alimentos</option>
-                  <option value="Bebidas">Bebidas</option>
-                  <option value="Limpeza">Limpeza</option>
-                  <option value="Higiene Pessoal">Higiene Pessoal</option>
-                  <option value="Outros">Outros</option>
-                </select>
-
-                <label for="productPrice">Preço (R$) *</label>
-                <input type="number" step="0.01" min="0" id="productPrice" placeholder="Ex: 12.90" required>
-
-                <label for="productDescription">Descrição</label>
-                <textarea id="productDescription" rows="3" placeholder="Descrição detalhada do produto"></textarea>
-
-                <div class="btn-row">
-                  <button type="submit">
-                    <i class="fas fa-save"></i> Salvar Produto
-                  </button>
-                  <button type="button" class="secondary" id="reprocessButton" disabled>
-                    <i class="fas fa-sync"></i> Reprocessar
-                  </button>
+              <div class="card">
+                <h2 class="h2">Detalhes do Produto</h2>
+                <div class="chip" id="aiStatus">
+                  <i class="fas fa-clock"></i> Aguardando análise
                 </div>
-              </form>
+
+                <form id="productForm">
+                  <label for="productName">Nome do Produto *</label>
+                  <input type="text" id="productName" placeholder="Ex: Arroz Integral Tipo 1" required>
+
+                  <label for="productBrand">Marca *</label>
+                  <input type="text" id="productBrand" placeholder="Ex: Tio João" required>
+
+                  <label for="productGTIN">GTIN/EAN</label>
+                  <input type="text" id="productGTIN" placeholder="Ex: 7891000315507" pattern="[0-9]{13}"
+                    maxlength="13">
+
+                  <label for="productCategory">Categoria *</label>
+                  <select id="productCategory" required>
+                    <option value="">Selecione uma categoria</option>
+                    <option value="Alimentos">Alimentos</option>
+                    <option value="Bebidas">Bebidas</option>
+                    <option value="Limpeza">Limpeza</option>
+                    <option value="Higiene Pessoal">Higiene Pessoal</option>
+                    <option value="Outros">Outros</option>
+                  </select>
+
+                  <label for="productPrice">Preço (R$) *</label>
+                  <input type="number" step="0.01" min="0" id="productPrice" placeholder="Ex: 12.90" required>
+
+                  <label for="productDescription">Descrição</label>
+                  <textarea id="productDescription" rows="3" placeholder="Descrição detalhada do produto"></textarea>
+
+                  <div class="btn-row">
+                    <button type="submit">
+                      <i class="fas fa-save"></i> Salvar Produto
+                    </button>
+                    <button type="button" class="secondary" id="reprocessButton" disabled>
+                      <i class="fas fa-sync"></i> Reprocessar
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
-          </div>
         </section>
 
         <!-- Outras páginas seriam implementadas de forma similar -->
