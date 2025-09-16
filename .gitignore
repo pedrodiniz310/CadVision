@@ -11,7 +11,7 @@ build/
 .eggs/
 .Python
 
-# Pastas de dependências
+# Pastas de dependencias
 CadVision/
 CadVision_backup/
 
@@ -51,6 +51,7 @@ $RECYCLE.BIN/
 # --- Banco de Dados Local ---
 *.db
 *.sqlite3
+app.db
 
 # --- Arquivos de Configuração Pessoais ---
 .env
