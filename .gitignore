@@ -1,5 +1,80 @@
-venv
-.env
+# --- Python ---
 __pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.Python
+
+# --- Virtualenv ---
+venv/
+ENV/
+env/
+.venv/
+pip-wheel-metadata/
+*.whl
+
+# --- IDEs e Editores ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Logs ---
+*.log
+*.out
+*.err
+
+# --- Sistema Operacional ---
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# MacOS
 .DS_Store
-app.db
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# --- Banco de Dados Local ---
+*.db
+*.sqlite3
+
+# --- Arquivos de Configuração Pessoais ---
+.env
+.env.*
+*.secret
+*.key
+
+# --- Chaves e Credenciais ---
+keys/
+*.json
+
+# --- Testes ---
+.coverage
+.pytest_cache/
+htmlcov/
+.cache/
+.tox/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+*.ipynb
+
+# --- Frontend/Node ---
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# --- Outros ---
+*.bak
+*.tmp
+*.lock

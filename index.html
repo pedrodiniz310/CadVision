@@ -1,1006 +1,206 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
-    <title>Dashboard Varejo — Identificação Automática (IA)</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      :root {
-        --bg: #ffffff;
-        --surface: #ffffff;
-        --text: #171717;
-        --muted: #6b7280;
-        --line: #eaeaea;
-        --accent: #ff8819;
-        --accent-600: #eb690a;
-        --accent-50: #fff3e7;
-        --ok: #0b7e20;
-        --warn: #c62828;
-        --chip: #f6f6f6;
-        --sidebar: #0f172a;
-        --sidebar-text: #e5e7eb;
-        --sidebar-active: #ff8819;
-        --safe-top: env(safe-area-inset-top);
-        --safe-bottom: env(safe-area-inset-bottom);
-      }
-      * {
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        height: 100%;
-      }
-      body {
-        margin: 0;
-        font-family: Montserrat, system-ui, -apple-system, Segoe UI, Roboto,
-          Ubuntu, "Helvetica Neue", Arial;
-        color: var(--text);
-        background: var(--bg);
-      }
-      .app {
-        display: grid;
-        grid-template-columns: 260px 1fr;
-        min-height: 100vh;
-      }
-      @media (max-width: 960px) {
-        .app {
-          grid-template-columns: 1fr;
-        }
-      }
-      .sidebar {
-        background: var(--sidebar);
-        color: var(--sidebar-text);
-        position: sticky;
-        top: 0;
-        height: 100dvh;
-        overflow: auto;
-        border-right: 1px solid #0b1224;
-      }
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 18px 16px;
-        border-bottom: 1px solid #111a33;
-      }
-      .brand .logo {
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
-        background: linear-gradient(135deg, var(--accent), #ffae5a);
-      }
-      .brand .title {
-        font-weight: 800;
-        letter-spacing: 0.2px;
-      }
-      .nav {
-        padding: 10px;
-      }
-      .nav h6 {
-        margin: 16px 10px 8px;
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        color: #9aa3b2;
-      }
-      .nav a {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 12px 12px;
-        color: inherit;
-        text-decoration: none;
-        border-radius: 12px;
-        transition: 0.15s ease;
-        font-weight: 700;
-      }
-      .nav a:hover {
-        background: #0b1224;
-      }
-      .nav a.active {
-        background: #0b1224;
-        outline: 2px solid var(--sidebar-active);
-      }
-      .topbar {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        background: var(--surface);
-        border-bottom: 1px solid var(--line);
-      }
-      .topbar .wrap {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px 18px;
-        gap: 12px;
-      }
-      .search {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        background: #fafafa;
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        padding: 10px 12px;
-        min-width: 220px;
-      }
-      .search input {
-        border: 0;
-        background: transparent;
-        outline: none;
-        width: 180px;
-        font-family: inherit;
-      }
-      .chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: var(--chip);
-        border: 1px solid var(--line);
-        color: #444;
-        padding: 6px 8px;
-        border-radius: 999px;
-        font-size: 12px;
-      }
-      .content {
-        padding: 18px;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-      .section {
-        margin: 22px 0;
-      }
-      .h1 {
-        font-size: 22px;
-        font-weight: 800;
-        margin: 0 0 8px;
-      }
-      .h2 {
-        font-size: 16px;
-        font-weight: 700;
-        margin: 0 0 8px;
-      }
-      .muted {
-        color: var(--muted);
-        font-size: 13px;
-      }
-      .grid {
-        display: grid;
-        gap: 16px;
-      }
-      @media (min-width: 980px) {
-        .grid-2 {
-          grid-template-columns: 1.1fr 0.9fr;
-        }
-      }
-      .card {
-        background: var(--surface);
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 16px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-      }
-      label {
-        display: block;
-        font-size: 12px;
-        font-weight: 700;
-        margin: 8px 0 6px;
-      }
-      input,
-      select,
-      textarea {
-        width: 100%;
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        padding: 14px 14px;
-        font-family: inherit;
-        font-size: 16px;
-      }
-      input:focus,
-      select:focus,
-      textarea:focus {
-        outline: none;
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px var(--accent-50);
-      }
-      button {
-        appearance: none;
-        border: 0;
-        background: var(--accent);
-        color: #fff;
-        border-radius: 14px;
-        padding: 14px 16px;
-        font-weight: 800;
-        cursor: pointer;
-        font-size: 16px;
-      }
-      button.secondary {
-        background: #f4f4f4;
-        color: #222;
-        border: 1px solid var(--line);
-      }
-      button.ghost {
-        background: transparent;
-        color: #222;
-        border: 1px dashed var(--line);
-      }
-      button:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
-      .btn-row {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        align-items: center;
-      }
-      .mono {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas,
-          "Liberation Mono", monospace;
-        background: #fafafa;
-        border: 1px solid var(--line);
-        padding: 10px;
-        border-radius: 10px;
-        white-space: pre-wrap;
-        font-size: 12px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 14px;
-      }
-      th,
-      td {
-        border-bottom: 1px solid var(--line);
-        padding: 10px 8px;
-        text-align: left;
-      }
-      th {
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: var(--muted);
-      }
-      tr:hover td {
-        background: #fcfcfc;
-      }
-      .drop {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        background: #fafafa;
-        border: 2px dashed var(--line);
-        border-radius: 16px;
-        padding: 20px;
-        min-height: 140px;
-      }
-      .drop.drag {
-        border-color: var(--accent);
-      }
-      .thumb {
-        width: 100%;
-        border-radius: 14px;
-        border: 1px solid var(--line);
-        display: none;
-      }
-      .sticky-actions {
-        position: sticky;
-        bottom: 0;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0), #fff 30%);
-        padding: 12px 0 calc(12px + var(--safe-bottom));
-      }
-      .touch {
-        min-height: 48px;
-      }
-      .side-toggle {
-        display: none;
-      }
-      @media (max-width: 960px) {
-        .sidebar {
-          position: fixed;
-          left: -280px;
-          width: 260px;
-          transition: 0.2s ease;
-        }
-        .sidebar.open {
-          left: 0;
-        }
-        .side-toggle {
-          display: inline-flex;
-        }
-        .topbar .wrap {
-          position: relative;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="app">
-      <!-- SIDEBAR -->
-      <aside class="sidebar" id="sidebar">
-        <div class="brand">
-          <div class="logo" aria-hidden="true"></div>
-          <div class="title">Cadastro Inteligente</div>
-        </div>
-        <nav class="nav" id="nav">
-          <h6>Geral</h6>
-          <a href="#sec-overview" class="active">Visão Geral</a>
-          <a href="#sec-identificar">Identificar por Imagem (IA)</a>
-          <a href="#sec-cadastro">Cadastro</a>
-          <a href="#sec-produtos">Produtos</a>
-          <h6>Admin</h6>
-          <a href="#sec-logs">Logs</a>
-          <a href="#sec-config">Configurações</a>
-        </nav>
-      </aside>
 
-      <!-- MAIN -->
-      <main>
-        <div class="topbar">
-          <div class="wrap">
-            <button class="side-toggle" id="btnMenu">☰</button>
-            <div class="search">
-              🔎 <input id="q" placeholder="Buscar por título, marca…" />
-            </div>
-            <div class="btn-row">
-              <span class="chip">Ambiente: <strong>Sandbox</strong></span>
-              <button id="btnNovo">Novo Produto</button>
-            </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CadVision - Sistema Completo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div class="title">CadVision</div>
+        <div class="subtitle">O SEU CADASTRO VISUAL</div>
+      </div>
+      <nav class="nav">
+        <h6>Geral</h6>
+        <a href="#dashboard" class="nav-link active"><i class="fas fa-home"></i> Visão Geral</a>
+        <a href="#identify" class="nav-link"><i class="fas fa-robot"></i> Identificar por IA</a>
+
+        <h6>Cadastro</h6>
+        <a href="#products" class="nav-link"><i class="fas fa-box"></i> Produtos</a>
+        <a href="#admin" class="nav-link"><i class="fas fa-user-cog"></i> ADMIN</a>
+        <a href="#logs" class="nav-link"><i class="fas fa-clipboard-list"></i> Logs</a>
+        <a href="#settings" class="nav-link"><i class="fas fa-cog"></i> Configurações</a>
+      </nav>
+    </aside>
+
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+      <header class="topbar">
+        <div class="wrap">
+          <button class="side-toggle" id="btnMenu">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="search">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Buscar produtos..." id="searchInput">
+          </div>
+          <div class="chip">
+            <i class="fas fa-wifi"></i>
+            <span id="connectionStatus">Conectado</span>
           </div>
         </div>
+      </header>
 
-        <div class="content">
-          <!-- Overview -->
-          <section class="section" id="sec-overview">
-            <div class="h1">Visão Geral</div>
-            <p class="muted">
-              Cadastre produtos usando <strong>foto</strong>: a IA identifica
-              rótulo/marca e sugere NCM/CEST/impostos.
-            </p>
-          </section>
+      <div class="content">
+        <!-- Página de Visão Geral -->
+        <section id="dashboard" class="page-content active">
+          <h1 class="h1">Visão Geral</h1>
+          <p class="muted">Dashboard de acompanhamento do sistema CadVision.</p>
 
-          <!-- Identificar por Imagem (IA) -->
-          <section class="section" id="sec-identificar">
-            <div class="h1">Identificar por Imagem (IA)</div>
-            <p class="muted">
-              Tire uma foto do produto (rótulo legível) ou envie da galeria. Em
-              mobile, usamos a câmera traseira.
-            </p>
-
-            <div class="grid grid-2" style="margin-top: 12px">
-              <!-- Upload/Camera -->
-              <div class="card">
-                <div class="h2">Foto do produto</div>
-                <div class="drop" id="drop">
-                  <div>
-                    <div style="font-weight: 700">Arraste e solte aqui</div>
-                    <div class="muted">ou</div>
-                    <div class="btn-row" style="margin-top: 8px">
-                      <!-- Tirar foto agora usa a câmera ao vivo -->
-                      <button id="btnTake" class="touch">📷 Tirar foto</button>
-                      <!-- Galeria permanece como input file -->
-                      <label class="touch" for="fileGallery"
-                        ><button class="secondary touch">
-                          🖼️ Galeria
-                        </button></label
-                      >
-                      <input
-                        id="fileGallery"
-                        type="file"
-                        accept="image/*"
-                        style="display: none"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <img id="thumb" class="thumb" alt="Pré-visualização" />
-
-                <div class="sticky-actions">
-                  <div class="btn-row">
-                    <button id="btnIdentify" disabled>
-                      Identificar com IA
-                    </button>
-                    <button id="btnClearImg" class="ghost" disabled>
-                      Trocar imagem
-                    </button>
-                  </div>
-                  <div class="muted" id="hint" style="margin-top: 6px">
-                    Dica: foque no rótulo; evite reflexos.
-                  </div>
-                </div>
+          <div class="grid grid-2">
+            <div class="card">
+              <h2 class="h2">Estatísticas</h2>
+              <p class="muted">Resumo do seu cadastro de produtos.</p>
+              <div class="muted" style="margin-top: 20px;">
+                <i class="fas fa-box" style="color: var(--primary); margin-right: 10px;"></i>
+                <span>Total de produtos: <strong id="totalProducts">0</strong></span>
               </div>
-
-              <!-- Resultado IA -->
-              <div class="card">
-                <div class="h2">Sugestão automática</div>
-                <div id="aiStatus" class="muted">Aguardando imagem…</div>
-                <div class="grid" style="margin-top: 8px">
-                  <div>
-                    <label>Título</label><input id="aiTitle" placeholder="—" />
-                  </div>
-                  <div>
-                    <label>Marca</label><input id="aiBrand" placeholder="—" />
-                  </div>
-                  <div>
-                    <label>Unidade</label
-                    ><input id="aiUnit" placeholder="UN / CX / KG" />
-                  </div>
-                  <div>
-                    <label>GTIN (se detectado)</label
-                    ><input id="aiGtin" placeholder="—" />
-                  </div>
-                  <div>
-                    <label>NCM</label><input id="aiNcm" placeholder="—" />
-                  </div>
-                  <div>
-                    <label>CEST</label><input id="aiCest" placeholder="—" />
-                  </div>
-                </div>
-                <label style="margin-top: 12px"
-                  >Impostos sugeridos (JSON)</label
-                >
-                <textarea
-                  id="aiTax"
-                  rows="10"
-                  class="mono"
-                  placeholder="—"
-                  readonly
-                ></textarea>
-                <div class="btn-row" style="margin-top: 10px">
-                  <button id="btnAplicar" disabled>Aplicar ao cadastro</button>
-                </div>
+              <div class="muted" style="margin-top: 10px;">
+                <i class="fas fa-robot" style="color: var(--primary); margin-right: 10px;"></i>
+                <span>Identificações por IA: <strong id="totalAI">0</strong></span>
               </div>
             </div>
 
-            <!-- Câmera ao vivo (beta) -->
-            <div class="card" id="liveCamCard" style="margin-top: 16px">
-              <div class="h2">Câmera ao vivo (beta)</div>
-              <video
-                id="liveVideo"
-                playsinline
-                autoplay
-                muted
-                style="
-                  width: 100%;
-                  border: 1px solid var(--line);
-                  border-radius: 12px;
-                "
-              ></video>
-              <div class="btn-row" style="margin-top: 8px">
-                <button id="btnStartLive">Iniciar câmera</button>
-                <button id="btnSnap" class="secondary" disabled>
-                  Tirar foto
+            <div class="card">
+              <h2 class="h2">Últimas Atividades</h2>
+              <p class="muted">Eventos recentes no sistema.</p>
+              <div id="recentActivities" class="muted" style="margin-top: 15px;">
+                <p>Nenhuma atividade recente.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Página de Identificação por IA -->
+        <section id="identify" class="page-content">
+          <h1 class="h1">Identificar Produto por IA</h1>
+          <p class="muted">Faça upload de uma imagem para identificar automaticamente o produto</p>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <h2 class="h2">Enviar Imagem</h2>
+              <div class="drop" id="dropArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Arraste uma imagem aqui ou clique para selecionar</p>
+                <small class="muted">Use a câmera traseira para melhor qualidade</small>
+              </div>
+              <input type="file" id="fileInput" accept="image/*" hidden>
+
+              <div class="btn-row">
+                <button class="secondary" onclick="document.getElementById('fileInput').click()">
+                  <i class="fas fa-upload"></i> Selecionar da Galeria
                 </button>
-                <button id="btnStopLive" class="ghost" disabled>Parar</button>
+                <button class="secondary" id="btnCamera">
+                  <i class="fas fa-camera"></i> Tirar Foto
+                </button>
               </div>
-              <canvas id="snapCanvas" style="display: none"></canvas>
-            </div>
-          </section>
 
-          <!-- Cadastro -->
-          <section class="section" id="sec-cadastro">
-            <div class="h1">Cadastro</div>
-            <p class="muted">Revise/complete e salve.</p>
+              <img id="imagePreview" class="thumb" alt="Preview">
+
+              <div class="muted" style="margin-top: 10px;" id="uploadStatus">
+                Aguardando imagem...
+              </div>
+
+              <div class="btn-row" style="margin-top: 15px;">
+                <button id="btnIdentify" disabled>
+                  <i class="fas fa-robot"></i> Identificar com IA
+                </button>
+              </div>
+            </div>
+
             <div class="card">
-              <div class="grid">
-                <div>
-                  <label>GTIN</label><input id="outGtin" placeholder="—" />
-                </div>
-                <div>
-                  <label>Título</label
-                  ><input id="outTitle" placeholder="Nome do produto" />
-                </div>
-                <div>
-                  <label>Marca</label
-                  ><input id="outBrand" placeholder="Marca" />
-                </div>
-                <div>
-                  <label>Unidade</label
-                  ><input id="outUnit" placeholder="UN / CX / KG" />
-                </div>
-                <div>
-                  <label>NCM</label
-                  ><input id="outNcm" placeholder="Ex.: 2202.10.00" />
-                </div>
-                <div>
-                  <label>CEST</label
-                  ><input id="outCest" placeholder="Ex.: 03.001.00" />
-                </div>
-                <div>
-                  <label>Preço</label
-                  ><input
-                    id="outPrice"
-                    placeholder="Ex.: 19,90"
-                    inputmode="decimal"
-                  />
-                </div>
+              <h2 class="h2">Detalhes do Produto</h2>
+              <div class="chip" id="aiStatus">
+                <i class="fas fa-clock"></i> Aguardando análise
               </div>
-              <label style="margin-top: 12px">Impostos sugeridos (JSON)</label>
-              <textarea
-                id="outTax"
-                rows="10"
-                class="mono"
-                placeholder="—"
-                readonly
-              ></textarea>
-              <div class="btn-row" style="margin-top: 10px">
-                <button id="btnSave" disabled>Salvar produto</button>
-                <button id="btnClear" class="secondary">Limpar</button>
-              </div>
-            </div>
-          </section>
 
-          <!-- Produtos -->
-          <section class="section" id="sec-produtos">
-            <div class="h1">Produtos</div>
-            <p class="muted">Últimos itens cadastrados.</p>
-            <div class="card">
-              <table id="tblProdutos">
-                <thead>
-                  <tr>
-                    <th>GTIN</th>
-                    <th>Título</th>
-                    <th>Marca</th>
-                    <th>NCM</th>
-                    <th>Preço</th>
-                    <th>Ações</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-          </section>
+              <form id="productForm">
+                <label for="productName">Nome do Produto *</label>
+                <input type="text" id="productName" placeholder="Ex: Arroz Integral Tipo 1" required>
 
-          <!-- Logs -->
-          <section class="section" id="sec-logs">
-            <div class="h1">Logs</div>
-            <p class="muted">Eventos recentes.</p>
-            <div
-              class="card mono"
-              id="logs"
-              style="max-height: 220px; overflow: auto"
-            >
-              Pronto.
-            </div>
-          </section>
+                <label for="productBrand">Marca *</label>
+                <input type="text" id="productBrand" placeholder="Ex: Tio João" required>
 
-          <!-- Config -->
-          <section class="section" id="sec-config">
-            <div class="h1">Configurações</div>
-            <p class="muted">Defina sua API e padrões fiscais.</p>
-            <div class="card">
-              <label>API Base URL</label>
-              <input id="cfgBaseUrl" placeholder="http://localhost:8000" />
-              <label>UF padrão</label>
-              <input id="cfgUf" placeholder="SC" />
-              <label>Regime padrão</label>
-              <select id="cfgRegime">
-                <option value="SN" selected>Simples Nacional</option>
-                <option value="LP">Lucro Presumido</option>
-                <option value="LR">Lucro Real</option>
-              </select>
-              <div class="btn-row" style="margin-top: 10px">
-                <button id="btnSalvarCfg">Salvar configurações</button>
-                <span class="muted">Estas configs ficam no localStorage.</span>
-              </div>
-            </div>
-          </section>
+                <label for="productGTIN">GTIN/EAN</label>
+                <input type="text" id="productGTIN" placeholder="Ex: 7891000315507" pattern="[0-9]{13}" maxlength="13">
 
-          <div
-            class="footer"
-            style="
-              padding: 18px;
-              color: var(--muted);
-              font-size: 12px;
-              border-top: 1px solid var(--line);
-            "
-          >
-            © 2025 • Dashboard de Cadastro Inteligente • Mobile-first, com IA
-            para identificação por imagem.
+                <label for="productCategory">Categoria *</label>
+                <select id="productCategory" required>
+                  <option value="">Selecione uma categoria</option>
+                  <option value="Alimentos">Alimentos</option>
+                  <option value="Bebidas">Bebidas</option>
+                  <option value="Limpeza">Limpeza</option>
+                  <option value="Higiene Pessoal">Higiene Pessoal</option>
+                  <option value="Outros">Outros</option>
+                </select>
+
+                <label for="productPrice">Preço (R$) *</label>
+                <input type="number" step="0.01" min="0" id="productPrice" placeholder="Ex: 12.90" required>
+
+                <label for="productDescription">Descrição</label>
+                <textarea id="productDescription" rows="3" placeholder="Descrição detalhada do produto"></textarea>
+
+                <div class="btn-row">
+                  <button type="submit">
+                    <i class="fas fa-save"></i> Salvar Produto
+                  </button>
+                  <button type="button" class="secondary" id="reprocessButton" disabled>
+                    <i class="fas fa-sync"></i> Reprocessar
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      </main>
-    </div>
+        </section>
 
-    <script>
-      // ===== Estado global =====
-      const state = {
-        baseUrl:
-          localStorage.getItem("cfg.baseUrl") ||
-          (location.hostname === "localhost" ? "http://localhost:8000" : ""),
-        uf: localStorage.getItem("cfg.uf") || "SC",
-        regime: localStorage.getItem("cfg.regime") || "SN",
-        products: [],
-        lastImageFile: null,
-        lastAI: null,
-      };
+        <!-- Outras páginas seriam implementadas de forma similar -->
+        <section id="products" class="page-content">
+          <h1 class="h1">Produtos Cadastrados</h1>
+          <p class="muted">Lista de todos os produtos cadastrados no sistema.</p>
+          <div id="productsContainer"></div>
+        </section>
 
-      // ===== Helpers =====
-      const $ = (sel) => document.querySelector(sel);
-      const $$ = (sel) => Array.from(document.querySelectorAll(sel));
-      const log = (m) => {
-        const el = $("#logs");
-        el.textContent += "\n" + m;
-        el.scrollTop = el.scrollHeight;
-      };
-      function setActiveLink() {
-        const hash = location.hash || "#sec-overview";
-        $$("#nav a").forEach((a) =>
-          a.classList.toggle("active", a.getAttribute("href") === hash)
-        );
-      }
-      function go(hash) {
-        location.hash = hash;
-        setActiveLink();
-      }
-      function fmtMoney(n) {
-        if (n == null || isNaN(n)) return "—";
-        return Number(n).toLocaleString("pt-BR", {
-          style: "currency",
-          currency: "BRL",
-        });
-      }
-      function safeParseJSON(txt) {
-        try {
-          return JSON.parse(txt);
-        } catch {
-          return null;
-        }
-      }
+        <section id="logs" class="page-content">
+          <h1 class="h1">Logs do Sistema</h1>
+          <p class="muted">Registro de atividades e eventos.</p>
+          <div class="card">
+            <div class="mono" id="logsContent">
+              Sistema inicializado. Aguardando atividades...
+            </div>
+          </div>
+        </section>
 
-      // ===== Config persistência =====
-      function loadCfgUI() {
-        $("#cfgBaseUrl").value = state.baseUrl || "";
-        $("#cfgUf").value = state.uf;
-        $("#cfgRegime").value = state.regime;
-      }
-      function saveCfg() {
-        state.baseUrl = $("#cfgBaseUrl").value.trim();
-        state.uf = $("#cfgUf").value.trim().toUpperCase() || "SC";
-        state.regime = $("#cfgRegime").value;
-        localStorage.setItem("cfg.baseUrl", state.baseUrl);
-        localStorage.setItem("cfg.uf", state.uf);
-        localStorage.setItem("cfg.regime", state.regime);
-        log("Config salva.");
-      }
+        <section id="settings" class="page-content">
+          <h1 class="h1">Configurações</h1>
+          <p class="muted">Configure as preferências do sistema.</p>
+          <div class="card">
+            <label for="apiUrl">URL da API</label>
+            <input type="text" id="apiUrl" placeholder="http://localhost:8000" value="http://localhost:8000">
 
-      // ===== API =====
-      async function apiIdentify(file) {
-        if (!state.baseUrl)
-          throw new Error("Defina a API Base URL em Configurações.");
-        const form = new FormData();
-        form.append("image", file);
-        form.append("uf", state.uf);
-        form.append("regime", state.regime);
-        const res = await fetch(state.baseUrl + "/vision/identify", {
-          method: "POST",
-          body: form,
-        });
-        if (!res.ok) {
-          const txt = await res.text().catch(() => "");
-          throw new Error(
-            `Falha na identificação (HTTP ${res.status}). ${txt}`
-          );
-        }
-        return await res.json();
-      }
-      async function apiSave(prod) {
-        if (!state.baseUrl)
-          throw new Error("Defina a API Base URL em Configurações.");
-        const res = await fetch(state.baseUrl + "/products/save", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(prod),
-        });
-        if (!res.ok) {
-          const txt = await res.text().catch(() => "");
-          throw new Error(`Falha ao salvar (HTTP ${res.status}). ${txt}`);
-        }
-        return await res.json();
-      }
+            <div class="btn-row" style="margin-top: 15px;">
+              <button id="btnSaveSettings">
+                <i class="fas fa-save"></i> Salvar Configurações
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
 
-      // ===== Render =====
-      function renderProducts() {
-        const tbody = $("#tblProdutos tbody");
-        tbody.innerHTML = "";
-        state.products.forEach((p) => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `<td>${p.gtin || "—"}</td><td>${
-            p.title || "—"
-          }</td><td>${p.brand || "—"}</td><td>${
-            p.ncm || "—"
-          }</td><td>${fmtMoney(
-            p.price
-          )}</td><td><button class="secondary" data-edit="${
-            p.gtin || ""
-          }">Editar</button></td>`;
-          tbody.appendChild(tr);
-        });
-        $$("button[data-edit]").forEach(
-          (btn) =>
-            (btn.onclick = () => {
-              const gtin = btn.getAttribute("data-edit");
-              const p = state.products.find((x) => x.gtin === gtin) || {};
-              fillForm(p);
-              go("#sec-cadastro");
-            })
-        );
-      }
+  <script src="script.js"></script>
+</body>
 
-      function fillAI(data) {
-        $("#aiStatus").textContent = data?.confidence
-          ? `Confiança da IA: ${(data.confidence * 100).toFixed(0)}%`
-          : "Sugestão preenchida.";
-        $("#aiTitle").value = data.title || "";
-        $("#aiBrand").value = data.brand || "";
-        $("#aiUnit").value = data.unit || "";
-        $("#aiGtin").value = data.gtin || "";
-        $("#aiNcm").value = data.ncm || "";
-        $("#aiCest").value = data.cest || "";
-        $("#aiTax").value = data.tax ? JSON.stringify(data.tax, null, 2) : "";
-        $("#btnAplicar").disabled = false;
-      }
-
-      function fillForm(prod) {
-        $("#outGtin").value = prod.gtin || "";
-        $("#outTitle").value = prod.title || "";
-        $("#outBrand").value = prod.brand || "";
-        $("#outUnit").value = prod.unit || "";
-        $("#outNcm").value = prod.ncm || "";
-        $("#outCest").value = prod.cest || "";
-        $("#outPrice").value =
-          prod.price != null ? String(prod.price).replace(".", ",") : "";
-        $("#outTax").value = prod.tax ? JSON.stringify(prod.tax, null, 2) : "";
-        $("#btnSave").disabled = !($("#outTitle").value || $("#outGtin").value);
-      }
-      function clearForm() {
-        fillForm({});
-      }
-
-      // ===== Uploader & compressão =====
-      const drop = $("#drop");
-      const thumb = $("#thumb");
-      function setImage(file) {
-        state.lastImageFile = file;
-        $("#btnIdentify").disabled = !file;
-        $("#btnClearImg").disabled = !file;
-        if (file) {
-          const url = URL.createObjectURL(file);
-          thumb.src = url;
-          thumb.style.display = "block";
-          drop.style.display = "none";
-        } else {
-          thumb.style.display = "none";
-          drop.style.display = "flex";
-        }
-      }
-      function dataURLtoBlob(dataurl) {
-        const arr = dataurl.split(","),
-          mime = arr[0].match(/:(.*?);/)[1],
-          bstr = atob(arr[1]);
-        let n = bstr.length;
-        const u8 = new Uint8Array(n);
-        while (n--) u8[n] = bstr.charCodeAt(n);
-        return new Blob([u8], { type: mime });
-      }
-      async function compressImage(
-        file,
-        maxW = 1280,
-        maxH = 1280,
-        quality = 0.8
-      ) {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => {
-            let w = img.width,
-              h = img.height,
-              ratio = Math.min(maxW / w, maxH / h, 1);
-            const nw = Math.round(w * ratio),
-              nh = Math.round(h * ratio);
-            const canvas = document.createElement("canvas");
-            canvas.width = nw;
-            canvas.height = nh;
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, nw, nh);
-            const dataUrl = canvas.toDataURL("image/jpeg", quality);
-            resolve(
-              new File([dataURLtoBlob(dataUrl)], "imagem.jpg", {
-                type: "image/jpeg",
-              })
-            );
-          };
-          img.onerror = reject;
-          img.src = URL.createObjectURL(file);
-        });
-      }
-
-      // Drag & Drop
-      ["dragenter", "dragover"].forEach((ev) =>
-        drop.addEventListener(ev, (e) => {
-          e.preventDefault();
-          drop.classList.add("drag");
-        })
-      );
-      ["dragleave", "drop"].forEach((ev) =>
-        drop.addEventListener(ev, (e) => {
-          e.preventDefault();
-          drop.classList.remove("drag");
-        })
-      );
-      drop.addEventListener("drop", (e) => {
-        const f = e.dataTransfer.files?.[0];
-        if (f) setImage(f);
-      });
-
-      // Galeria
-      document.getElementById("fileGallery").addEventListener("change", (e) => {
-        const f = e.target.files?.[0];
-        if (f) setImage(f);
-      });
-
-      // ===== Ações UI =====
-      $("#btnMenu").onclick = () => $("#sidebar").classList.toggle("open");
-
-      $("#btnIdentify").onclick = async () => {
-        if (!state.lastImageFile) {
-          $("#aiStatus").textContent = "Selecione uma imagem primeiro.";
-          return;
-        }
-        $("#aiStatus").textContent = "Analisando imagem…";
-        try {
-          const small = await compressImage(
-            state.lastImageFile,
-            1400,
-            1400,
-            0.82
-          );
-          const data = await apiIdentify(small);
-          state.lastAI = data;
-          fillAI(data);
-        } catch (e) {
-          $("#aiStatus").textContent = "Falha na identificação.";
-          log("IA erro: " + (e?.message || e));
-        }
-      };
-
-      $("#btnClearImg").onclick = () => {
-        setImage(null);
-        $("#aiStatus").textContent = "Aguardando imagem…";
-        $("#btnAplicar").disabled = true;
-      };
-
-      $("#btnAplicar").onclick = () => {
-        const data = {
-          gtin: $("#aiGtin").value.trim() || "",
-          title: $("#aiTitle").value.trim() || "",
-          brand: $("#aiBrand").value.trim() || "",
-          unit: $("#aiUnit").value.trim() || "",
-          ncm: $("#aiNcm").value.trim() || "",
-          cest: $("#aiCest").value.trim() || "",
-          tax: safeParseJSON($("#aiTax").value),
-        };
-        fillForm(data);
-        go("#sec-cadastro");
-      };
-
-      $("#btnSave").onclick = async () => {
-        const payload = {
-          gtin: $("#outGtin").value.trim() || null,
-          title: $("#outTitle").value.trim() || null,
-          brand: $("#outBrand").value.trim() || null,
-          unit: $("#outUnit").value.trim() || null,
-          ncm: $("#outNcm").value.trim() || null,
-          cest: $("#outCest").value.trim() || null,
-          price: Number(String($("#outPrice").value).replace(",", ".")) || null,
-          tax: safeParseJSON($("#outTax").value),
-        };
-        try {
-          await apiSave(payload);
-          log("Produto salvo: " + (payload.gtin || payload.title || ""));
-          state.products.unshift(payload);
-          renderProducts();
-          go("#sec-produtos");
-        } catch (e) {
-          alert("Erro ao salvar: " + (e?.message || e));
-        }
-      };
-
-      $("#btnClear").onclick = () => clearForm();
-      $("#btnSalvarCfg").onclick = () => {
-        saveCfg();
-      };
-
-      // Pesquisa local
-      $("#q").addEventListener("input", (e) => {
-        const q = e.target.value.toLowerCase();
-        $$("#tblProdutos tbody tr").forEach((tr) => {
-          const txt = tr.textContent.toLowerCase();
-          tr.style.display = txt.includes(q) ? "" : "none";
-        });
-      });
-
-      // ===== Câmera ao vivo (HTTPS ou localhost) =====
-      let liveStream = null;
-      const liveVideo = document.getElementById("liveVideo");
-      const btnStartLive = document.getElementById("btnStartLive");
-      const btnSnap = document.getElementById("btnSnap");
-      const btnStopLive = document.getElementById("btnStopLive");
-      const snapCanvas = document.getElementById("snapCanvas");
-
-      async function startLive() {
-        try {
-          liveStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { ideal: "environment" } },
-            audio: false,
-          });
-          liveVideo.srcObject = liveStream;
-          await liveVideo.play();
-          btnSnap.disabled = false;
-          btnStopLive.disabled = false;
-        } catch (e) {
-          alert(
-            "Não foi possível acessar a câmera. Use HTTPS/localhost e verifique permissões do navegador."
-          );
-        }
-      }
-      function stopLive() {
-        if (liveStream) {
-          liveStream.getTracks().forEach((t) => t.stop());
-          liveStream = null;
-        }
-        liveVideo.srcObject = null;
-        btnSnap.disabled = true;
-        btnStopLive.disabled = true;
-      }
-      function snapPhoto() {
-        const w = liveVideo.videoWidth || 1280,
-          h = liveVideo.videoHeight || 720;
-        snapCanvas.width = w;
-        snapCanvas.height = h;
-        const ctx = snapCanvas.getContext("2d");
-        ctx.drawImage(liveVideo, 0, 0, w, h);
-        snapCanvas.toBlob(
-          (blob) => {
-            const file = new File([blob], "foto.jpg", { type: "image/jpeg" });
-            if (typeof setImage === "function") setImage(file);
-            document
-              .querySelector("#sec-identificar")
-              ?.scrollIntoView({ behavior: "smooth" });
-          },
-          "image/jpeg",
-          0.92
-        );
-      }
-      btnStartLive?.addEventListener("click", startLive);
-      btnStopLive?.addEventListener("click", stopLive);
-      btnSnap?.addEventListener("click", snapPhoto);
-      window.addEventListener("beforeunload", stopLive);
-
-      // “Tirar foto” no card principal abre a câmera ao vivo
-      document
-        .getElementById("btnTake")
-        ?.addEventListener("click", async (e) => {
-          e.preventDefault();
-          document
-            .getElementById("liveCamCard")
-            ?.scrollIntoView({ behavior: "smooth" });
-          await startLive();
-        });
-
-      // Inicialização
-      window.addEventListener("hashchange", setActiveLink);
-      setActiveLink();
-      loadCfgUI();
-      renderProducts();
-    </script>
-  </body>
 </html>
