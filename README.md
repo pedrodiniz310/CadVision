@@ -1,8 +1,8 @@
-# 🚀 CadVision - Sistema de Cadastro Inteligente
+# 📷 CadVision - Sistema de Cadastro Inteligente
 
 Sistema avançado de cadastro de produtos utilizando visão computacional e OCR para automatizar a identificação de produtos a partir de imagens.
 
-## ✨ Funcionalidades
+##  Funcionalidades
 
 - **OCR Inteligente**: Reconhecimento de texto em imagens usando Google Cloud Vision e Tesseract
 - **Análise de Produtos**: Identificação automática de GTIN, marca, categoria e preço
@@ -10,7 +10,7 @@ Sistema avançado de cadastro de produtos utilizando visão computacional e OCR 
 - **API REST**: Interface completa para integração com outros sistemas
 - **Interface Web**: Frontend moderno e responsivo
 
-## 🛠️ Tecnologias Utilizadas
+##  Tecnologias Utilizadas
 
 - **Backend**: FastAPI, Python 3.8+
 - **OCR**: Google Cloud Vision API, Tesseract OCR
@@ -19,7 +19,7 @@ Sistema avançado de cadastro de produtos utilizando visão computacional e OCR 
 - **Frontend**: HTML5, CSS3, JavaScript Vanilla
 - **Deploy**: Uvicorn ASGI server
 
-## 📦 Instalação
+##  Instalação
 
 ### Pré-requisitos
 
