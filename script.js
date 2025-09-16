@@ -122,6 +122,8 @@ function setupEventListeners() {
 
   // Configurações
   $("#btnSaveSettings")?.addEventListener("click", saveSettings);
+  // Botão de remover imagem
+  $("#btnRemoveImage")?.addEventListener("click", removeImage);
 }
 
 function preventDefaults(e) {
@@ -150,6 +152,7 @@ function handleFiles(files) {
 function setImage(file) {
   state.lastImageFile = file;
   $("#btnIdentify").disabled = false;
+  $("#btnRemoveImage").style.display = "inline-flex"; // MOSTRAR BOTÃO
   $("#uploadStatus").textContent = "Imagem carregada. Clique em 'Identificar com IA'";
 
   const reader = new FileReader();
@@ -254,6 +257,28 @@ function reprocessImage() {
   if (state.lastImageFile) processImageWithAI();
 }
 
+function removeImage() {
+  // Limpar estado
+  state.lastImageFile = null;
+  state.lastAI = null;
+
+  // Limpar visualização
+  $("#imagePreview").style.display = "none";
+  $("#imagePreview").src = "";
+  $("#dropArea").style.display = "flex";
+
+  // Resetar botões
+  $("#btnIdentify").disabled = true;
+  $("#btnRemoveImage").style.display = "none";
+  $("#uploadStatus").textContent = "Aguardando imagem...";
+
+  // Limpar formulário
+  $("#productForm").reset();
+  updateAIStatus("Aguardando análise", "info");
+
+  log("Imagem removida", "info");
+}
+
 // ===== Gerenciamento de Produtos =====
 async function saveProduct(e) {
   e.preventDefault();
@@ -298,6 +323,14 @@ async function saveProduct(e) {
     state.lastAI = null;
     updateAIStatus("Aguardando análise", "info");
     updateStats();
+    // Limpar após salvar
+    $("#productForm").reset();
+    $("#imagePreview").style.display = "none";
+    $("#dropArea").style.display = "flex";
+    $("#btnRemoveImage").style.display = "none"; // ESCONDER BOTÃO
+    state.lastImageFile = null;
+    state.lastAI = null;
+    updateAIStatus("Aguardando análise", "info");
 
   } catch (error) {
     log(`Erro ao salvar produto: ${error.message}`, "error");
@@ -331,9 +364,24 @@ function renderProducts() {
   `).join('');
 }
 
-function loadProducts() {
-  // Em uma aplicação real, isso carregaria da API
-  console.log("Produtos carregados:", state.products.length);
+async function loadProducts() {
+  try {
+    const response = await fetch(`${state.baseUrl}/products`);
+    if (response.ok) {
+      const products = await response.json();
+      state.products = products;
+      localStorage.setItem("products", JSON.stringify(products));
+      log(`Carregados ${products.length} produtos da API`, "success");
+    } else {
+      log("Não foi possível carregar produtos da API, usando cache local", "warning");
+    }
+  } catch (error) {
+    log(`Erro ao carregar produtos: ${error.message}`, "error");
+  }
+  updateStats();
+  if (state.currentPage === "products") {
+    renderProducts();
+  }
 }
 
 // ===== Configurações =====

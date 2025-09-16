@@ -11,6 +11,10 @@ build/
 .eggs/
 .Python
 
+# Pastas de dependências
+CadVision/
+CadVision_backup/
+
 # --- Virtualenv ---
 venv/
 ENV/
