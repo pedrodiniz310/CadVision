@@ -1,0 +1,30 @@
+# Arquivo: backend/requirements.txt
+
+# --- Framework Web e Servidor ---
+# O coração da nossa API
+fastapi==0.111.0
+# O servidor que executa a aplicação FastAPI
+uvicorn[standard]==0.29.0
+# Para carregar segredos do arquivo .env
+python-dotenv==1.0.1
+
+# --- Comunicação com APIs Externas ---
+# Para fazer chamadas HTTP para a API do Cosmos
+requests==2.31.0
+
+# --- Google Cloud ---
+# Biblioteca oficial para a API Cloud Vision
+google-cloud-vision==3.7.2
+
+# --- Processamento de Imagem ---
+# A principal biblioteca para manipulação de imagem (filtros, etc.)
+# A versão "headless" é ideal para servidores, pois não precisa de interface gráfica
+opencv-python-headless==4.9.0.80
+# Dependência principal do OpenCV para cálculos numéricos
+numpy==1.26.4
+# Usada para manipulação de imagens, dependência de outras bibliotecas
+Pillow==10.3.0
+
+# --- OCR Local (Fallback) ---
+# Caso você queira manter o Tesseract como uma alternativa
+pytesseract==0.3.10

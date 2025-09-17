@@ -1,7 +1,7 @@
 // ===== Estado global =====
 const state = {
-  baseUrl: localStorage.getItem("apiUrl") || "http://localhost:8000",
-  products: JSON.parse(localStorage.getItem("products") || "[]"),
+  baseUrl: localStorage.getItem("apiUrl") || "http://127.0.0.1:8000/api/v1",
+  products: [], // Será carregado da API
   lastImageFile: null,
   lastAI: null,
   currentPage: "dashboard"
@@ -25,12 +25,18 @@ const log = (message, type = "info") => {
 // ===== Inicialização =====
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
-  loadProducts();
   setupEventListeners();
-  updateStats();
 });
 
 function initApp() {
+  // Carregar produtos da API e depois atualizar o resto
+  loadProducts().then(() => {
+    updateStats();
+    if (state.currentPage === "products") {
+      renderProducts();
+    }
+  });
+
   // Configurar navegação
   $$(".nav-link").forEach(link => {
     link.addEventListener("click", (e) => {
@@ -64,6 +70,10 @@ function initApp() {
   if ($("#apiUrl")) {
     $("#apiUrl").value = state.baseUrl;
   }
+
+  // Testar conexão inicial
+  setTimeout(testConnection, 2000);
+  showPage('identify'); // Inicia na página de identificação
 }
 
 function showPage(pageId) {
@@ -83,8 +93,7 @@ function updateStats() {
     $("#totalProducts").textContent = state.products.length;
   }
 
-  // Contar identificações por IA
-  const aiCount = state.products.filter(p => p.identifiedByAI).length;
+  const aiCount = state.products.filter(p => p.confidence && p.confidence > 0).length;
   if ($("#totalAI")) {
     $("#totalAI").textContent = aiCount;
   }
@@ -95,34 +104,26 @@ function setupEventListeners() {
   const dropArea = $("#dropArea");
   const fileInput = $("#fileInput");
 
-  // Drag and drop
-  ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
-    dropArea.addEventListener(eventName, preventDefaults, false);
-  });
+  if (dropArea) {
+    ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
+      dropArea.addEventListener(eventName, preventDefaults, false);
+    });
+    ["dragenter", "dragover"].forEach(eventName => {
+      dropArea.addEventListener(eventName, () => dropArea.classList.add("drag"), false);
+    });
+    ["dragleave", "drop"].forEach(eventName => {
+      dropArea.addEventListener(eventName, () => dropArea.classList.remove("drag"), false);
+    });
+    dropArea.addEventListener("drop", handleDrop, false);
+    dropArea.addEventListener("click", () => fileInput.click());
+  }
+  fileInput?.addEventListener("change", handleFileSelect);
 
-  ["dragenter", "dragover"].forEach(eventName => {
-    dropArea.addEventListener(eventName, () => dropArea.classList.add("drag"), false);
-  });
-
-  ["dragleave", "drop"].forEach(eventName => {
-    dropArea.addEventListener(eventName, () => dropArea.classList.remove("drag"), false);
-  });
-
-  dropArea.addEventListener("drop", handleDrop, false);
-  dropArea.addEventListener("click", () => fileInput.click());
-  fileInput.addEventListener("change", handleFileSelect);
-
-  // Botão da câmera
   $("#btnCamera")?.addEventListener("click", openCamera);
-
-  // Botões de processamento
   $("#btnIdentify")?.addEventListener("click", processImageWithAI);
-  $("#reprocessButton")?.addEventListener("click", reprocessImage);
+  $("#reprocessButton")?.addEventListener("click", processImageWithAI);
   $("#productForm")?.addEventListener("submit", saveProduct);
-
-  // Configurações
   $("#btnSaveSettings")?.addEventListener("click", saveSettings);
-  // Botão de remover imagem
   $("#btnRemoveImage")?.addEventListener("click", removeImage);
 }
 
@@ -136,8 +137,8 @@ function handleDrop(e) {
   if (files.length > 0) handleFiles(files);
 }
 
-function handleFileSelect() {
-  handleFiles(this.files);
+function handleFileSelect(e) {
+  handleFiles(e.target.files);
 }
 
 function handleFiles(files) {
@@ -152,7 +153,7 @@ function handleFiles(files) {
 function setImage(file) {
   state.lastImageFile = file;
   $("#btnIdentify").disabled = false;
-  $("#btnRemoveImage").style.display = "inline-flex"; // MOSTRAR BOTÃO
+  $("#btnRemoveImage").style.display = "inline-flex";
   $("#uploadStatus").textContent = "Imagem carregada. Clique em 'Identificar com IA'";
 
   const reader = new FileReader();
@@ -167,7 +168,6 @@ function setImage(file) {
 function openCamera() {
   log("Abrindo câmera...", "info");
   alert("Funcionalidade de câmera será implementada em breve.");
-  // Em um cenário real, isso usaria a API MediaDevices.getUserMedia()
 }
 
 // ===== Processamento com IA =====
@@ -179,8 +179,9 @@ async function processImageWithAI() {
   }
 
   updateAIStatus("Analisando imagem...", "processing");
-  $("#btnIdentify").disabled = true;
-  $("#btnIdentify").innerHTML = '<div class="spinner"></div> Processando...';
+  const identifyButton = $("#btnIdentify");
+  identifyButton.disabled = true;
+  identifyButton.innerHTML = '<div class="spinner"></div> Processando...';
 
   try {
     const formData = new FormData();
@@ -193,91 +194,73 @@ async function processImageWithAI() {
       body: formData
     });
 
-    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-
     const result = await response.json();
+    if (!response.ok) {
+      // ALTERAÇÃO: Tenta pegar a mensagem de erro da API
+      const errorDetail = result.detail || `HTTP ${response.status}: ${response.statusText}`;
+      throw new Error(errorDetail);
+    }
+
     state.lastAI = result;
 
     updateAIStatus(`Análise concluída (${Math.round(result.confidence * 100)}% confiança)`, "success");
     fillFormWithAIResults(result);
     $("#reprocessButton").disabled = false;
-    $("#btnIdentify").disabled = false;
-    $("#btnIdentify").innerHTML = '<i class="fas fa-robot"></i> Identificar com IA';
-
     log(`Produto identificado: ${result.title || "Desconhecido"}`, "success");
+
   } catch (error) {
     updateAIStatus("Falha na análise", "error");
-    $("#btnIdentify").disabled = false;
-    $("#btnIdentify").innerHTML = '<i class="fas fa-robot"></i> Identificar com IA';
     log(`Erro na identificação: ${error.message}`, "error");
+    alert(`Ocorreu um erro na análise: ${error.message}`);
+  } finally {
+    // Garante que o botão seja restaurado
+    identifyButton.disabled = false;
+    identifyButton.innerHTML = '<i class="fas fa-robot"></i> Identificar com IA';
   }
 }
 
 function updateAIStatus(message, status) {
   const statusEl = $("#aiStatus");
   if (!statusEl) return;
-
   statusEl.innerHTML = `<i class="fas fa-${getStatusIcon(status)}"></i> ${message}`;
-  statusEl.style.background = getStatusColor(status);
+  statusEl.className = `chip ${status}`;
 }
 
 function getStatusIcon(status) {
-  const icons = {
-    processing: "spinner fa-spin",
-    success: "check-circle",
-    error: "exclamation-circle",
-    warning: "exclamation-triangle",
-    info: "info-circle"
-  };
+  const icons = { processing: "spinner fa-spin", success: "check-circle", error: "exclamation-circle", warning: "exclamation-triangle", info: "info-circle" };
   return icons[status] || "info-circle";
 }
 
-function getStatusColor(status) {
-  const colors = {
-    processing: "var(--muted)",
-    success: "var(--primary)",
-    error: "#dc3545",
-    warning: "orange",
-    info: "var(--accent)"
-  };
-  return colors[status] || "var(--chip)";
-}
-
 function fillFormWithAIResults(result) {
-  if (result.title) $("#productName").value = result.title;
-  if (result.brand) $("#productBrand").value = result.brand;
-  if (result.gtin) $("#productGTIN").value = result.gtin;
-  if (result.category) $("#productCategory").value = result.category;
-
-  // Focar no preço para o usuário completar
+  $("#productName").value = result.title || "";
+  $("#productBrand").value = result.brand || "";
+  $("#productGTIN").value = result.gtin || "";
+  $("#productCategory").value = result.category || "";
   $("#productPrice").focus();
 }
 
-function reprocessImage() {
-  if (state.lastImageFile) processImageWithAI();
+function removeImage() {
+  resetIdentifyUI();
+  log("Imagem removida", "info");
 }
 
-function removeImage() {
-  // Limpar estado
+// ALTERAÇÃO: Função centralizada para limpar a UI de identificação
+function resetIdentifyUI() {
   state.lastImageFile = null;
   state.lastAI = null;
 
-  // Limpar visualização
   $("#imagePreview").style.display = "none";
   $("#imagePreview").src = "";
   $("#dropArea").style.display = "flex";
 
-  // Resetar botões
   $("#btnIdentify").disabled = true;
   $("#btnRemoveImage").style.display = "none";
   $("#uploadStatus").textContent = "Aguardando imagem...";
 
-  // Limpar formulário
   $("#productForm").reset();
   updateAIStatus("Aguardando análise", "info");
-
-  log("Imagem removida", "info");
 }
+
 
 // ===== Gerenciamento de Produtos =====
 async function saveProduct(e) {
@@ -289,52 +272,44 @@ async function saveProduct(e) {
     gtin: $("#productGTIN").value,
     category: $("#productCategory").value,
     price: parseFloat($("#productPrice").value),
-    description: $("#productDescription").value,
-    identifiedByAI: !!state.lastAI,
-    confidence: state.lastAI?.confidence || 0,
-    timestamp: new Date().toISOString()
+    ncm: state.lastAI?.ncm || null,
+    cest: state.lastAI?.cest || null,
+    confidence: state.lastAI?.confidence || null
   };
 
+  if (!product.title) {
+    alert("O título do produto é obrigatório.");
+    return;
+  }
+
   try {
-    // Salvar via API
     const response = await fetch(`${state.baseUrl}/products/save`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(product)
     });
 
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
     const result = await response.json();
-
-    // Salvar localmente
-    product.id = result.id;
-    state.products.unshift(product);
-    localStorage.setItem("products", JSON.stringify(state.products));
+    if (!response.ok) {
+      const errorDetail = result.detail || `HTTP ${response.status}`;
+      throw new Error(errorDetail);
+    }
 
     log(`Produto salvo: ${product.title} (ID: ${result.id})`, "success");
     alert("Produto salvo com sucesso!");
 
-    // Limpar formulário
-    $("#productForm").reset();
-    $("#imagePreview").style.display = "none";
-    $("#dropArea").style.display = "flex";
-    state.lastImageFile = null;
-    state.lastAI = null;
-    updateAIStatus("Aguardando análise", "info");
-    updateStats();
-    // Limpar após salvar
-    $("#productForm").reset();
-    $("#imagePreview").style.display = "none";
-    $("#dropArea").style.display = "flex";
-    $("#btnRemoveImage").style.display = "none"; // ESCONDER BOTÃO
-    state.lastImageFile = null;
-    state.lastAI = null;
-    updateAIStatus("Aguardando análise", "info");
+    // Recarrega os produtos da API para ter a lista mais recente
+    await loadProducts();
+
+    // Limpa a UI
+    resetIdentifyUI();
+
+    // Navega para a lista de produtos
+    showPage('products');
 
   } catch (error) {
     log(`Erro ao salvar produto: ${error.message}`, "error");
-    alert("Erro ao salvar produto. Verifique o console para detalhes.");
+    alert(`Erro ao salvar produto: ${error.message}`);
   }
 }
 
@@ -343,25 +318,21 @@ function renderProducts() {
   if (!productsContainer) return;
 
   if (state.products.length === 0) {
-    productsContainer.innerHTML = `
-      <div class="card">
-        <p class="muted">Nenhum produto cadastrado ainda.</p>
-      </div>
-    `;
+    productsContainer.innerHTML = `<div class="card"><p class="muted">Nenhum produto cadastrado ainda.</p></div>`;
     return;
   }
 
   productsContainer.innerHTML = state.products.map(product => `
-    <div class="card fade-in">
-      <h3>${product.title}</h3>
-      <p><strong>Marca:</strong> ${product.brand || "Não informada"}</p>
-      <p><strong>Preço:</strong> R$ ${product.price ? product.price.toFixed(2) : "0,00"}</p>
-      <p><strong>Categoria:</strong> ${product.category || "Não definida"}</p>
-      ${product.gtin ? `<p><strong>GTIN:</strong> ${product.gtin}</p>` : ''}
-      ${product.confidence ? `<p><strong>Confiança da IA:</strong> ${Math.round(product.confidence * 100)}%</p>` : ''}
-      <small class="muted">Cadastrado em: ${new Date(product.timestamp).toLocaleString()}</small>
-    </div>
-  `).join('');
+        <div class="card fade-in">
+            <h3>${product.title}</h3>
+            <p><strong>Marca:</strong> ${product.brand || "Não informada"}</p>
+            <p><strong>Preço:</strong> R$ ${product.price ? product.price.toFixed(2).replace('.', ',') : "0,00"}</p>
+            <p><strong>Categoria:</strong> ${product.category || "Não definida"}</p>
+            ${product.gtin ? `<p><strong>GTIN:</strong> ${product.gtin}</p>` : ''}
+            ${product.confidence ? `<p><strong>Confiança da IA:</strong> ${Math.round(product.confidence * 100)}%</p>` : ''}
+            <small class="muted">Cadastrado em: ${new Date(product.created_at || new Date()).toLocaleString()}</small>
+        </div>
+    `).join('');
 }
 
 async function loadProducts() {
@@ -370,7 +341,6 @@ async function loadProducts() {
     if (response.ok) {
       const products = await response.json();
       state.products = products;
-      localStorage.setItem("products", JSON.stringify(products));
       log(`Carregados ${products.length} produtos da API`, "success");
     } else {
       log("Não foi possível carregar produtos da API, usando cache local", "warning");
@@ -379,9 +349,6 @@ async function loadProducts() {
     log(`Erro ao carregar produtos: ${error.message}`, "error");
   }
   updateStats();
-  if (state.currentPage === "products") {
-    renderProducts();
-  }
 }
 
 // ===== Configurações =====
@@ -400,25 +367,22 @@ function saveSettings() {
 
 // ===== Teste de Conexão =====
 async function testConnection() {
+  const statusEl = $("#connectionStatus");
+  if (!statusEl) return;
+
   try {
     const response = await fetch(`${state.baseUrl}/test`);
+    const data = await response.json();
     if (response.ok) {
-      const data = await response.json();
       log(`Conexão bem-sucedida: ${data.message}`, "success");
-      $("#connectionStatus").textContent = "Conectado";
-      $("#connectionStatus").style.color = "green";
+      statusEl.textContent = "Conectado";
+      statusEl.style.color = "var(--primary)";
     } else {
-      throw new Error(`HTTP ${response.status}`);
+      throw new Error(data.detail || `HTTP ${response.status}`);
     }
   } catch (error) {
     log(`Falha na conexão: ${error.message}`, "error");
-    $("#connectionStatus").textContent = "Desconectado";
-    $("#connectionStatus").style.color = "red";
+    statusEl.textContent = "Desconectado";
+    statusEl.style.color = "#dc3545";
   }
 }
-
-// Adicionar teste de conexão na inicialização
-document.addEventListener("DOMContentLoaded", () => {
-  // Testar conexão após 2 segundos
-  setTimeout(testConnection, 2000);
-});

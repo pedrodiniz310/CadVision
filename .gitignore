@@ -1,85 +1,49 @@
-# --- Python ---
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.so
-*.egg
-*.egg-info/
-dist/
-build/
-.eggs/
-.Python
-
-# Pastas de dependencias
-CadVision/
-CadVision_backup/
-
-# --- Virtualenv ---
+# Ambiente Virtual Python
 venv/
-ENV/
-env/
 .venv/
-pip-wheel-metadata/
-*.whl
 
-# --- IDEs e Editores ---
-.vscode/
-.idea/
-*.swp
-*.swo
+# Arquivos de Cache do Python
+__pycache__/
+*.pyc
 
-# --- Logs ---
-*.log
-*.out
-*.err
+# Arquivos de Ambiente (Contém segredos!)
+.env
 
-# --- Sistema Operacional ---
-# Windows
-Thumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-
-# MacOS
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Linux
-*~
-
-# --- Banco de Dados Local ---
+# Bancos de Dados SQLite
 *.db
 *.sqlite3
-app.db
 
-# --- Arquivos de Configuração Pessoais ---
-.env
-.env.*
-*.secret
-*.key
-
-# --- Chaves e Credenciais ---
-keys/
-*.json
-
-# --- Testes ---
-.coverage
-.pytest_cache/
-htmlcov/
-.cache/
-.tox/
-
-# --- Jupyter ---
-.ipynb_checkpoints/
-*.ipynb
-
-# --- Frontend/Node ---
+# Dependências do Node.js
 node_modules/
-npm-debug.log
-yarn-error.log
 
-# --- Outros ---
-*.bak
-*.tmp
-*.lock
+# Arquivos do Editor/SO
+.vscode/
+.idea/
+.DS_Store
+
+Olá! Ótimo que você está subindo seu projeto para o GitHub. Vamos analisar o que está acontecendo.
+
+Você está no caminho certo! Os comandos que você usou (git add .gitignore e git add .) adicionaram seus arquivos à "área de preparação" (staging area) do Git, prontos para serem salvos em um "commit".
+
+Vamos abordar os pontos principais: o aviso de segurança CRÍTICO sobre seu arquivo de chave e os próximos passos para enviar seu código.
+
+⚠️ AVISO DE SEGURANÇA MUITO IMPORTANTE!
+Eu notei que você está adicionando o arquivo backend/keys/vision.json. NUNCA, EM HIPÓTESE ALGUMA, ENVIE ESTE ARQUIVO PARA O GITHUB.
+
+O que é esse arquivo? É a sua chave de acesso secreta para a API do Google Cloud Vision. É como a senha da sua conta do Google Cloud.
+
+Qual é o risco? Se você enviar esse arquivo, qualquer pessoa que tiver acesso ao seu repositório (e se ele for público, o mundo inteiro) poderá usar suas credenciais para fazer chamadas à API em seu nome, gerando custos altíssimos na sua conta. Bots maliciosos varrem o GitHub constantemente em busca desses arquivos.
+
+Como corrigir isso AGORA, antes de continuar:
+
+Remova o arquivo da área de preparação do Git. Execute o seguinte comando:
+
+PowerShell
+
+git rm --cached backend/keys/vision.json
+Isso diz ao Git para parar de rastrear o arquivo, mas o mantém no seu computador.
+
+Adicione a pasta ou o arquivo ao .gitignore. Abra o arquivo .gitignore que está na raiz do seu projeto e adicione uma nova linha para ignorar a chave ou a pasta inteira de chaves:
+
+# Ignorar arquivos de segredo e chaves de API
+backend/keys/

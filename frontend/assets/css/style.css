@@ -556,3 +556,13 @@ p {
     transform: rotate(360deg);
   }
 }
+/* Adicione isto ao final de style.css para garantir que o logo funcione */
+.brand .logo {
+    width: 120px;
+    height: 60px;
+    background-image: url('/assets/images/cadvisionbranco.webp');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-bottom: 10px;
+}
