@@ -4,202 +4,488 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CadVision</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <meta name="description" content="CadVision - Sistema de cadastro de produtos por visão computacional">
+  <title>CadVision - Identificação de Produtos por IA</title>
+
+  <!-- Fontes -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon/favicon-16x16.png">
+  <link rel="manifest" href="/assets/images/favicon/site.webmanifest">
+  <link rel="icon" type="image/x-icon" href="/assets/images/favicon/favicon.ico">
+
+  <!-- Meta tags para redes sociais -->
+  <meta property="og:title" content="CadVision - Identificação de Produtos por IA">
+  <meta property="og:description"
+    content="Sistema inteligente para cadastro de produtos através de visão computacional">
+  <meta property="og:image" content="/assets/images/og-image.png">
+  <meta property="og:url" content="https://cadvision.example.com">
+  <meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body>
   <div class="app">
-    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="brand">
-        <div class="assets/images/CadVision1.png"></div>
-        <div class="subtitle">O SEU CADASTRO VISUAL</div>
+        <div class="logo"></div>
+        <div class="title">CadVision</div>
+        <div class="subtitle">SEU CADASTRO INTELIGENTE</div>
       </div>
       <nav class="nav">
         <h6>Geral</h6>
-        <a href="#dashboard" class="nav-link active"><i class="fas fa-home"></i> Visão Geral</a>
-        <a href="#identify" class="nav-link"><i class="fas fa-robot"></i> Identificar por IA</a>
+        <a href="#dashboard" class="nav-link"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="#identify" class="nav-link active"><i class="fas fa-robot"></i> Identificar por IA</a>
 
         <h6>Cadastro</h6>
         <a href="#products" class="nav-link"><i class="fas fa-box"></i> Produtos</a>
-        <a href="#admin" class="nav-link"><i class="fas fa-user-cog"></i> ADMIN</a>
         <a href="#logs" class="nav-link"><i class="fas fa-clipboard-list"></i> Logs</a>
+
+        <h6>Sistema</h6>
         <a href="#settings" class="nav-link"><i class="fas fa-cog"></i> Configurações</a>
+        <a href="#help" class="nav-link"><i class="fas fa-question-circle"></i> Ajuda</a>
       </nav>
+
+      <div class="sidebar-footer">
+        <div class="connection-status">
+          <i class="fas fa-circle" id="connectionIcon"></i>
+          <span id="sidebarConnectionStatus">Conectando...</span>
+        </div>
+        <div class="version">v1.0.0</div>
+      </div>
     </aside>
 
-    <!-- Overlay para mobile -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- Main Content -->
     <main class="main">
       <header class="topbar">
         <div class="wrap">
-          <button class="side-toggle" id="btnMenu">
+          <button class="side-toggle" id="btnMenu" aria-label="Alternar menu">
             <i class="fas fa-bars"></i>
           </button>
           <div class="search">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Buscar produtos..." id="searchInput">
+            <input type="text" placeholder="Buscar produtos..." id="searchProducts" aria-label="Buscar produtos">
           </div>
-          <div class="chip">
-            <i class="fas fa-wifi"></i>
-            <span id="connectionStatus">Conectado</span>
+          <div class="topbar-actions">
+            <button class="btn btn-secondary btn-sm" id="btnRefreshProducts" title="Atualizar lista de produtos">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+            <div class="chip" id="connectionStatusContainer">
+              <i class="fas fa-wifi"></i>
+              <span id="connectionStatus">Conectando...</span>
+            </div>
           </div>
         </div>
       </header>
 
       <div class="content">
-        <!-- Página de Visão Geral -->
-        <section id="dashboard" class="page-content active">
-          <h1 class="h1">Visão Geral</h1>
-          <p class="muted">Dashboard de acompanhamento do sistema CadVision.</p>
+        <!-- Dashboard -->
+        <section id="dashboard" class="page-content" style="display: none;">
+          <h1 class="h1">Dashboard</h1>
+          <p class="muted">Visão geral do sistema e estatísticas de uso.</p>
 
-          <div class="grid grid-2">
-            <div class="card">
-              <h2 class="h2">Estatísticas</h2>
-              <p class="muted">Resumo do seu cadastro de produtos.</p>
-              <div class="muted" style="margin-top: 20px;">
-                <i class="fas fa-box" style="color: var(--primary); margin-right: 10px;"></i>
-                <span>Total de produtos: <strong id="totalProducts">0</strong></span>
-              </div>
-              <div class="muted" style="margin-top: 10px;">
-                <i class="fas fa-robot" style="color: var(--primary); margin-right: 10px;"></i>
-                <span>Identificações por IA: <strong id="totalAI">0</strong></span>
-              </div>
+          <div class="grid grid-3">
+            <div class="card text-center">
+              <i class="fas fa-box" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 15px;"></i>
+              <h2 id="totalProducts">0</h2>
+              <p class="muted">Produtos Cadastrados</p>
             </div>
 
+            <div class="card text-center">
+              <i class="fas fa-robot" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 15px;"></i>
+              <h2 id="totalAI">0</h2>
+              <p class="muted">Identificados por IA</p>
+            </div>
+
+            <div class="card text-center">
+              <i class="fas fa-bolt" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 15px;"></i>
+              <h2 id="successRate">0%</h2>
+              <p class="muted">Taxa de Sucesso</p>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2 class="h2">Atividade Recente</h2>
             <div class="card">
-              <h2 class="h2">Últimas Atividades</h2>
-              <p class="muted">Eventos recentes no sistema.</p>
-              <div id="recentActivities" class="muted" style="margin-top: 15px;">
-                <p>Nenhuma atividade recente.</p>
+              <div id="recentActivity">
+                <p class="muted text-center">Carregando atividades...</p>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Página de Identificação por IA -->
+        <!-- Identificação por IA -->
         <section id="identify" class="page-content">
           <h1 class="h1">Identificar Produto por IA</h1>
-          <p class="muted">Faça upload de uma imagem para identificar automaticamente o produto</p>
+          <p class="muted">Faça upload de uma imagem para identificar automaticamente o produto.</p>
 
           <div class="grid grid-2">
             <div class="card">
-              <h2 class="h2">Enviar Imagem</h2>
-              <div class="drop" id="dropArea">
+              <h2 class="h2">1. Enviar Imagem</h2>
+              <div class="drop" id="dropArea" role="button" aria-label="Área para upload de imagem" tabindex="0">
                 <i class="fas fa-cloud-upload-alt"></i>
                 <p>Arraste uma imagem aqui ou clique para selecionar</p>
-                <small class="muted">Use a câmera traseira para melhor qualidade</small>
+                <small class="muted">Formatos suportados: JPG, PNG, WebP, BMP, GIF (até 10MB)</small>
               </div>
-              <input type="file" id="fileInput" accept="image/*" hidden>
+              <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/bmp,image/gif" hidden>
+              <img id="imagePreview" class="thumb" alt="Preview da imagem para upload">
+
+              <div class="upload-info">
+                <div class="muted" id="uploadStatus">Aguardando imagem...</div>
+                <div class="chip info" id="aiStatus">
+                  <i class="fas fa-info-circle"></i> Aguardando análise
+                </div>
+              </div>
 
               <div class="btn-row">
-                <button class="secondary" onclick="document.getElementById('fileInput').click()">
-                  <i class="fas fa-upload"></i> Selecionar da Galeria
-                </button>
-                <button class="secondary" id="btnCamera">
-                  <i class="fas fa-camera"></i> Tirar Foto
-                </button>
-              </div>
-
-              <img id="imagePreview" class="thumb" alt="Preview">
-
-              <div class="muted" style="margin-top: 10px;" id="uploadStatus">
-                Aguardando imagem...
-              </div>
-
-              <div class="btn-row" style="margin-top: 15px;">
-                <button id="btnIdentify" disabled>
+                <button id="btnIdentify" class="btn btn-primary" disabled>
                   <i class="fas fa-robot"></i> Identificar com IA
                 </button>
-                <button id="btnRemoveImage" class="danger" style="display: none;">
+                <button id="btnRemoveImage" class="btn btn-secondary" style="display: none;">
                   <i class="fas fa-trash"></i> Remover Imagem
                 </button>
               </div>
+            </div>
 
-              <div class="card">
-                <h2 class="h2">Detalhes do Produto</h2>
-                <div class="chip" id="aiStatus">
-                  <i class="fas fa-clock"></i> Aguardando análise
-                </div>
+            <div class="card">
+              <h2 class="h2">2. Detalhes do Produto</h2>
+              <p class="muted">Revise e complete as informações do produto identificado.</p>
 
-                <form id="productForm">
+              <form id="productForm">
+                <div class="form-group">
                   <label for="productName">Nome do Produto *</label>
                   <input type="text" id="productName" placeholder="Ex: Arroz Integral Tipo 1" required>
+                </div>
 
-                  <label for="productBrand">Marca *</label>
-                  <input type="text" id="productBrand" placeholder="Ex: Tio João" required>
+                <div class="form-group">
+                  <label for="productBrand">Marca</label>
+                  <input type="text" id="productBrand" placeholder="Ex: Tio João">
+                </div>
 
+                <div class="form-group">
                   <label for="productGTIN">GTIN/EAN</label>
-                  <input type="text" id="productGTIN" placeholder="Ex: 7891000315507" pattern="[0-9]{13}"
-                    maxlength="13">
+                  <input type="text" id="productGTIN" placeholder="Ex: 7891000315507" pattern="[0-9]*">
+                </div>
 
-                  <label for="productCategory">Categoria *</label>
-                  <select id="productCategory" required>
+                <div class="grid grid-2">
+                  <div class="form-group">
+                    <label for="productNCM">NCM</label>
+                    <input type="text" id="productNCM" placeholder="Ex: 1006.30.90">
+                  </div>
+                  <div class="form-group">
+                    <label for="productCEST">CEST</label>
+                    <input type="text" id="productCEST" placeholder="Ex: 13.001.00">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="productCategory">Categoria</label>
+                  <select id="productCategory">
                     <option value="">Selecione uma categoria</option>
                     <option value="Alimentos">Alimentos</option>
                     <option value="Bebidas">Bebidas</option>
                     <option value="Limpeza">Limpeza</option>
-                    <option value="Higiene Pessoal">Higiene Pessoal</option>
+                    <option value="Higiene">Higiene</option>
+                    <option value="Eletrônicos">Eletrônicos</option>
                     <option value="Outros">Outros</option>
                   </select>
+                </div>
 
-                  <label for="productPrice">Preço (R$) *</label>
-                  <input type="number" step="0.01" min="0" id="productPrice" placeholder="Ex: 12.90" required>
+                <div class="form-group">
+                  <label for="productPrice">Preço (R$)</label>
+                  <input type="number" step="0.01" min="0" id="productPrice" placeholder="Ex: 12.90">
+                </div>
 
-                  <label for="productDescription">Descrição</label>
-                  <textarea id="productDescription" rows="3" placeholder="Descrição detalhada do produto"></textarea>
-
+                <div class="sticky-actions">
                   <div class="btn-row">
-                    <button type="submit">
+                    <button type="submit" class="btn btn-primary">
                       <i class="fas fa-save"></i> Salvar Produto
                     </button>
-                    <button type="button" class="secondary" id="reprocessButton" disabled>
-                      <i class="fas fa-sync"></i> Reprocessar
+                    <button type="reset" class="btn btn-secondary">
+                      <i class="fas fa-times"></i> Limpar
                     </button>
                   </div>
-                </form>
-              </div>
-            </div>
-        </section>
-
-        <!-- Outras páginas seriam implementadas de forma similar -->
-        <section id="products" class="page-content">
-          <h1 class="h1">Produtos Cadastrados</h1>
-          <p class="muted">Lista de todos os produtos cadastrados no sistema.</p>
-          <div id="productsContainer"></div>
-        </section>
-
-        <section id="logs" class="page-content">
-          <h1 class="h1">Logs do Sistema</h1>
-          <p class="muted">Registro de atividades e eventos.</p>
-          <div class="card">
-            <div class="mono" id="logsContent">
-              Sistema inicializado. Aguardando atividades...
+                </div>
+              </form>
             </div>
           </div>
         </section>
 
-        <section id="settings" class="page-content">
-          <h1 class="h1">Configurações</h1>
-          <p class="muted">Configure as preferências do sistema.</p>
-          <div class="card">
-            <label for="apiUrl">URL da API</label>
-            <input type="text" id="apiUrl" placeholder="http://localhost:8000" value="http://localhost:8000">
-
-            <div class="btn-row" style="margin-top: 15px;">
-              <button id="btnSaveSettings">
-                <i class="fas fa-save"></i> Salvar Configurações
+        <!-- Lista de Produtos -->
+        <section id="products" class="page-content" style="display: none;">
+          <div class="section-header">
+            <h1 class="h1">Produtos Cadastrados</h1>
+            <div class="header-actions">
+              <button class="btn btn-secondary" id="btnExportProducts">
+                <i class="fas fa-download"></i> Exportar
               </button>
+            </div>
+          </div>
+
+          <div class="filters">
+            <div class="grid grid-3">
+              <div class="form-group">
+                <label for="filterCategory">Filtrar por categoria</label>
+                <select id="filterCategory">
+                  <option value="">Todas categorias</option>
+                  <option value="Alimentos">Alimentos</option>
+                  <option value="Bebidas">Bebidas</option>
+                  <option value="Limpeza">Limpeza</option>
+                  <option value="Higiene">Higiene</option>
+                  <option value="Eletrônicos">Eletrônicos</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="filterBrand">Filtrar por marca</label>
+                <input type="text" id="filterBrand" placeholder="Digite a marca">
+              </div>
+
+              <div class="form-group">
+                <label for="filterSort">Ordenar por</label>
+                <select id="filterSort">
+                  <option value="newest">Mais recentes</option>
+                  <option value="oldest">Mais antigos</option>
+                  <option value="name">Nome (A-Z)</option>
+                  <option value="name_desc">Nome (Z-A)</option>
+                  <option value="price">Preço (menor-maior)</option>
+                  <option value="price_desc">Preço (maior-menor)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="productsContainer">
+            <div class="card text-center">
+              <i class="fas fa-box-open" style="font-size: 3rem; color: var(--muted); margin-bottom: 20px;"></i>
+              <h3>Nenhum produto cadastrado</h3>
+              <p class="muted">Comece identificando um produto usando a visão computacional.</p>
+              <button class="btn btn-primary" onclick="showPage('identify')">
+                <i class="fas fa-robot"></i> Identificar Primeiro Produto
+              </button>
+            </div>
+          </div>
+
+          <div class="pagination" id="productsPagination" style="display: none;">
+            <button class="btn btn-secondary" id="btnPrevPage">
+              <i class="fas fa-chevron-left"></i> Anterior
+            </button>
+            <span class="pagination-info" id="paginationInfo">Página 1 de 1</span>
+            <button class="btn btn-secondary" id="btnNextPage">
+              Próxima <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Logs do Sistema -->
+        <section id="logs" class="page-content" style="display: none;">
+          <div class="section-header">
+            <h1 class="h1">Logs do Sistema</h1>
+            <div class="header-actions">
+              <button class="btn btn-secondary" id="btnClearLogs">
+                <i class="fas fa-trash"></i> Limpar Logs
+              </button>
+              <button class="btn btn-secondary" id="btnExportLogs">
+                <i class="fas fa-download"></i> Exportar
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="logs-header">
+              <div class="chip">
+                <i class="fas fa-info-circle"></i>
+                <span>Últimas atividades do sistema</span>
+              </div>
+              <div class="logs-actions">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="logLevelFilter">Filtrar por nível</label>
+                  <select id="logLevelFilter">
+                    <option value="all">Todos</option>
+                    <option value="info">Info</option>
+                    <option value="success">Sucesso</option>
+                    <option value="error">Erro</option>
+                    <option value="warning">Aviso</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="mono" id="logsContent" style="max-height: 500px; overflow-y: auto;">
+              [00:00:00] INFO: Sistema inicializado
+            </div>
+          </div>
+        </section>
+
+        <!-- Configurações -->
+        <section id="settings" class="page-content" style="display: none;">
+          <h1 class="h1">Configurações</h1>
+          <p class="muted">Configure as preferências do sistema e conexão com a API.</p>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <h2 class="h2">Conexão com API</h2>
+
+              <div class="form-group">
+                <label for="apiUrl">URL da API</label>
+                <input type="url" id="apiUrl" placeholder="http://localhost:8000/api/v1">
+                <small class="muted">URL completa do endpoint da API</small>
+              </div>
+
+              <div class="form-group">
+                <label for="apiTimeout">Timeout da API (segundos)</label>
+                <input type="number" id="apiTimeout" value="30" min="5" max="120">
+              </div>
+
+              <div class="btn-row">
+                <button class="btn btn-primary" id="btnSaveSettings">
+                  <i class="fas fa-save"></i> Salvar Configurações
+                </button>
+                <button class="btn btn-secondary" id="btnTestConnection">
+                  <i class="fas fa-bolt"></i> Testar Conexão
+                </button>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2 class="h2">Preferências</h2>
+
+              <div class="form-group">
+                <label for="autoSave">Salvamento automático</label>
+                <select id="autoSave">
+                  <option value="true">Ativado</option>
+                  <option value="false">Desativado</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="maxFileSize">Tamanho máximo de arquivo (MB)</label>
+                <input type="number" id="maxFileSize" value="10" min="1" max="50">
+              </div>
+
+              <div class="form-group">
+                <label for="theme">Tema de interface</label>
+                <select id="theme">
+                  <option value="light">Claro</option>
+                  <option value="dark">Escuro</option>
+                  <option value="auto">Automático (segue o sistema)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="h2">Estatísticas do Sistema</h2>
+
+            <div class="grid grid-3">
+              <div class="stat-card">
+                <div class="stat-value" id="statTotalProducts">0</div>
+                <div class="stat-label">Produtos Cadastrados</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-value" id="statTotalIdentifications">0</div>
+                <div class="stat-label">Identificações</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-value" id="statSuccessRate">0%</div>
+                <div class="stat-label">Taxa de Sucesso</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Ajuda -->
+        <section id="help" class="page-content" style="display: none;">
+          <h1 class="h1">Ajuda & Suporte</h1>
+          <p class="muted">Encontre respostas para dúvidas comuns e informações sobre o sistema.</p>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <h2 class="h2">Como Usar</h2>
+
+              <div class="accordion">
+                <div class="accordion-item">
+                  <button class="accordion-header">
+                    <i class="fas fa-question-circle"></i>
+                    Como identificar um produto?
+                    <i class="fas fa-chevron-down"></i>
+                  </button>
+                  <div class="accordion-content">
+                    <p>Para identificar um produto, navegue até a aba "Identificar por IA", faça upload de uma imagem
+                      clara do produto e clique em "Identificar com IA". O sistema analisará a imagem e preencherá
+                      automaticamente as informações do produto.</p>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <button class="accordion-header">
+                    <i class="fas fa-question-circle"></i>
+                    Quais formatos de imagem são suportados?
+                    <i class="fas fa-chevron-down"></i>
+                  </button>
+                  <div class="accordion-content">
+                    <p>O sistema suporta os formatos JPG, PNG, WebP, BMP e GIF. O tamanho máximo do arquivo é 10MB.</p>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <button class="accordion-header">
+                    <i class="fas fa-question-circle"></i>
+                    Como editar um produto cadastrado?
+                    <i class="fas fa-chevron-down"></i>
+                  </button>
+                  <div class="accordion-content">
+                    <p>Atualmente, é necessário excluir e recadastrar o produto com as informações corretas. Em breve,
+                      adicionaremos funcionalidade de edição.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2 class="h2">Suporte Técnico</h2>
+
+              <div class="support-info">
+                <div class="support-item">
+                  <i class="fas fa-book"></i>
+                  <div>
+                    <h3>Documentação</h3>
+                    <p class="muted">Consulte o manual completo do usuário</p>
+                  </div>
+                </div>
+
+                <div class="support-item">
+                  <i class="fas fa-envelope"></i>
+                  <div>
+                    <h3>E-mail de Suporte</h3>
+                    <p class="muted">suporte@cadvision.com</p>
+                  </div>
+                </div>
+
+                <div class="support-item">
+                  <i class="fas fa-globe"></i>
+                  <div>
+                    <h3>Site Oficial</h3>
+                    <p class="muted">www.cadvision.com</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="btn-row">
+                <button class="btn btn-primary">
+                  <i class="fas fa-download"></i> Baixar Manual do Usuário
+                </button>
+              </div>
             </div>
           </div>
         </section>
@@ -207,7 +493,8 @@
     </main>
   </div>
 
-  <script src="assets/js/script.js"></script>
+  <!-- Scripts -->
+  <script src="/assets/js/script.js"></script>
 </body>
 
 </html>

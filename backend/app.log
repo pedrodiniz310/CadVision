@@ -1,0 +1,149 @@
+2025-09-18 16:38:36,148 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 16:39:23,928 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 16:41:41,920 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 16:46:55,667 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 16:48:36,240 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 16:51:23,091 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 16:51:42,639 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 17:02:03,498 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 17:02:29,855 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 17:03:24,244 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 17:03:26,696 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-18 17:03:26,698 - app.services.vision_service - ERROR - Erro durante a extração de dados do Vision: global flags not at the start of the expression at position 19
+2025-09-18 17:03:26,698 - main - INFO - Dados extraídos - Texto: 0 chars, Logos: [], Sucesso: False, Tempo: 2.52s
+2025-09-18 17:13:06,245 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 17:17:04,605 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 17:18:04,591 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 17:18:08,318 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-18 17:18:08,320 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 3.79s
+2025-09-18 17:18:08,320 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-18 17:18:08,320 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '', 'title': 'Produto não identificado', 'brand': None, 'category': '', 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
+2025-09-18 17:18:08,321 - main - ERROR - Erro interno no processamento: 7 validation errors for IdentificationResult
+product.gtin
+  Value error, GTIN deve ter 8, 12, 13 ou 14 dígitos [type=value_error, input_value='', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error
+product.category
+  Input should be 'Alimentos', 'Bebidas', 'Limpeza', 'Higiene', 'Eletrônicos', 'Vestuário', 'Automotivo', 'Construção' or 'Outros' [type=enum, input_value='', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/enum
+product.ncm
+  Value error, NCM deve estar no formato 9999.99.99 [type=value_error, input_value='', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error
+product.cest
+  Value error, CEST deve estar no formato 99.999.99 [type=value_error, input_value='', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error
+product.id
+  Field required [type=missing, input_value={'gtin': '', 'title': 'Pr...65576', 'success': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+product.created_at
+  Field required [type=missing, input_value={'gtin': '', 'title': 'Pr...65576', 'success': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+product.updated_at
+  Field required [type=missing, input_value={'gtin': '', 'title': 'Pr...65576', 'success': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 209, in identify_image
+    return IdentificationResult(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 7 validation errors for IdentificationResult
+product.gtin
+  Value error, GTIN deve ter 8, 12, 13 ou 14 dígitos [type=value_error, input_value='', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error
+product.category
+  Input should be 'Alimentos', 'Bebidas', 'Limpeza', 'Higiene', 'Eletrônicos', 'Vestuário', 'Automotivo', 'Construção' or 'Outros' [type=enum, input_value='', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/enum
+product.ncm
+  Value error, NCM deve estar no formato 9999.99.99 [type=value_error, input_value='', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error
+product.cest
+  Value error, CEST deve estar no formato 99.999.99 [type=value_error, input_value='', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error
+product.id
+  Field required [type=missing, input_value={'gtin': '', 'title': 'Pr...65576', 'success': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+product.created_at
+  Field required [type=missing, input_value={'gtin': '', 'title': 'Pr...65576', 'success': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+product.updated_at
+  Field required [type=missing, input_value={'gtin': '', 'title': 'Pr...65576', 'success': True}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-09-18 17:34:27,240 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 17:34:46,611 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 17:34:49,120 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-18 17:34:49,122 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 2.57s
+2025-09-18 17:34:49,122 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-18 17:34:49,122 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '', 'title': 'Produto não identificado', 'brand': None, 'category': '', 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
+2025-09-18 17:34:49,123 - main - ERROR - Erro interno no processamento: name 'IdentifiedProduct' is not defined
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 164, in identify_image
+    identified_product = IdentifiedProduct(
+                         ^^^^^^^^^^^^^^^^^
+NameError: name 'IdentifiedProduct' is not defined
+2025-09-18 17:37:50,781 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 17:38:00,474 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 17:38:03,411 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-18 17:38:03,413 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 3.01s
+2025-09-18 17:38:03,413 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-18 17:38:03,414 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '', 'title': 'Produto não identificado', 'brand': None, 'category': '', 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
+2025-09-18 17:38:03,414 - main - ERROR - Erro interno no processamento: 1 validation error for IdentifiedProduct
+category
+  Input should be 'Alimentos', 'Bebidas', 'Limpeza', 'Higiene', 'Eletrônicos', 'Vestuário', 'Automotivo', 'Construção' or 'Outros' [type=enum, input_value='', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/enum
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 164, in identify_image
+    identified_product = IdentifiedProduct(
+                         ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentifiedProduct
+category
+  Input should be 'Alimentos', 'Bebidas', 'Limpeza', 'Higiene', 'Eletrônicos', 'Vestuário', 'Automotivo', 'Construção' or 'Outros' [type=enum, input_value='', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/enum
+2025-09-18 17:40:51,870 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 17:41:07,894 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 17:41:33,479 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 17:42:47,359 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 17:47:30,732 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 17:47:43,989 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 17:47:47,745 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-18 17:47:47,747 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 3.82s
+2025-09-18 17:47:47,747 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-18 17:47:47,748 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '', 'title': 'Produto não identificado', 'brand': None, 'category': '', 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
+2025-09-18 17:47:47,748 - main - ERROR - Erro interno no processamento: 1 validation error for IdentifiedProduct
+category
+  Input should be 'Alimentos', 'Bebidas', 'Limpeza', 'Higiene', 'Eletrônicos', 'Vestuário', 'Automotivo', 'Construção' or 'Outros' [type=enum, input_value='', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/enum
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 164, in identify_image
+    identified_product = IdentifiedProduct(
+                         ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentifiedProduct
+category
+  Input should be 'Alimentos', 'Bebidas', 'Limpeza', 'Higiene', 'Eletrônicos', 'Vestuário', 'Automotivo', 'Construção' or 'Outros' [type=enum, input_value='', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/enum
+2025-09-18 17:55:44,694 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 18:02:35,509 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 18:04:34,166 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 18:05:51,917 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 18:06:24,808 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 18:06:59,956 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 18:07:04,472 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-18 18:07:04,474 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 4.58s
+2025-09-18 18:07:04,474 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-18 18:07:04,475 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '', 'title': 'Produto não identificado', 'brand': None, 'category': None, 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
+2025-09-18 18:07:04,478 - app.database - ERROR - Erro durante operação no banco: UNIQUE constraint failed: processing_logs.image_hash
+2025-09-18 18:07:04,478 - app.database - ERROR - Erro de banco de dados: UNIQUE constraint failed: processing_logs.image_hash
+2025-09-18 18:07:04,478 - app.database - ERROR - Erro ao registrar log de processamento: UNIQUE constraint failed: processing_logs.image_hash
+2025-09-18 18:13:24,904 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 18:14:04,255 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 18:16:51,261 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 18:16:54,404 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-18 18:16:54,406 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 3.20s
+2025-09-18 18:16:54,406 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-18 18:16:54,407 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '', 'title': 'Produto não identificado', 'brand': None, 'category': None, 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}

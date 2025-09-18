@@ -1,5 +1,4 @@
 # backend/app/services/product_service.py
-
 import logging
 import re
 import sqlite3
@@ -7,24 +6,27 @@ from typing import Dict, List, Optional
 
 from app.services.cosmos_service import fetch_product_by_gtin
 from app.services.vision_service import clean_text
+# Importar para verificar se a chave existe
+from app.core.config import COSMOS_API_KEY
 
 logger = logging.getLogger(__name__)
-
-# --- Constantes de Heurística ---
 
 EXCLUSION_WORDS = [
     'ingredientes', 'contém', 'glúten', 'lactose', 'informação', 'nutricional',
     'validade', 'fabricado', 'lote', 'peso', 'líquido', 'neto', 'indústria',
     'brasileira', 'conservar', 'agite', 'usar', 'manter', 'ambiente', 'não',
-    'congelar', 'valor', 'energético', 'diário', 'valores', 'referência'
+    'congelar', 'valor', 'energético', 'diário', 'valores', 'referência',
+    'produto', 'registro', 'ms', 'sac', 'consumidor', 'embalagem'
 ]
 
 CATEGORY_KEYWORDS = {
-    'Alimentos': ['arroz', 'feijão', 'açúcar', 'café', 'óleo', 'macarrão', 'farinha'],
-    'Bebidas': ['refrigerante', 'suco', 'água', 'cerveja', 'vinho', 'energético'],
-    'Limpeza': ['sabão', 'detergente', 'amaciante', 'água sanitária', 'desinfetante'],
-    'Higiene': ['shampoo', 'sabonete', 'pasta dental', 'desodorante'],
-    'Laticínios': ['leite', 'queijo', 'iogurte', 'manteiga', 'requeijão']
+    'Alimentos': ['biscoito', 'bolacha', 'wafer', 'chocolate', 'snack', 'doce', 'bombom', 'recheado', 'brigadeiro'],
+    'Bebidas': ['refrigerante', 'suco', 'água', 'cerveja', 'vinho', 'energético', 'refresco'],
+    'Limpeza': ['sabão', 'detergente', 'amaciante', 'água sanitária', 'desinfetante', 'limpeza'],
+    'Higiene': ['shampoo', 'sabonete', 'pasta dental', 'desodorante', 'higiene'],
+    'Laticínios': ['leite', 'queijo', 'iogurte', 'manteiga', 'requeijão', 'laticínio'],
+    'Padaria': ['pão', 'bolo', 'rosquinha', 'croissant', 'bisnaga'],
+    'Carnes': ['carne', 'frango', 'peixe', 'bovina', 'suína', 'aves']
 }
 
 # --- Funções Auxiliares de Análise ---
@@ -43,6 +45,51 @@ def _find_gtin_in_text(text: str) -> Optional[str]:
     return None
 
 
+def _is_valid_gtin13(gtin: str) -> bool:
+    """Valida o dígito verificador do GTIN-13."""
+    if len(gtin) != 13 or not gtin.isdigit():
+        return False
+
+    total = 0
+    for i, digit in enumerate(gtin[:-1]):
+        num = int(digit)
+        total += num * (3 if i % 2 == 0 else 1)
+
+    check_digit = (10 - (total % 10)) % 10
+    return check_digit == int(gtin[-1])
+
+
+def _extract_product_name(text: str, gtin: str = None) -> str:
+    """Extrai o nome do produto do texto, removendo o GTIN e informações irrelevantes."""
+    if gtin:
+        # Remove o GTIN do texto
+        text = text.replace(gtin, '')
+
+    lines = [line.strip() for line in text.split('\n') if line.strip()]
+
+    # Remove linhas com palavras de exclusão
+    filtered_lines = []
+    for line in lines:
+        if not any(excl_word in line.lower() for excl_word in EXCLUSION_WORDS):
+            if len(line) > 5 and re.search(r'[a-zA-Z]', line):
+                filtered_lines.append(line)
+
+    if filtered_lines:
+        # Retorna a linha mais longa (provavelmente o nome do produto)
+        return max(filtered_lines, key=len)
+
+    return "Produto não identificado"
+
+
+def _infer_category(text: str) -> str:
+    """Infere a categoria do produto com base no texto."""
+    text_lower = text.lower()
+    for category, keywords in CATEGORY_KEYWORDS.items():
+        if any(keyword in text_lower for keyword in keywords):
+            return category
+    return ""
+
+
 def _infer_data_from_text(text: str, brand_from_logo: Optional[str]) -> Dict:
     """Usa heurísticas para adivinhar informações do produto quando o GTIN falha."""
     result = {'title': None, 'brand': brand_from_logo, 'category': None}
@@ -57,21 +104,16 @@ def _infer_data_from_text(text: str, brand_from_logo: Optional[str]) -> Dict:
         text_for_analysis = re.sub(
             result['brand'], '', text_for_analysis, flags=re.IGNORECASE)
 
-    # Pega a linha mais longe e que contém letras como o candidato a título.
+    # Pega a linha mais longa e que contém letras como o candidato a título.
     clean_lines = [line for line in text_for_analysis.split(
         '\n') if len(line) > 5 and re.search('[a-zA-Z]', line)]
     if clean_lines:
         result['title'] = max(clean_lines, key=len)
 
     # Inferir categoria
-    for category, keywords in CATEGORY_KEYWORDS.items():
-        if any(keyword in text.lower() for keyword in keywords):
-            result['category'] = category
-            break
+    result['category'] = _infer_category(text)
 
     return result
-
-# --- Função Principal do Serviço (O Cérebro) ---
 
 
 def intelligent_text_analysis(text: str, detected_logos: List[str], db: sqlite3.Connection) -> Dict:
@@ -81,6 +123,7 @@ def intelligent_text_analysis(text: str, detected_logos: List[str], db: sqlite3.
     """
     # ETAPA 1: TENTAR A "FONTE DA VERDADE" (GTIN)
     detected_gtin = _find_gtin_in_text(text)
+
     if detected_gtin:
         logger.info(
             f"Prioridade 1: GTIN detectado ({detected_gtin}). Iniciando validação.")
@@ -96,55 +139,79 @@ def intelligent_text_analysis(text: str, detected_logos: List[str], db: sqlite3.
                 f"Sucesso! GTIN {detected_gtin} encontrado no cache local.")
             return {"confidence": 0.99, "detected_patterns": ["gtin_db_lookup"], **dict(product_from_db)}
 
-        # 1.2: Se não está no cache, buscar na API externa (Cosmos).
-        cosmos_data = fetch_product_by_gtin(detected_gtin)
-        if cosmos_data:
-            # CORREÇÃO: cosmos_data já vem formatado corretamente como strings
-            parsed_data = {
-                "gtin": detected_gtin,
-                "title": cosmos_data.get("description", ""),
-                "brand": cosmos_data.get("brand", ""),
-                "category": cosmos_data.get("category", ""),
-                "ncm": cosmos_data.get("ncm", ""),
-                "cest": cosmos_data.get("cest", ""),
-                "confidence": 0.99,
-                "detected_patterns": ["gtin_api_lookup"]
-            }
+        # 1.2: Se não está no cache, verificar se podemos buscar na API externa (Cosmos)
+        if COSMOS_API_KEY:  # Só tenta Cosmos se a chave estiver configurada
+            logger.info(f"Consultando API Cosmos para GTIN: {detected_gtin}")
+            cosmos_data = fetch_product_by_gtin(detected_gtin)
 
-            try:
-                cursor.execute(
-                    "INSERT INTO products (gtin, title, brand, category, ncm, cest, confidence) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    (
-                        parsed_data['gtin'],
-                        parsed_data['title'],
-                        parsed_data['brand'],
-                        parsed_data['category'],
-                        parsed_data['ncm'],
-                        parsed_data['cest'],
-                        parsed_data['confidence']
+            if cosmos_data and cosmos_data.get("description"):
+                # CORREÇÃO: cosmos_data já vem formatado corretamente como strings
+                parsed_data = {
+                    "gtin": detected_gtin,
+                    "title": cosmos_data.get("description", ""),
+                    "brand": cosmos_data.get("brand", ""),
+                    "category": cosmos_data.get("category", ""),
+                    "ncm": cosmos_data.get("ncm", ""),
+                    "cest": cosmos_data.get("cest", ""),
+                    "confidence": 0.99,
+                    "detected_patterns": ["gtin_api_lookup"]
+                }
+
+                try:
+                    cursor.execute(
+                        "INSERT INTO products (gtin, title, brand, category, ncm, cest, confidence) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                        (
+                            parsed_data['gtin'],
+                            parsed_data['title'],
+                            parsed_data['brand'],
+                            parsed_data['category'],
+                            parsed_data['ncm'],
+                            parsed_data['cest'],
+                            parsed_data['confidence']
+                        )
                     )
-                )
-                db.commit()
-                logger.info(
-                    f"Novo produto com GTIN {detected_gtin} salvo no cache local.")
-            except sqlite3.Error as e:
-                logger.error(f"Erro ao salvar produto do Cosmos no DB: {e}")
-            return parsed_data
+                    db.commit()
+                    logger.info(
+                        f"Novo produto com GTIN {detected_gtin} salvo no cache local.")
+                except sqlite3.Error as e:
+                    logger.error(
+                        f"Erro ao salvar produto do Cosmos no DB: {e}")
+                return parsed_data
+            else:
+                logger.warning("API Cosmos não retornou dados válidos")
+        else:
+            logger.warning(
+                "Chave da API Cosmos não configurada. Pulando consulta.")
 
-    # ETAPA 2: INFERÊNCIA INTELIGENTE (SE O GTIN FALHOU)
+    # ETAPA 2: INFERÊNCIA INTELIGENTE (SE O GTIN FALHOU OU COSMOS NÃO RETORNOU DADOS)
     logger.info(
-        "Prioridade 2: GTIN não validado. Partindo para a inferência por logo e texto.")
+        "Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.")
 
-    brand_from_logo = detected_logos[0].upper() if detected_logos else None
+    brand_from_logo = detected_logos[0] if detected_logos else None
 
     # Usa a função auxiliar para inferir dados a partir do texto e do logo.
     inferred_data = _infer_data_from_text(text, brand_from_logo)
 
+    # Se não conseguiu inferir um título, tenta extrair o nome do produto
+    if not inferred_data.get('title'):
+        inferred_data['title'] = _extract_product_name(text, detected_gtin)
+
+    # Se não conseguiu inferir uma categoria, tenta inferir novamente
+    if not inferred_data.get('category'):
+        inferred_data['category'] = _infer_category(text)
+
+    # Garanta que a categoria seja None se não for identificada (em vez de string vazia)
+    category = inferred_data.get('category')
+    if category == "":
+        category = None
+
     result = {
-        'gtin': detected_gtin,
-        'title': inferred_data.get('title'),
-        'brand': inferred_data.get('brand'),
-        'category': inferred_data.get('category'),
+        'gtin': detected_gtin or "",
+        'title': inferred_data.get('title', 'Produto não identificado'),
+        'brand': inferred_data.get('brand', ''),
+        'category': category,  # Usamos a variável tratada
+        'ncm': "",
+        'cest': "",
         'confidence': 0.80 if brand_from_logo else 0.60,
         'detected_patterns': ['logo_detection' if brand_from_logo else 'text_heuristic']
     }
@@ -155,4 +222,6 @@ def intelligent_text_analysis(text: str, detected_logos: List[str], db: sqlite3.
     if result['brand']:
         result['brand'] = clean_text(result['brand'])
 
+    logger.info(f"Resultado da inferência: {result}")
     return result
+# --- FIM DO ARQUIVO product_service.py ---
