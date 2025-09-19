@@ -147,3 +147,164 @@ category
 2025-09-18 18:16:54,406 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 3.20s
 2025-09-18 18:16:54,406 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
 2025-09-18 18:16:54,407 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '', 'title': 'Produto não identificado', 'brand': None, 'category': None, 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
+2025-09-18 22:25:28,037 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 22:26:04,406 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 22:26:07,014 - app.services.vision_service - INFO - Vision API: Texto extraído (407 chars), Logos: 0, Labels: 6
+2025-09-18 22:26:07,016 - main - INFO - Dados extraídos - Texto: 407 chars, Logos: [], Sucesso: True, Tempo: 2.70s
+2025-09-18 22:26:07,017 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-18 22:26:07,017 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '', 'title': 'CONTIENE AROMATIZANTE SINTETICO IDENTICO AL NATURAL', 'brand': None, 'category': 'Alimentos', 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
+2025-09-18 22:47:33,193 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 23:14:05,674 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 23:14:26,439 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 23:14:29,857 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-18 23:14:29,859 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 3.48s
+2025-09-18 23:14:29,860 - main - ERROR - Erro interno no processamento: intelligent_text_analysis() takes 3 positional arguments but 7 were given
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 162, in identify_image
+    product_info = intelligent_text_analysis(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: intelligent_text_analysis() takes 3 positional arguments but 7 were given
+2025-09-18 23:15:39,409 - main - INFO - Iniciando aplicação CadVision API
+2025-09-18 23:15:39,412 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 23:15:39,412 - main - INFO - Banco de dados inicializado
+2025-09-18 23:16:16,203 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 23:16:19,391 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-18 23:16:19,393 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 3.25s
+2025-09-18 23:16:19,393 - main - ERROR - Erro interno no processamento: intelligent_text_analysis() takes 3 positional arguments but 7 were given
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 163, in identify_image
+    product_info = intelligent_text_analysis(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: intelligent_text_analysis() takes 3 positional arguments but 7 were given
+2025-09-18 23:17:21,065 - main - INFO - Encerrando aplicação CadVision API
+2025-09-18 23:17:22,852 - main - INFO - Iniciando aplicação CadVision API
+2025-09-18 23:17:22,856 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 23:17:22,856 - main - INFO - Banco de dados inicializado
+2025-09-18 23:18:08,111 - main - INFO - Encerrando aplicação CadVision API
+2025-09-18 23:18:09,861 - main - INFO - Iniciando aplicação CadVision API
+2025-09-18 23:18:09,864 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 23:18:09,864 - main - INFO - Banco de dados inicializado
+2025-09-18 23:18:14,809 - main - INFO - Encerrando aplicação CadVision API
+2025-09-18 23:18:18,360 - main - INFO - Iniciando aplicação CadVision API
+2025-09-18 23:18:18,363 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 23:18:18,364 - main - INFO - Banco de dados inicializado
+2025-09-18 23:18:37,682 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 23:18:42,199 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-18 23:18:42,201 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 4.58s
+2025-09-18 23:18:42,201 - main - ERROR - Erro interno no processamento: intelligent_text_analysis() takes 4 positional arguments but 7 were given
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 163, in identify_image
+    product_info = intelligent_text_analysis(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: intelligent_text_analysis() takes 4 positional arguments but 7 were given
+2025-09-18 23:25:45,087 - main - INFO - Encerrando aplicação CadVision API
+2025-09-18 23:25:46,872 - main - INFO - Iniciando aplicação CadVision API
+2025-09-18 23:25:46,875 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 23:25:46,875 - main - INFO - Banco de dados inicializado
+2025-09-18 23:26:07,400 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 23:26:11,077 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-18 23:26:11,079 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 3.74s
+2025-09-18 23:26:11,079 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-18 23:26:11,080 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '', 'title': 'Produto não identificado', 'brand': None, 'category': None, 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
+2025-09-18 23:32:52,663 - main - INFO - Encerrando aplicação CadVision API
+2025-09-18 23:32:54,424 - main - INFO - Iniciando aplicação CadVision API
+2025-09-18 23:32:54,429 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 23:32:54,429 - main - INFO - Banco de dados inicializado
+2025-09-18 23:34:26,821 - main - INFO - Encerrando aplicação CadVision API
+2025-09-18 23:34:28,541 - main - INFO - Iniciando aplicação CadVision API
+2025-09-18 23:34:28,544 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 23:34:28,545 - main - INFO - Banco de dados inicializado
+2025-09-18 23:34:30,809 - main - INFO - Encerrando aplicação CadVision API
+2025-09-18 23:34:34,786 - main - INFO - Iniciando aplicação CadVision API
+2025-09-18 23:34:34,789 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 23:34:34,789 - main - INFO - Banco de dados inicializado
+2025-09-18 23:35:11,863 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 23:35:14,971 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-18 23:35:14,971 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-18 23:35:14,971 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-18 23:35:14,973 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 3.16s
+2025-09-18 23:35:14,973 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7891340365576). Iniciando validação.
+2025-09-18 23:35:14,974 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7891340365576
+2025-09-18 23:35:16,590 - app.services.product_service - INFO - Novo produto com GTIN 7891340365576 salvo no cache local.
+2025-09-18 23:36:28,522 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 23:36:31,734 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-18 23:36:31,734 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-18 23:36:31,735 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-18 23:36:31,735 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 3.27s
+2025-09-18 23:36:31,735 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7891340365576). Iniciando validação.
+2025-09-18 23:36:31,736 - app.services.product_service - INFO - Sucesso! GTIN 7891340365576 encontrado no cache local.
+2025-09-18 23:40:55,113 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 23:40:58,855 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-18 23:40:58,855 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-18 23:40:58,855 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-18 23:40:58,856 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 3.80s
+2025-09-18 23:40:58,856 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7891340365576). Iniciando validação.
+2025-09-18 23:40:58,857 - app.services.product_service - INFO - Sucesso! GTIN 7891340365576 encontrado no cache local.
+2025-09-18 23:43:50,930 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 23:43:52,627 - app.services.vision_service - INFO - Vision API: Texto extraído (20 chars), Logos: 0, Labels: 2
+2025-09-18 23:43:52,627 - app.services.vision_service - INFO - Texto bruto: '78980554208111
+a
+eld' -> Texto limpo para análise: '78980554208111'
+2025-09-18 23:43:52,627 - app.services.vision_service - INFO - GTIN validado com sucesso: 7898055420811
+2025-09-18 23:43:52,628 - main - INFO - Dados extraídos - Texto: 20 chars, Logos: [], Sucesso: True, Tempo: 1.74s
+2025-09-18 23:43:52,628 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7898055420811). Iniciando validação.
+2025-09-18 23:43:52,629 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7898055420811
+2025-09-18 23:43:54,042 - app.services.product_service - INFO - Novo produto com GTIN 7898055420811 salvo no cache local.
+2025-09-18 23:46:09,374 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 23:46:12,258 - app.services.vision_service - INFO - Vision API: Texto extraído (34 chars), Logos: 0, Labels: 1
+2025-09-18 23:46:12,258 - app.services.vision_service - INFO - Texto bruto: 'MEDIO
+CADO NO BRASIL
+7909961682207' -> Texto limpo para análise: '7909961682207'
+2025-09-18 23:46:12,259 - app.services.vision_service - INFO - GTIN validado com sucesso: 7909961682207
+2025-09-18 23:46:12,259 - main - INFO - Dados extraídos - Texto: 34 chars, Logos: [], Sucesso: True, Tempo: 2.95s
+2025-09-18 23:46:12,259 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7909961682207). Iniciando validação.
+2025-09-18 23:46:12,260 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7909961682207
+2025-09-18 23:46:13,763 - app.services.product_service - WARNING - API Cosmos não retornou dados válidos
+2025-09-18 23:46:13,763 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-18 23:46:13,764 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '7909961682207', 'title': 'CADO NO BRASIL', 'brand': None, 'category': None, 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
+2025-09-18 23:47:15,992 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 23:47:19,619 - app.services.vision_service - INFO - Vision API: Texto extraído (468 chars), Logos: 1, Labels: 7
+2025-09-18 23:47:19,619 - app.services.vision_service - INFO - Texto bruto: 'Experimente.
+Quer mais
+informações e
+dicas de receitas
+deliciosas?
+É só acessar o
+QR Code
+ao lado.
+MANTER REFRIGERADO EM
+MPERATURAS ENTRE 5°C E 16°C.
+ÓS ABERTO, CONSUMIR EM ATÉ
+O DIAS, DENTRO DO PRAZO DE
+VALIDADE.
+77838 V20 GEN
+PP
+EMBALAGEM RECICLAVEL
+7 894904 571949
+ZIDO POR: SEARA ALIMENTOS LTDA. (G) ROD. JORGE LACERDA, KM 20, N°
+GASPAR-SC BRASIL CNPJ 02.914.460/0448-75 (J) AV. ALEXANDRE MACKENZIE,
+SORIOS GRASH CNPL02 914 469/0446-03 (S) AV. PORTUÁRIA, S/N°
+STRA' -> Texto limpo para análise: '51677838207894904571949200291446004487502914469044603'
+2025-09-18 23:47:19,620 - app.services.vision_service - INFO - GTIN validado com sucesso: 4904571949200
+2025-09-18 23:47:19,621 - main - INFO - Dados extraídos - Texto: 468 chars, Logos: ['Stylenanda'], Sucesso: True, Tempo: 3.68s
+2025-09-18 23:47:19,621 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (4904571949200). Iniciando validação.
+2025-09-18 23:47:19,622 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 4904571949200
+2025-09-18 23:47:21,077 - app.services.product_service - WARNING - API Cosmos não retornou dados válidos
+2025-09-18 23:47:21,078 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-18 23:47:21,078 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '4904571949200', 'title': 'GASPAR-SC BRASIL CNPJ 02.914.4600448-75 (J) AV. ALEXANDRE MACKENZIE,', 'brand': 'Stylenanda', 'category': None, 'ncm': '', 'cest': '', 'confidence': 0.8, 'detected_patterns': ['logo_detection']}
+2025-09-18 23:47:40,388 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-18 23:47:43,861 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-18 23:47:43,871 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-18 23:47:43,871 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 3.53s
+2025-09-18 23:47:43,871 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-18 23:47:43,872 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7896022200534
+2025-09-18 23:47:45,254 - app.services.product_service - INFO - Novo produto com GTIN 7896022200534 salvo no cache local.
+2025-09-18 23:49:05,937 - main - INFO - Encerrando aplicação CadVision API
+2025-09-18 23:49:07,692 - main - INFO - Iniciando aplicação CadVision API
+2025-09-18 23:49:07,696 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 23:49:07,696 - main - INFO - Banco de dados inicializado
+2025-09-18 23:49:10,188 - main - INFO - Encerrando aplicação CadVision API
+2025-09-18 23:49:11,995 - main - INFO - Iniciando aplicação CadVision API
+2025-09-18 23:49:11,998 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-18 23:49:11,998 - main - INFO - Banco de dados inicializado
+2025-09-18 23:49:13,707 - main - INFO - Encerrando aplicação CadVision API

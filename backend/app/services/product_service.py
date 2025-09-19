@@ -116,13 +116,11 @@ def _infer_data_from_text(text: str, brand_from_logo: Optional[str]) -> Dict:
     return result
 
 
-def intelligent_text_analysis(text: str, detected_logos: List[str], db: sqlite3.Connection) -> Dict:
+def intelligent_text_analysis(text: str, detected_gtin: Optional[str], detected_logos: List[str], db: sqlite3.Connection) -> Dict:
     """
     Executa o pipeline de análise inteligente em cascata.
     Prioridade: 1º GTIN (Cache Local -> API Externa), 2º Inferência (Logo -> Heurísticas).
     """
-    # ETAPA 1: TENTAR A "FONTE DA VERDADE" (GTIN)
-    detected_gtin = _find_gtin_in_text(text)
 
     if detected_gtin:
         logger.info(

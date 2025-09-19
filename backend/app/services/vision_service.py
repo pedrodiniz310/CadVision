@@ -26,27 +26,6 @@ except ImportError:
 logger = logging.getLogger(__name__)
 vision_client = None
 
-# Configurar cache
-REDIS_AVAILABLE = False
-redis_client = None
-
-try:
-    import redis
-    # Tenta conectar com configurações padrão
-    redis_client = redis.Redis(
-        host='localhost', port=6379, db=0, socket_timeout=1)
-    # Testa a conexão
-    redis_client.ping()
-    REDIS_AVAILABLE = True
-    logger.info(" Cache Redis disponível")
-except ImportError:
-    logger.warning("Redis não está instalado. Execute: pip install redis")
-except redis.ConnectionError:
-    logger.warning("Redis não está disponível - servidor não encontrado")
-except Exception as e:
-    logger.warning(f"Redis não disponível: {e}")
-    REDIS_AVAILABLE = False
-
 try:
     credentials = service_account.Credentials.from_service_account_file(
         GOOGLE_KEY_PATH)
@@ -79,38 +58,6 @@ CATEGORY_KEYWORDS = {
 def get_cache_key(image_bytes: bytes) -> str:
     """Gera uma chave única para cache baseada no conteúdo da imagem."""
     return hashlib.md5(image_bytes).hexdigest()
-
-
-def cache_result(key: str, result: Dict, ttl_hours: int = 24):
-    """Armazena resultado no cache."""
-    if not REDIS_AVAILABLE:
-        return
-
-    try:
-        redis_client.setex(
-            key,
-            timedelta(hours=ttl_hours),
-            json.dumps(result)
-        )
-        logger.debug(f"Resultado armazenado em cache com chave: {key}")
-    except Exception as e:
-        logger.warning(f"Erro ao armazenar no cache: {e}")
-
-
-def get_cached_result(key: str) -> Optional[Dict]:
-    """Recupera resultado do cache."""
-    if not REDIS_AVAILABLE:
-        return None
-
-    try:
-        cached = redis_client.get(key)
-        if cached:
-            logger.debug(f"Resultado recuperado do cache: {key}")
-            return json.loads(cached)
-    except Exception as e:
-        logger.warning(f"Erro ao recuperar do cache: {e}")
-
-    return None
 
 
 def enhance_image_for_ocr(image_bytes: bytes) -> bytes:
@@ -167,14 +114,13 @@ def enhance_image_for_ocr(image_bytes: bytes) -> bytes:
         return image_bytes
 
 
+# SUBSTITUA a função extract_vision_data por esta:
+
 def extract_vision_data(image_bytes: bytes) -> Dict:
     """
     Extrai texto, logos e outros dados de uma imagem usando a API do Google Vision.
     """
-    cache_key = get_cache_key(image_bytes)
-    cached_result = get_cached_result(cache_key)
-    if cached_result:
-        return cached_result
+    # Linha de verificação de cache removida daqui
 
     if not vision_client:
         logger.warning("Serviço do Vision não está disponível.")
@@ -255,8 +201,7 @@ def extract_vision_data(image_bytes: bytes) -> Dict:
             'success': len(raw_text) > 10 or len(detected_logos) > 0 or len(detected_labels) > 0
         }
 
-        # Armazena no cache
-        cache_result(cache_key, result)
+        # Linha de armazenamento em cache removida daqui
 
         return result
 
@@ -323,40 +268,34 @@ def extract_gtin_from_text(text: str) -> str:
     if not text:
         return ""
 
+    # --- LINHA DA CORREÇÃO ---
+    # Remove todos os caracteres que não são dígitos (espaços, letras, etc.)
+    cleaned_text = re.sub(r'\D', '', text)
+    # -------------------------
+
+    logger.info(
+        f"Texto bruto: '{text}' -> Texto limpo para análise: '{cleaned_text}'")
+
     # Padrões para GTIN (8, 12, 13, 14 dígitos)
+    # Agora eles vão funcionar no texto limpo
     patterns = [
-        r'\b(\d{8})\b',    # GTIN-8
-        r'\b(\d{12})\b',   # GTIN-12
-        r'\b(\d{13})\b',   # GTIN-13 (EAN)
-        r'\b(\d{14})\b'    # GTIN-14
+        r'(\d{13})',   # GTIN-13 (EAN) - Prioridade
+        r'(\d{12})',   # GTIN-12 (UPC)
+        r'(\d{14})',   # GTIN-14
+        r'(\d{8})'     # GTIN-8
     ]
 
-    # Também procura por padrões com prefixos comuns
-    prefix_patterns = [
-        r'(?i)(ean|gtin|code| código)[:\s]*(\d{8,14})',
-        r'(?i)(ean|gtin)[-\s]?(\d{8,14})'
-    ]
-
-    # Primeiro verifica padrões com prefixos
-    for pattern in prefix_patterns:
-        matches = re.findall(pattern, text)
-        for match in matches:
-            if isinstance(match, tuple):
-                # Pega a parte numérica
-                gtin_candidate = match[1]
-            else:
-                gtin_candidate = match
-
-            if validate_gtin(gtin_candidate):
-                return gtin_candidate
-
-    # Depois verifica padrões numéricos simples
     for pattern in patterns:
-        matches = re.findall(pattern, text)
+        # Busca todas as possíveis sequências no texto limpo
+        matches = re.findall(pattern, cleaned_text)
         for gtin_candidate in matches:
+            # Valida cada candidato com o dígito verificador
             if validate_gtin(gtin_candidate):
+                logger.info(f"GTIN validado com sucesso: {gtin_candidate}")
                 return gtin_candidate
 
+    logger.warning(
+        f"Nenhum GTIN válido encontrado no texto limpo: '{cleaned_text}'")
     return ""
 
 

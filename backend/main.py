@@ -53,6 +53,7 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan
 )
 
 # --- MIDDLEWARES ---
@@ -129,6 +130,7 @@ async def identify_image(
         raw_text = vision_data.get('raw_text', '')
         detected_logos = [logo['description']
                           for logo in vision_data.get('detected_logos', [])]
+        gtin_from_vision = vision_data.get('gtin')
         success = vision_data.get('success', False)
 
         processing_time = time.time() - start_time
@@ -159,7 +161,7 @@ async def identify_image(
             )
 
         # 3. Chama o serviço de produto para executar a análise
-        product_info = intelligent_text_analysis(raw_text, detected_logos, db)
+        product_info = intelligent_text_analysis(raw_text, gtin_from_vision, detected_logos, db)
 
         # 4. Converte para o modelo IdentifiedProduct com fallbacks
         identified_product = IdentifiedProduct(
@@ -365,11 +367,6 @@ async def health_check():
     }
 
 # Adicione esta linha para inicializar o banco de dados na inicialização
-
-
-@app.on_event("startup")
-async def startup_event():
-    init_db()
 
 # --- SERVIR O FRONTEND ---
 # Define o caminho para a pasta 'frontend', que está na pasta-pai da pasta 'backend'
