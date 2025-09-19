@@ -11,6 +11,7 @@ const STATE = {
   products: [],
   lastImageFile: null,
   lastAIResult: null,
+  lastImageHash: null,
   currentPage: "identify",
   isLoading: false,
   connectionStatus: "checking",
@@ -49,6 +50,72 @@ const Logger = {
     if (logsContent) logsContent.textContent = "";
   }
 };
+
+/**
+ * Exibe um modal de confirmação profissional em vez do confirm() padrão.
+ * @param {string} title - O título do modal.
+ * @param {string} message - A mensagem de confirmação.
+ * @returns {Promise<boolean>} - Resolve como true se o usuário confirmar, false caso contrário.
+ */
+function showConfirmModal({ title, message, okText = "Confirmar", cancelText = "Cancelar", okClass = "btn-danger" }) {
+  // Pega os elementos do modal do DOM
+  const overlay = $('#confirmOverlay');
+  const modal = $('#confirmModal');
+  const titleEl = $('#confirmTitle');
+  const messageEl = $('#confirmMessage');
+  const okBtn = $('#confirmOk');
+  const cancelBtn = $('#confirmCancel');
+
+  // Preenche o conteúdo do modal
+  titleEl.textContent = title;
+  messageEl.innerHTML = message; // Usa innerHTML para permitir quebras de linha com <br>
+  okBtn.textContent = okText;
+  cancelBtn.textContent = cancelText;
+
+  // Reseta e aplica a classe de estilo do botão OK
+  okBtn.className = `btn ${okClass}`;
+
+  // Mostra o modal com animação
+  overlay.style.display = 'flex';
+  setTimeout(() => overlay.classList.add('visible'), 10);
+
+  return new Promise(resolve => {
+    // Handler para os botões
+    const handleOk = () => {
+      closeModal();
+      resolve(true);
+    };
+
+    const handleCancel = () => {
+      closeModal();
+      resolve(false);
+    };
+
+    // Função para fechar o modal e remover listeners
+    const closeModal = () => {
+      overlay.classList.remove('visible');
+      // Espera a animação de fade-out terminar para esconder o overlay
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        okBtn.removeEventListener('click', handleOk);
+        cancelBtn.removeEventListener('click', handleCancel);
+        overlay.removeEventListener('click', handleOverlayClick);
+      }, 300);
+    };
+
+    // Clicar fora do modal também fecha (cancela)
+    const handleOverlayClick = (event) => {
+      if (event.target === overlay) {
+        handleCancel();
+      }
+    };
+
+    // Adiciona os listeners de clique
+    okBtn.addEventListener('click', handleOk);
+    cancelBtn.addEventListener('click', handleCancel);
+    overlay.addEventListener('click', handleOverlayClick);
+  });
+}
 
 // Sistema de notificações
 function showNotification(message, type = "info", duration = 5000) {
@@ -128,6 +195,31 @@ function debounce(func, wait) {
     timeout = setTimeout(later, wait);
   };
 }
+/**
+ * Gerencia o estado de carregamento de um botão, mostrando um spinner.
+ * @param {HTMLElement} button O elemento do botão a ser modificado.
+ * @param {boolean} isLoading True para ativar o estado de carregamento, false para desativar.
+ * @param {string} [loadingText='Identificando...'] O texto para exibir ao lado do spinner.
+ */
+function setButtonLoadingState(button, isLoading, loadingText = 'Identificando...') {
+  if (!button) return;
+
+  if (isLoading) {
+    // Salva o conteúdo original do botão para poder restaurá-lo depois
+    button.dataset.originalContent = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = `
+      <i class="fas fa-spinner fa-spin"></i>
+      <span>${loadingText}</span>
+    `;
+  } else {
+    // Restaura o conteúdo original que salvamos
+    if (button.dataset.originalContent) {
+      button.innerHTML = button.dataset.originalContent;
+    }
+    button.disabled = false;
+  }
+}
 
 // ===== Inicialização =====
 document.addEventListener("DOMContentLoaded", () => {
@@ -201,6 +293,15 @@ function cacheDOMElements() {
   DOM.totalProducts = $("#totalProducts");
   DOM.totalAI = $("#totalAI");
 
+  // --- ADIÇÕES PARA OS FILTROS ---
+  DOM.filterCategory = $("#filterCategory");
+  DOM.filterBrand = $("#filterBrand");
+  DOM.filterSort = $("#filterSort");
+  DOM.productsPagination = $("#productsPagination");
+  DOM.paginationInfo = $("#paginationInfo");
+  DOM.btnPrevPage = $("#btnPrevPage");
+  DOM.btnNextPage = $("#btnNextPage");
+
   // Logs
   DOM.logsContent = $("#logsContent");
   DOM.btnClearLogs = $("#btnClearLogs");
@@ -244,6 +345,11 @@ function setupEventListeners() {
   // Logs
   DOM.btnClearLogs?.addEventListener("click", Logger.clear);
 
+  // --- LÓGICA PARA ATIVAR OS FILTROS DA PÁGINA DE PRODUTOS ---
+  DOM.filterCategory?.addEventListener('change', () => loadProducts(1));
+  DOM.filterBrand?.addEventListener('input', debounce(() => loadProducts(1), 500));
+  DOM.filterSort?.addEventListener('change', () => loadProducts(1));
+
   // Configurações
   $("#btnSaveSettings")?.addEventListener("click", saveSettings);
 
@@ -251,6 +357,32 @@ function setupEventListeners() {
   const searchInput = $("#searchProducts");
   if (searchInput) {
     searchInput.addEventListener("input", debounce(searchProducts, CONFIG.DEBOUNCE_DELAY));
+  }
+  // --- LÓGICA DO NOVO DROPDOWN DE EXPORTAÇÃO ---
+  const exportContainer = $('#exportContainer');
+  if (exportContainer) {
+    const exportButton = $('#btnExport');
+    const exportMenu = $('#exportMenu');
+
+    exportButton.addEventListener('click', () => {
+      exportContainer.classList.toggle('open');
+      exportMenu.classList.toggle('visible');
+    });
+
+    $$('.dropdown-item', exportMenu).forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const format = item.dataset.format;
+        exportProducts(format);
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!exportContainer.contains(e.target)) {
+        exportContainer.classList.remove('open');
+        exportMenu.classList.remove('visible');
+      }
+    });
   }
 }
 
@@ -341,10 +473,19 @@ function formatFileSize(bytes) {
 }
 
 async function processImageWithAI() {
-  if (!STATE.lastImageFile) return;
+  if (!STATE.lastImageFile) {
+    Logger.log("Nenhuma imagem selecionada para análise.", "warning");
+    return;
+  }
 
+  // Pega o elemento do botão para facilitar a leitura
+  const identifyButton = DOM.btnIdentify;
+
+  // --- INÍCIO DA MUDANÇA ---
+  // 1. Ativa o estado de carregamento ANTES de iniciar o processo
+  setButtonLoadingState(identifyButton, true, 'Identificando...');
   updateAIStatus("Analisando imagem...", "processing");
-  setLoadingState(DOM.btnIdentify, true, "Processando...");
+  // --- FIM DA MUDANÇA ---
 
   try {
     const formData = new FormData();
@@ -360,29 +501,57 @@ async function processImageWithAI() {
     if (!response.ok) {
       throw new Error(result.detail || result.message || `Erro ${response.status}`);
     }
+    // --- INÍCIO DA NOVA LÓGICA PARA DUPLICATAS ---
+    // Em frontend/js/script.js, dentro de processImageWithAI
 
-    // Verificar se a API retornou a estrutura esperada
+    // --- INÍCIO DA LÓGICA CORRIGIDA PARA DUPLICATAS ---
+    if (result.status === "duplicate_found") {
+      // Chama o novo modal profissional e aguarda a resposta
+      const userWantsToLoad = await showConfirmModal({
+        title: "Imagem Duplicada",
+        message: "Esta imagem já foi processada e salva anteriormente.<br>Deseja carregar os dados encontrados?",
+        okText: "Sim, Carregar",
+        okClass: "btn-primary" // Botão verde para confirmar
+      });
+
+      if (userWantsToLoad) {
+        fillFormWithAIResults(result);
+        updateAIStatus("Dados carregados do histórico", "success");
+        Logger.log("Dados de imagem duplicada carregados.", "info");
+      } else {
+        updateAIStatus("Análise cancelada pelo usuário", "info");
+        Logger.log("Usuário cancelou o carregamento de dados duplicados.", "info");
+      }
+
+      // A função termina aqui, pois não há mais nada a fazer.
+      return;
+    }
+    // --- FIM DA LÓGICA CORRIGIDA ---
+    // --- FIM DA NOVA LÓGICA ---
     if (result.success === false) {
       updateAIStatus(result.error_message || "Falha na análise", "error");
       Logger.log(`Análise falhou: ${result.error_message || "Erro desconhecido"}`, "error");
-      return;
+      return; // A execução para aqui, mas o 'finally' ainda será chamado
     }
 
     STATE.lastAIResult = result;
+    STATE.lastImageHash = result.image_hash; // Adicione esta linha
     const confidencePercent = Math.round((result.confidence || 0) * 100);
     updateAIStatus(`Análise concluída (${confidencePercent}% confiança)`, "success");
     fillFormWithAIResults(result);
-    Logger.log(`Produto identificado: ${result.title || result.product?.title || "Desconhecido"}`, "success");
+    Logger.log(`Produto identificado: ${result.product?.title || "Desconhecido"}`, "success");
 
   } catch (error) {
     updateAIStatus("Falha na análise", "error");
     Logger.log(`Erro na identificação: ${error.message}`, "error");
     showNotification(`Erro na análise: ${error.message}`, "error");
   } finally {
-    setLoadingState(DOM.btnIdentify, false, '<i class="fas fa-robot"></i> Identificar com IA');
+    // --- INÍCIO DA MUDANÇA ---
+    // 2. Desativa o estado de carregamento DEPOIS que tudo terminou (sucesso ou falha)
+    setButtonLoadingState(identifyButton, false);
+    // --- FIM DA MUDANÇA ---
   }
 }
-
 function updateAIStatus(message, status) {
   if (!DOM.aiStatus) return;
 
@@ -398,22 +567,63 @@ function updateAIStatus(message, status) {
   DOM.aiStatus.className = `chip ${status}`;
 }
 
-function fillFormWithAIResults(result) {
-  // Preenche o formulário com os dados da identificação
-  // Usa valores padrão para campos vazios
-  $("#productName").value = result.product?.title || "";
-  $("#productBrand").value = result.product?.brand || "";
-  $("#productGTIN").value = result.product?.gtin || "";
-  $("#productCategory").value = result.product?.category || "";
-  $("#productNCM").value = result.product?.ncm || "";
-  $("#productCEST").value = result.product?.cest || "";
-  $("#productPrice").value = result.product?.price || "";
+// Em frontend/js/script.js
 
-  // Foca no primeiro campo vazio ou no preço
-  if (!$("#productName").value) {
-    $("#productName").focus();
-  } else {
-    $("#productPrice").focus();
+function fillFormWithAIResults(result) {
+  // Função auxiliar para definir o valor e a classe de um campo
+  const setFieldValue = (element, value) => {
+    const formGroup = element.closest('.form-group');
+
+    // Primeiro, sempre limpa o estado anterior
+    element.classList.remove('ai-filled');
+    if (formGroup) {
+      formGroup.classList.remove('ai-filled-group'); // Remove a classe do grupo também
+    }
+
+    if (value !== null && value !== undefined && value !== "") {
+      // Define o valor e adiciona as classes de destaque
+      element.value = value;
+      element.classList.add('ai-filled');
+      if (formGroup) {
+        formGroup.classList.add('ai-filled-group');
+      }
+
+      // --- ADIÇÃO CRÍTICA PARA CORRIGIR O BUG DO SELECT ---
+      // Se o elemento for um SELECT, vamos forçar a seleção da option correta.
+      if (element.tagName === 'SELECT') {
+        // Percorre todas as <option> dentro do <select>
+        for (let i = 0; i < element.options.length; i++) {
+          if (element.options[i].value === value) {
+            // Define explicitamente esta opção como a selecionada
+            element.options[i].selected = true;
+            break; // Para a busca assim que encontrar
+          }
+        }
+      }
+      // --- FIM DA ADIÇÃO ---
+
+    } else {
+      // Se não houver valor, limpa o campo
+      element.value = '';
+    }
+  };
+
+  const product = result.product || {};
+
+  // Usa a função auxiliar para cada campo do formulário
+  setFieldValue(DOM.productName, product.title);
+  setFieldValue(DOM.productBrand, product.brand);
+  setFieldValue(DOM.productGTIN, product.gtin);
+  setFieldValue(DOM.productCategory, product.category);
+  setFieldValue(DOM.productNCM, product.ncm);
+  setFieldValue(DOM.productCEST, product.cest);
+  setFieldValue(DOM.productPrice, product.price);
+
+  // Foca no primeiro campo vazio ou no preço (lógica original mantida)
+  if (!DOM.productName.value) {
+    DOM.productName.focus();
+  } else if (!DOM.productPrice.value) {
+    DOM.productPrice.focus();
   }
 }
 
@@ -426,6 +636,12 @@ function resetIdentifyUI() {
   DOM.btnRemoveImage.style.display = "none";
   DOM.uploadStatus.textContent = "Aguardando imagem...";
   DOM.productForm.reset();
+  // --- ADIÇÃO IMPORTANTE ---
+  // Percorre todos os campos do formulário e remove a classe de destaque.
+  const formElements = DOM.productForm.querySelectorAll('input, select');
+  formElements.forEach(el => el.classList.remove('ai-filled'));
+  // --- FIM DA ADIÇÃO ---
+
   updateAIStatus("Aguardando análise", "info");
   Logger.log("Imagem removida", "info");
 }
@@ -446,6 +662,105 @@ function setLoadingState(element, isLoading, text = "") {
 }
 
 // ===== Gerenciamento de Produtos =====
+
+async function exportProducts(format = 'csv') {
+  const exportButton = $('#btnExport'); // Usaremos o botão principal do dropdown
+  if (!exportButton) return;
+
+  // Usa a função de loading que já temos
+  const originalContent = exportButton.innerHTML;
+  setButtonLoadingState(exportButton, true, `Gerando .${format}...`);
+
+  try {
+    // 1. Pega os valores atuais dos filtros da tela
+    const category = $('#filterCategory').value;
+    const brand = $('#filterBrand').value;
+
+    // 2. Constrói a URL com os parâmetros de filtro e formato
+    const params = new URLSearchParams();
+    if (category) params.append('category', category);
+    if (brand) params.append('brand', brand);
+    params.append('format', format);
+
+    const url = `${CONFIG.BASE_URL}/products/export?${params.toString()}`;
+    Logger.log(`Iniciando exportação para: ${url}`, "info");
+
+    // 3. Faz a requisição e inicia o download
+    const response = await fetch(url);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || `Erro no servidor: ${response.statusText}`);
+    }
+
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    const extension = format === 'excel' ? 'xlsx' : 'csv';
+    a.download = `cadvision_produtos_${new Date().toISOString().slice(0, 10)}.${extension}`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(downloadUrl);
+
+    Logger.log("Exportação concluída com sucesso.", "success");
+    showNotification("Relatório de produtos gerado!", "success");
+
+  } catch (error) {
+    Logger.log(`Falha na exportação: ${error.message}`, "error");
+    showNotification(`Não foi possível gerar o relatório: ${error.message}`, "error");
+  } finally {
+    setButtonLoadingState(exportButton, false); // Desativa o loading
+    exportButton.innerHTML = originalContent; // Restaura o conteúdo original do botão
+  }
+}
+
+async function deleteProduct(productId, productTitle) {
+  // Chama o novo modal e aguarda a resposta do usuário
+  const confirmed = await showConfirmModal({
+    title: "Confirmar Exclusão",
+    message: `Você tem certeza que deseja excluir o produto <strong>"${productTitle}"</strong>?<br>Esta ação não pode ser desfeita.`,
+    okText: "Sim, Excluir",
+    okClass: "btn-danger" // Para deixar o botão de confirmação vermelho
+  });
+
+  // Se o usuário não confirmou (clicou em cancelar ou fora), para a execução
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`${CONFIG.BASE_URL}/products/${productId}`, {
+      method: 'DELETE'
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.detail || result.message || 'Erro ao excluir');
+    }
+
+    Logger.log(`Produto ${productId} excluído com sucesso.`, "success");
+
+    // --- INÍCIO DA CORREÇÃO ---
+    // 1. Remove o produto da variável de estado local (STATE.products)
+    STATE.products = STATE.products.filter(p => p.id !== productId);
+
+    // 2. Remove a linha da tabela da interface
+    const row = $(`#product-row-${productId}`);
+    if (row) {
+      row.remove();
+    }
+
+    // 3. Atualiza as estatísticas que dependem da contagem de produtos
+    updateStats();
+    // --- FIM DA CORREÇÃO ---
+
+  } catch (error) {
+    Logger.log(`Erro ao excluir produto: ${error.message}`, "error");
+  }
+}
+
 async function saveProduct(e) {
   e.preventDefault();
 
@@ -453,6 +768,8 @@ async function saveProduct(e) {
     title: DOM.productName.value.trim(),
     brand: DOM.productBrand.value.trim() || null,
     gtin: DOM.productGTIN.value.trim() || null,
+    confidence: STATE.lastAIResult?.confidence || null,
+    image_hash: STATE.lastImageHash || null, // Adiciona o hash da imagem
     category: DOM.productCategory.value.trim() || null,
     price: DOM.productPrice.value ? parseFloat(DOM.productPrice.value.replace(',', '.')) : null,
     ncm: DOM.productNCM.value.trim() || null,
@@ -496,31 +813,54 @@ async function saveProduct(e) {
   }
 }
 
-async function loadProducts() {
+// Em frontend/js/script.js, substitua a função loadProducts
+
+// Em frontend/js/script.js, substitua a função loadProducts
+
+async function loadProducts(page = 1) {
   try {
-    setLoadingState($("#btnRefreshProducts"), true, "Carregando...");
+    DOM.productsContainer.innerHTML = `<div class="card text-center muted">Carregando produtos...</div>`;
 
-    const response = await fetch(`${CONFIG.BASE_URL}/products`);
+    // 1. Pega os valores atuais dos filtros E DA ORDENAÇÃO
+    const category = DOM.filterCategory?.value || "";
+    const brand = DOM.filterBrand?.value.trim() || "";
+    const sort = DOM.filterSort?.value || "newest"; // <-- Já estava aqui, ótimo!
 
+    // 2. Monta a URL com TODOS os parâmetros
+    const params = new URLSearchParams({
+      page: page,
+      size: 10, // Define um tamanho de página
+      sort: sort // <-- ADIÇÃO CRÍTICA AQUI
+    });
+    if (category) params.append('category', category);
+    if (brand) params.append('brand', brand);
+
+    const url = `${CONFIG.BASE_URL}/products?${params.toString()}`;
+    Logger.log(`Carregando produtos de: ${url}`, "info");
+
+    const response = await fetch(url);
     if (!response.ok) {
-      throw new Error(`HTTP Error ${response.status}`);
+      throw new Error(`Erro HTTP ${response.status}`);
     }
 
     const result = await response.json();
 
-    // Verificar se a resposta é paginada
-    STATE.products = result.items || result;
-    Logger.log(`Carregados ${STATE.products.length} produtos`, "success");
+    STATE.products = result.items || [];
     renderProducts();
+
+    // Atualiza a informação da paginação
+    if (DOM.paginationInfo) {
+      DOM.paginationInfo.textContent = `Página ${result.page} de ${result.pages}`;
+      DOM.productsPagination.style.display = result.pages > 1 ? 'flex' : 'none';
+    }
 
   } catch (error) {
     Logger.log(`Erro ao carregar produtos: ${error.message}`, "error");
-    showNotification("Erro ao carregar produtos", "error");
-  } finally {
-    setLoadingState($("#btnRefreshProducts"), false, "Atualizar Lista");
-    updateStats();
+    DOM.productsContainer.innerHTML = `<div class="card text-center alert-error">Falha ao carregar produtos.</div>`;
   }
 }
+
+// Em frontend/js/script.js
 
 function renderProducts() {
   if (!DOM.productsContainer) return;
@@ -530,76 +870,53 @@ function renderProducts() {
       <div class="card text-center">
         <i class="fas fa-box-open" style="font-size: 48px; color: var(--muted); margin-bottom: 15px;"></i>
         <p class="muted">Nenhum produto cadastrado ainda.</p>
-        <button class="btn btn-primary" onclick="showPage('identify')">
-          <i class="fas fa-camera"></i> Identificar Primeiro Produto
-        </button>
       </div>
     `;
     return;
   }
 
-  DOM.productsContainer.innerHTML = STATE.products.map(product => `
-    <div class="card fade-in">
-      <div class="d-flex justify-content-between align-items-start">
-        <h3 class="mt-0">${escapeHtml(product.title)}</h3>
-        ${product.confidence ? `
-          <span class="badge badge-primary">
-            <i class="fas fa-robot"></i> ${Math.round(product.confidence * 100)}%
-          </span>
-        ` : ''}
-      </div>
-      
-      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
-        ${product.brand ? `
-          <div>
-            <strong>Marca:</strong>
-            <p>${escapeHtml(product.brand)}</p>
-          </div>
-        ` : ''}
-        
-        ${product.category ? `
-          <div>
-            <strong>Categoria:</strong>
-            <p>${escapeHtml(product.category)}</p>
-          </div>
-        ` : ''}
-        
-        ${product.price ? `
-          <div>
-            <strong>Preço:</strong>
-            <p>R$ ${product.price.toFixed(2).replace('.', ',')}</p>
-          </div>
-        ` : ''}
-      </div>
-      
-      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-        ${product.gtin ? `
-          <div>
-            <strong>GTIN:</strong>
-            <p class="mono">${escapeHtml(product.gtin)}</p>
-          </div>
-        ` : ''}
-        
-        ${product.ncm ? `
-          <div>
-            <strong>NCM:</strong>
-            <p class="mono">${escapeHtml(product.ncm)}</p>
-          </div>
-        ` : ''}
-        
-        ${product.cest ? `
-          <div>
-            <strong>CEST:</strong>
-            <p class="mono">${escapeHtml(product.cest)}</p>
-          </div>
-        ` : ''}
-      </div>
-      
-      <small class="muted">Cadastrado em: ${new Date(product.created_at).toLocaleString('pt-BR')}</small>
+  // Constrói a estrutura da tabela com a nova coluna
+  const tableHTML = `
+    <div class="card p-0">
+      <table class="table-products">
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Marca</th>
+            <th>Categoria</th>  <th>GTIN/EAN</th>
+            <th>NCM</th>
+            <th>Cadastrado em</th>
+            <th class="text-center">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${STATE.products.map(product => `
+            <tr id="product-row-${product.id}">
+              <td class="product-title">
+                ${escapeHtml(product.title)}
+                ${product.confidence ? `<span class="badge badge-primary">${Math.round(product.confidence * 100)}%</span>` : ''}
+              </td>
+              <td>${escapeHtml(product.brand || 'N/A')}</td>
+              <td>${escapeHtml(product.category || 'N/A')}</td> <td class="mono">${escapeHtml(product.gtin || 'N/A')}</td>
+              <td class="mono">${escapeHtml(product.ncm || 'N/A')}</td>
+              <td>${new Date(product.created_at).toLocaleDateString('pt-BR')}</td>
+              <td class="actions">
+                <button class="btn btn-secondary btn-sm" title="Editar">
+                  <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id}, '${escapeHtml(product.title)}')" title="Excluir">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
     </div>
-  `).join('');
-}
+  `;
 
+  DOM.productsContainer.innerHTML = tableHTML;
+}
 function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;

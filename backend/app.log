@@ -998,3 +998,11 @@ fabricação impressa na embalagem.' -> Texto limpo para análise: '789893734577524
 2025-09-19 18:11:17,327 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7891340365576). Iniciando validação.
 2025-09-19 18:11:17,328 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7891340365576
 2025-09-19 18:13:22,903 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 18:13:54,421 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 18:13:54,424 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 18:13:54,424 - main - INFO - Banco de dados inicializado
+2025-09-19 18:29:28,734 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 18:29:30,959 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 18:29:30,962 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 18:29:30,962 - main - INFO - Banco de dados inicializado
+2025-09-19 18:39:09,490 - main - INFO - Encerrando aplicação CadVision API

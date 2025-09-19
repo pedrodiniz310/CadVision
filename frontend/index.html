@@ -224,65 +224,75 @@
           <div class="section-header">
             <h1 class="h1">Produtos Cadastrados</h1>
             <div class="header-actions">
-              <button class="btn btn-secondary" id="btnExportProducts">
-                <i class="fas fa-download"></i> Exportar
-              </button>
-            </div>
-          </div>
-
-          <div class="filters">
-            <div class="grid grid-3">
-              <div class="form-group">
-                <label for="filterCategory">Filtrar por categoria</label>
-                <select id="filterCategory">
-                  <option value="">Todas categorias</option>
-                  <option value="Alimentos">Alimentos</option>
-                  <option value="Bebidas">Bebidas</option>
-                  <option value="Limpeza">Limpeza</option>
-                  <option value="Higiene">Higiene</option>
-                  <option value="Eletrônicos">Eletrônicos</option>
-                </select>
+              <div class="dropdown-container" id="exportContainer">
+                <button class="btn btn-secondary" id="btnExport">
+                  <i class="fas fa-download"></i>
+                  <span>Exportar</span>
+                  <i class="fas fa-chevron-down arrow"></i>
+                </button>
+                <div class="dropdown-menu" id="exportMenu">
+                  <a href="#" class="dropdown-item" data-format="csv">
+                    <i class="fas fa-file-csv"></i> Exportar como CSV
+                  </a>
+                  <a href="#" class="dropdown-item" data-format="excel">
+                    <i class="fas fa-file-excel"></i> Exportar como Excel (.xlsx)
+                  </a>
+                </div>
               </div>
 
-              <div class="form-group">
-                <label for="filterBrand">Filtrar por marca</label>
-                <input type="text" id="filterBrand" placeholder="Digite a marca">
+              <div class="filters">
+                <div class="grid grid-3">
+                  <div class="form-group">
+                    <label for="filterCategory">Filtrar por categoria</label>
+                    <select id="filterCategory">
+                      <option value="">Todas categorias</option>
+                      <option value="Alimentos">Alimentos</option>
+                      <option value="Bebidas">Bebidas</option>
+                      <option value="Limpeza">Limpeza</option>
+                      <option value="Higiene">Higiene</option>
+                      <option value="Eletrônicos">Eletrônicos</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="filterBrand">Filtrar por marca</label>
+                    <input type="text" id="filterBrand" placeholder="Digite a marca">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="filterSort">Ordenar por</label>
+                    <select id="filterSort">
+                      <option value="newest">Mais recentes</option>
+                      <option value="oldest">Mais antigos</option>
+                      <option value="name">Nome (A-Z)</option>
+                      <option value="name_desc">Nome (Z-A)</option>
+                      <option value="price">Preço (menor-maior)</option>
+                      <option value="price_desc">Preço (maior-menor)</option>
+                    </select>
+                  </div>
+                </div>
               </div>
 
-              <div class="form-group">
-                <label for="filterSort">Ordenar por</label>
-                <select id="filterSort">
-                  <option value="newest">Mais recentes</option>
-                  <option value="oldest">Mais antigos</option>
-                  <option value="name">Nome (A-Z)</option>
-                  <option value="name_desc">Nome (Z-A)</option>
-                  <option value="price">Preço (menor-maior)</option>
-                  <option value="price_desc">Preço (maior-menor)</option>
-                </select>
+              <div id="productsContainer">
+                <div class="muted text-center"> Carregando produtos... </p>
+                  <i class="fas fa-box-open" style="font-size: 3rem; color: var(--muted); margin-bottom: 20px;"></i>
+                  <h3>Nenhum produto cadastrado</h3>
+                  <p class="muted">Comece identificando um produto usando a visão computacional.</p>
+                  <button class="btn btn-primary" onclick="showPage('identify')">
+                    <i class="fas fa-robot"></i> Identificar Primeiro Produto
+                  </button>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <div id="productsContainer">
-            <div class="card text-center">
-              <i class="fas fa-box-open" style="font-size: 3rem; color: var(--muted); margin-bottom: 20px;"></i>
-              <h3>Nenhum produto cadastrado</h3>
-              <p class="muted">Comece identificando um produto usando a visão computacional.</p>
-              <button class="btn btn-primary" onclick="showPage('identify')">
-                <i class="fas fa-robot"></i> Identificar Primeiro Produto
-              </button>
-            </div>
-          </div>
-
-          <div class="pagination" id="productsPagination" style="display: none;">
-            <button class="btn btn-secondary" id="btnPrevPage">
-              <i class="fas fa-chevron-left"></i> Anterior
-            </button>
-            <span class="pagination-info" id="paginationInfo">Página 1 de 1</span>
-            <button class="btn btn-secondary" id="btnNextPage">
-              Próxima <i class="fas fa-chevron-right"></i>
-            </button>
-          </div>
+              <div class="pagination" id="productsPagination" style="display: none;">
+                <button class="btn btn-secondary" id="btnPrevPage">
+                  <i class="fas fa-chevron-left"></i> Anterior
+                </button>
+                <span class="pagination-info" id="paginationInfo">Página 1 de 1</span>
+                <button class="btn btn-secondary" id="btnNextPage">
+                  Próxima <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
         </section>
 
         <!-- Logs do Sistema -->
@@ -460,7 +470,7 @@
                   <i class="fas fa-book"></i>
                   <div>
                     <h3>Documentação</h3>
-                    <p class="muted">Consulte o manual completo do usuário</p>
+                    <p class="muted">Consulte o manual completo do usuário (Em breve)</p>
                   </div>
                 </div>
 
@@ -468,7 +478,7 @@
                   <i class="fas fa-envelope"></i>
                   <div>
                     <h3>E-mail de Suporte</h3>
-                    <p class="muted">suporte@cadvision.com</p>
+                    <p class="muted">suportecadvision@gmail.com</p>
                   </div>
                 </div>
 
@@ -476,14 +486,14 @@
                   <i class="fas fa-globe"></i>
                   <div>
                     <h3>Site Oficial</h3>
-                    <p class="muted">www.cadvision.com</p>
+                    <p class="muted">Em breve</p>
                   </div>
                 </div>
               </div>
 
               <div class="btn-row">
                 <button class="btn btn-primary">
-                  <i class="fas fa-download"></i> Baixar Manual do Usuário
+                  <i class="fas fa-download"></i> Baixar Manual do Usuário (Em breve)
                 </button>
               </div>
             </div>
@@ -492,8 +502,21 @@
       </div>
     </main>
   </div>
-
-  <!-- Scripts -->
+  <div class="modal-overlay" id="confirmOverlay" style="display: none;">
+    <div class="modal-content" id="confirmModal">
+      <div class="modal-header">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3 id="confirmTitle">Confirmar Ação</h3>
+      </div>
+      <div class="modal-body">
+        <p id="confirmMessage">Você tem certeza que deseja continuar?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="confirmCancel">Cancelar</button>
+        <button class="btn btn-danger" id="confirmOk">Confirmar</button>
+      </div>
+    </div>
+  </div>
   <script src="/assets/js/script.js"></script>
 </body>
 

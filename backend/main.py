@@ -308,6 +308,7 @@ async def get_products(
         20, ge=1, le=100, description="Tamanho da página"),
     category: Optional[str] = Query(None, description="Filtrar por categoria"),
     brand: Optional[str] = Query(None, description="Filtrar por marca"),
+    sort: str = Query("newest", description="Critério de ordenação"),
     # --- NOVA OPÇÃO ---
     export: bool = Query(
         False, description="Se True, retorna todos os resultados sem paginar")
@@ -330,6 +331,17 @@ async def get_products(
             query += " AND brand LIKE :brand"
             params['brand'] = f"%{brand}%"
 
+        # Define a cláusula de ordenação com base no parâmetro 'sort'
+        sort_options = {
+            "newest": "ORDER BY created_at DESC",
+            "oldest": "ORDER BY created_at ASC",
+            "name": "ORDER BY title ASC",
+            "name_desc": "ORDER BY title DESC",
+            "price": "ORDER BY price ASC",
+            "price_desc": "ORDER BY price DESC"
+        }
+        order_clause = sort_options.get(sort, "ORDER BY id DESC")
+
         # Se não for para exportação, aplica ordenação e paginação
         if not export:
             # Conta o total de itens para a paginação
@@ -338,7 +350,8 @@ async def get_products(
             total = total_result[0] if total_result else 0
 
             offset = (page - 1) * size
-            query += " ORDER BY id DESC LIMIT :size OFFSET :offset"
+            # Adiciona a cláusula de ordenação antes do LIMIT/OFFSET
+            query += f" {order_clause} LIMIT :size OFFSET :offset"
             params['size'] = size
             params['offset'] = offset
 
@@ -354,7 +367,7 @@ async def get_products(
             )
         else:
             # Se for para exportação, retorna todos os produtos filtrados
-            query += " ORDER BY id DESC"
+            query += f" {order_clause}"
             products = db.execute(query, params).fetchall()
             return [dict(p) for p in products]
 
@@ -400,6 +413,8 @@ async def health_check():
         "timestamp": time.time(),
         "version": "1.0.0"
     }
+
+
 @app.get(
     f"{API_PREFIX}/products/export",
     summary="Exporta produtos filtrados para CSV ou Excel",
