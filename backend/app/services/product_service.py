@@ -152,14 +152,18 @@ def intelligent_text_analysis(text: str, detected_gtin: Optional[str], detected_
 
         # 1.1: Verificar cache local (nosso DB).
         cursor = db.cursor()
+        # --- ALTERAÇÃO AQUI: Adicione 'confidence' à consulta SELECT ---
         cursor.execute(
-            "SELECT gtin, title, brand, category, ncm, cest FROM products WHERE gtin = ?", (detected_gtin,))
+            "SELECT * FROM products WHERE gtin = ?",
+            (detected_gtin,)
+        )
         product_from_db = cursor.fetchone()
 
         if product_from_db:
             logger.info(
                 f"Sucesso! GTIN {detected_gtin} encontrado no cache local.")
-            return {"confidence": 0.99, "detected_patterns": ["gtin_db_lookup"], **dict(product_from_db)}
+            # Retorna o dicionário completo, que agora inclui a confiança
+            return dict(product_from_db)
 
         # 1.2: Se não está no cache, verificar se podemos buscar na API externa (Cosmos)
         if COSMOS_API_KEY:  # Só tenta Cosmos se a chave estiver configurada
@@ -180,26 +184,6 @@ def intelligent_text_analysis(text: str, detected_gtin: Optional[str], detected_
                     "confidence": 0.99,
                     "detected_patterns": ["gtin_api_lookup"]
                 }
-
-                try:
-                    cursor.execute(
-                        "INSERT INTO products (gtin, title, brand, category, ncm, cest, confidence) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                        (
-                            parsed_data['gtin'],
-                            parsed_data['title'],
-                            parsed_data['brand'],
-                            parsed_data['category'],
-                            parsed_data['ncm'],
-                            parsed_data['cest'],
-                            parsed_data['confidence']
-                        )
-                    )
-                    db.commit()
-                    logger.info(
-                        f"Novo produto com GTIN {detected_gtin} salvo no cache local.")
-                except sqlite3.Error as e:
-                    logger.error(
-                        f"Erro ao salvar produto do Cosmos no DB: {e}")
                 return parsed_data
             else:
                 logger.warning("API Cosmos não retornou dados válidos")

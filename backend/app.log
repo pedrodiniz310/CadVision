@@ -705,3 +705,142 @@ eld' -> Texto limpo para análise: '78980554208111'
 2025-09-19 14:22:45,932 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
 2025-09-19 14:22:45,932 - app.services.product_service - INFO - Sucesso! GTIN 7896022200534 encontrado no cache local.
 2025-09-19 14:37:46,187 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 14:43:03,550 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 14:43:03,553 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 14:43:03,553 - main - INFO - Banco de dados inicializado
+2025-09-19 14:43:25,722 - main - INFO - Imagem duplicada encontrada para o hash: 9bb1516d4f8c2209c62d366630cfc6bb
+2025-09-19 14:51:23,669 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 14:51:26,073 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 14:51:26,093 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 14:51:26,094 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 2.48s
+2025-09-19 14:51:26,094 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 14:51:26,095 - app.services.product_service - INFO - Sucesso! GTIN 7896022200534 encontrado no cache local.
+2025-09-19 14:51:26,095 - main - ERROR - Erro interno no processamento: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 206, in identify_image
+    return IdentificationResult(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+2025-09-19 14:54:56,065 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 14:54:57,819 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 14:54:57,822 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 14:54:57,822 - main - INFO - Banco de dados inicializado
+2025-09-19 14:55:01,963 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 14:55:03,762 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 14:55:03,765 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 14:55:03,765 - main - INFO - Banco de dados inicializado
+2025-09-19 14:55:05,925 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 14:55:15,032 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 14:55:15,035 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 14:55:15,035 - main - INFO - Banco de dados inicializado
+2025-09-19 14:55:33,003 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 14:55:35,403 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 14:55:35,423 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 14:55:35,424 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 2.47s
+2025-09-19 14:55:35,425 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 14:55:35,425 - app.services.product_service - INFO - Sucesso! GTIN 7896022200534 encontrado no cache local.
+2025-09-19 14:55:35,426 - main - ERROR - Erro interno no processamento: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 206, in identify_image
+    return IdentificationResult(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+2025-09-19 14:55:43,380 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 14:55:45,511 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 14:55:45,520 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 14:55:45,521 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 2.19s
+2025-09-19 14:55:45,521 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 14:55:45,521 - app.services.product_service - INFO - Sucesso! GTIN 7896022200534 encontrado no cache local.
+2025-09-19 14:55:45,522 - main - ERROR - Erro interno no processamento: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 206, in identify_image
+    return IdentificationResult(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+2025-09-19 15:00:44,143 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 15:00:45,904 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 15:00:45,907 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 15:00:45,907 - main - INFO - Banco de dados inicializado
+2025-09-19 15:02:53,490 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 15:02:55,276 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 15:02:55,278 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 15:02:55,279 - main - INFO - Banco de dados inicializado
+2025-09-19 15:04:21,467 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 15:04:23,282 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 15:04:23,285 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 15:04:23,285 - main - INFO - Banco de dados inicializado
+2025-09-19 15:04:26,546 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 15:04:35,160 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 15:04:35,162 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 15:04:35,163 - main - INFO - Banco de dados inicializado
+2025-09-19 15:04:51,356 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 15:04:53,902 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 15:04:53,921 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 15:04:53,923 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 2.62s
+2025-09-19 15:04:53,923 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 15:04:53,923 - app.services.product_service - INFO - Sucesso! GTIN 7896022200534 encontrado no cache local.
+2025-09-19 15:04:53,924 - main - ERROR - Erro interno no processamento: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 210, in identify_image
+    return IdentificationResult(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+2025-09-19 15:09:26,645 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 15:09:28,394 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 15:09:28,397 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 15:09:28,397 - main - INFO - Banco de dados inicializado
+2025-09-19 15:09:40,755 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 15:09:43,129 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 15:09:43,148 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 15:09:43,150 - main - INFO - Dados extraídos - GTIN: 7896022200534, Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 2.44s
+2025-09-19 15:09:43,150 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 15:09:43,150 - app.services.product_service - INFO - Sucesso! GTIN 7896022200534 encontrado no cache local.
+2025-09-19 15:12:23,658 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 15:12:25,417 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 15:12:25,420 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 15:12:25,420 - main - INFO - Banco de dados inicializado
+2025-09-19 15:12:35,634 - main - INFO - Imagem duplicada encontrada para o hash: 9bb1516d4f8c2209c62d366630cfc6bb
+2025-09-19 15:13:11,795 - main - INFO - Imagem duplicada encontrada para o hash: 9bb1516d4f8c2209c62d366630cfc6bb
+2025-09-19 15:13:45,424 - main - INFO - Imagem duplicada encontrada para o hash: 9bb1516d4f8c2209c62d366630cfc6bb
+2025-09-19 15:20:04,201 - main - INFO - Imagem duplicada encontrada para o hash: 9bb1516d4f8c2209c62d366630cfc6bb
+2025-09-19 15:28:54,251 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 15:28:56,110 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 15:28:56,113 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 15:28:56,113 - main - INFO - Banco de dados inicializado
+2025-09-19 15:28:57,821 - main - INFO - Encerrando aplicação CadVision API

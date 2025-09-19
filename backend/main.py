@@ -81,6 +81,8 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)
 API_PREFIX = "/api/v1"
 
 
+# Em backend/main.py
+
 @app.post(
     f"{API_PREFIX}/vision/identify",
     response_model=IdentificationResult,
@@ -128,23 +130,26 @@ async def identify_image(
         )
 
     image_hash = get_cache_key(image_bytes)
-    processing_time = 0
+
+    # --- Lógica de Detecção de Duplicata ---
     product_from_hash = find_product_by_image_hash(image_hash, db)
     if product_from_hash:
         logger.info(f"Imagem duplicada encontrada para o hash: {image_hash}")
 
-    # Converte o resultado do banco (dicionário) para o modelo Pydantic
         identified_product = IdentifiedProduct(**product_from_hash)
+
         return IdentificationResult(
             success=True,
-            status="duplicate_found",  # Sinaliza que é uma duplicata
+            status="duplicate_found",
             product=identified_product,
+            image_hash=image_hash,
+            # Garante que a confiança seja um float, com 1.0 como fallback para duplicatas
             confidence=identified_product.confidence or 1.0,
-            processing_time=0.01  # Tempo de processamento quase zero
+            processing_time=0.01
         )
-# --- FIM DA LÓGICA DE DETECÇÃO DE DUPLICATA ---
+
     try:
-        # 1. Chama o serviço do Vision para extrair dados brutos
+        # 1. Chama o serviço do Vision se não for duplicata
         vision_data = extract_vision_data(image_bytes)
         raw_text = vision_data.get('raw_text', '')
         detected_logos = [logo['description']
@@ -155,23 +160,23 @@ async def identify_image(
         processing_time = time.time() - start_time
 
         logger.info(
-            f"Dados extraídos - Texto: {len(raw_text)} chars, "
+            f"Dados extraídos - GTIN: {gtin_from_vision}, Texto: {len(raw_text)} chars, "
             f"Logos: {detected_logos}, Sucesso: {success}, "
             f"Tempo: {processing_time:.2f}s"
         )
 
-        # 2. Se não conseguiu extrair dados suficientes
+        # 2. Se a extração falhou
         if not success:
-            # Registra log de processamento
             background_tasks.add_task(
                 log_processing,
                 image_hash, processing_time, False, 0.0,
                 "Falha na extração de dados da imagem"
             )
-
             return IdentificationResult(
                 success=False,
+                status="failed",
                 product=None,
+                image_hash=image_hash,
                 raw_text=raw_text,
                 detected_logos=detected_logos,
                 confidence=0.0,
@@ -179,11 +184,11 @@ async def identify_image(
                 error_message="Não foi possível extrair dados suficientes da imagem."
             )
 
-        # 3. Chama o serviço de produto para executar a análise
+        # 3. Chama o serviço de produto para análise inteligente
         product_info = intelligent_text_analysis(
             raw_text, gtin_from_vision, detected_logos, db)
 
-        # 4. Converte para o modelo IdentifiedProduct com fallbacks
+        # 4. Converte para o modelo IdentifiedProduct
         identified_product = IdentifiedProduct(
             gtin=product_info.get('gtin'),
             title=product_info.get('title', 'Produto não identificado'),
@@ -192,39 +197,39 @@ async def identify_image(
             price=product_info.get('price'),
             ncm=product_info.get('ncm'),
             cest=product_info.get('cest'),
-            confidence=product_info.get('confidence', 0.0)
+            # O modelo permite None aqui
+            confidence=product_info.get('confidence')
         )
 
-        # 5. Prepara resposta
-        # Registra log de processing bem-sucedido
+        # --- CORREÇÃO AQUI ---
+        # Garante que o valor de 'confidence' seja um float (0.0 se for None)
+        # antes de passar para o IdentificationResult, que é mais restrito.
+        final_confidence = product_info.get('confidence') or 0.0
+
+        # 5. Prepara e retorna a resposta de sucesso
         background_tasks.add_task(
             log_processing,
-            image_hash, processing_time, True, product_info.get(
-                'confidence', 0.0), None
+            image_hash, processing_time, True, final_confidence, None
         )
 
         return IdentificationResult(
             success=True,
+            status="newly_identified",
             product=identified_product,
             image_hash=image_hash,
             raw_text=raw_text,
             detected_logos=detected_logos,
-            confidence=product_info.get('confidence', 0.0),
+            confidence=final_confidence,  # Usa a variável corrigida
             processing_time=processing_time
         )
 
-    except HTTPException:
-        raise
     except Exception as e:
         processing_time = time.time() - start_time
         logger.error(f"Erro interno no processamento: {str(e)}", exc_info=True)
-
-        # Registra log de processamento com erro
         background_tasks.add_task(
             log_processing,
             image_hash, processing_time, False, 0.0, str(e)
         )
-
         raise HTTPException(
             status_code=500,
             detail=f"Erro interno no processamento da imagem: {str(e)}"

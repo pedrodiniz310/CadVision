@@ -132,8 +132,10 @@ def init_db():
             """)
 
             # --- ÍNDICES PARA MELHOR PERFORMANCE ---
-            cur.execute("CREATE INDEX IF NOT EXISTS idx_products_gtin ON products(gtin)")
-            cur.execute("CREATE INDEX IF NOT EXISTS idx_logs_image_hash ON processing_logs(image_hash)")
+            cur.execute(
+                "CREATE INDEX IF NOT EXISTS idx_products_gtin ON products(gtin)")
+            cur.execute(
+                "CREATE INDEX IF NOT EXISTS idx_logs_image_hash ON processing_logs(image_hash)")
 
             # --- DADOS INICIAIS (SEMENTE) ---
 
@@ -159,6 +161,7 @@ def init_db():
 
 # Em backend/app/database.py
 
+
 def insert_product(product_data: Dict[str, Any], db: sqlite3.Connection) -> Optional[int]:
     """Insere ou atualiza um produto no banco de dados usando a conexão fornecida."""
     try:
@@ -178,7 +181,7 @@ def insert_product(product_data: Dict[str, Any], db: sqlite3.Connection) -> Opti
                     SET title = ?, brand = ?, category = ?, price = ?, ncm = ?, cest = ?, 
                         confidence = ?, image_hash = ?, updated_at = CURRENT_TIMESTAMP
                     WHERE gtin = ?
-                """, ( # A vírgula antes de WHERE foi removida
+                """, (  # A vírgula antes de WHERE foi removida
                     product_data.get('title'),
                     product_data.get('brand'),
                     product_data.get('category'),
@@ -346,16 +349,20 @@ def get_all_products(db: sqlite3.Connection) -> List[Dict]:
         logger.error(f"Erro ao buscar todos os produtos: {e}")
         return []
 
+# Em backend/app/database.py
+
+
 def find_product_by_image_hash(image_hash: str, db: sqlite3.Connection) -> Optional[Dict]:
     """
     Busca um produto na tabela 'products' pelo hash da imagem.
-    Retorna os dados do produto se encontrado e bem-sucedido anteriormente.
+    Retorna os dados do produto se encontrado.
     """
     try:
         cursor = db.cursor()
-        # Buscamos um produto que tenha o hash e uma confiança alta (indicando que foi salvo via IA)
+        # --- CORREÇÃO AQUI ---
+        # A simples existência do hash já define uma duplicata.
         cursor.execute(
-            "SELECT * FROM products WHERE image_hash = ? AND confidence > 0.9", 
+            "SELECT * FROM products WHERE image_hash = ?",
             (image_hash,)
         )
         row = cursor.fetchone()
@@ -363,3 +370,4 @@ def find_product_by_image_hash(image_hash: str, db: sqlite3.Connection) -> Optio
     except sqlite3.Error as e:
         logger.error(f"Erro ao buscar produto por hash de imagem: {e}")
         return None
+# Fim de backend/app/database.py
