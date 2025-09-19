@@ -919,3 +919,82 @@ Beijos' -> Texto limpo para análise: ''
 2025-09-19 17:14:47,607 - app.database - INFO - Banco de dados inicializado com sucesso.
 2025-09-19 17:14:47,608 - main - INFO - Banco de dados inicializado
 2025-09-19 17:14:49,321 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 17:44:50,358 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 17:44:50,361 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 17:44:50,361 - main - INFO - Banco de dados inicializado
+2025-09-19 17:45:01,539 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 17:45:04,265 - app.services.vision_service - INFO - Vision API: Texto extraído (20 chars), Logos: 0, Labels: 2
+2025-09-19 17:45:04,265 - app.services.vision_service - INFO - Texto bruto: '78980554208111
+a
+eld' -> Texto limpo para análise: '78980554208111'
+2025-09-19 17:45:04,266 - app.services.vision_service - INFO - GTIN validado com sucesso: 7898055420811
+2025-09-19 17:45:04,267 - main - INFO - Dados extraídos - GTIN: 7898055420811, Texto: 20 chars, Logos: [], Sucesso: True, Tempo: 2.78s
+2025-09-19 17:45:04,267 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7898055420811). Iniciando validação.
+2025-09-19 17:45:04,268 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7898055420811
+2025-09-19 17:45:23,403 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 17:45:26,219 - app.services.vision_service - INFO - Vision API: Texto extraído (510 chars), Logos: 1, Labels: 10
+2025-09-19 17:45:26,219 - app.services.vision_service - INFO - Texto bruto: 'MAÇÃO NUTRICIONAL
+ml (1 unidade)
+ico (kcal)
+100
+220 ml %VD*
+20
+44
+2
+5
+11
+4
+otals (g)
+5
+11
+5
+11
+20
+8.2
+18
+1
+rados (9)
+Quantidades significativas de
+duras totais, Gorduras saturadas,
+Te valores diários fornecidos pela
+e Fibras alimentares.
+THINDADE/GO, CNPJ 03.380.763/0015-07 6-RIO DE
+EROIRJ, CNPJ 00.074.569/0001-00 7-SOROCABA
+45.913.696/0001-85 8-UBERLÂNDIA REFRESCOS
+94010001-10 9-SPAL
+PAULINO BUENO COUTO,
+MARCACAO. CONSERVAR
+ODOR NÃO CONGELAR.
+Coca-Cola Brasil
+23-4200279
+1642 160
+894900 0250 19
+RECICLE-ME' -> Texto limpo para análise: '110022020442511451151120821819033807630015076000745690001007459136960001858940100011092342002791642160894900025019'
+2025-09-19 17:45:26,221 - app.services.vision_service - INFO - GTIN validado com sucesso: 64216089
+2025-09-19 17:45:26,222 - main - INFO - Dados extraídos - GTIN: 64216089, Texto: 510 chars, Logos: ['The Coca-Cola Company'], Sucesso: True, Tempo: 2.87s
+2025-09-19 17:45:26,222 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (64216089). Iniciando validação.
+2025-09-19 17:45:26,223 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 64216089
+2025-09-19 17:45:27,580 - app.services.product_service - WARNING - API Cosmos não retornou dados válidos
+2025-09-19 17:45:27,580 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-19 17:45:27,581 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '64216089', 'title': 'THINDADEGO, CNPJ 03.380.7630015-07 6-RIO DE', 'brand': 'The Coca-Cola Company', 'category': 'Bebidas', 'ncm': '', 'cest': '', 'confidence': 0.8, 'detected_patterns': ['logo_detection']}
+2025-09-19 17:46:37,915 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 17:46:39,402 - app.services.vision_service - INFO - Vision API: Texto extraído (91 chars), Logos: 0, Labels: 1
+2025-09-19 17:46:39,402 - app.services.vision_service - INFO - Texto bruto: '7 898937345775
+Prazo de Validade: 24 meses após a data de
+fabricação impressa na embalagem.' -> Texto limpo para análise: '789893734577524'
+2025-09-19 17:46:39,403 - app.services.vision_service - INFO - GTIN validado com sucesso: 7898937345775
+2025-09-19 17:46:39,403 - main - INFO - Dados extraídos - GTIN: 7898937345775, Texto: 91 chars, Logos: [], Sucesso: True, Tempo: 1.50s
+2025-09-19 17:46:39,403 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7898937345775). Iniciando validação.
+2025-09-19 17:46:39,404 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7898937345775
+2025-09-19 17:58:14,544 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 17:58:24,886 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 17:58:24,888 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 17:58:24,888 - main - INFO - Banco de dados inicializado
+2025-09-19 18:11:13,793 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 18:11:17,325 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-19 18:11:17,326 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-19 18:11:17,326 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-19 18:11:17,327 - main - INFO - Dados extraídos - GTIN: 7891340365576, Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 3.60s
+2025-09-19 18:11:17,327 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7891340365576). Iniciando validação.
+2025-09-19 18:11:17,328 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7891340365576
+2025-09-19 18:13:22,903 - main - INFO - Encerrando aplicação CadVision API
