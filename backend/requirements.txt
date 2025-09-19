@@ -28,3 +28,7 @@ Pillow==10.3.0
 # --- OCR Local (Fallback) ---
 # Caso você queira manter o Tesseract como uma alternativa
 pytesseract==0.3.10
+
+# exportar arquivos csv e excel
+openpyxl
+pandas

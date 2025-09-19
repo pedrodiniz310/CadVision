@@ -46,7 +46,7 @@ class ProductBase(BaseModel):
         max_length=100,
         example="Tio João"
     )
-    category: Optional[ProductCategory] = Field(
+    category: Optional[str] = Field(
         None,
         description="Categoria do produto"
     )

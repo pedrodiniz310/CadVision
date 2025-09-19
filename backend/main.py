@@ -4,6 +4,7 @@ import sqlite3
 import time
 import csv
 import io
+import pandas as pd
 from pathlib import Path
 from typing import List, Optional
 from contextlib import asynccontextmanager
@@ -291,72 +292,76 @@ async def save_product(
         )
 
 
+# Em backend/main.py
+
 @app.get(
     f"{API_PREFIX}/products",
-    response_model=PaginatedResponse,
-    summary="Lista produtos cadastrados",
+    # A resposta pode ser paginada ou uma lista simples, então ajustamos
+    # o response_model para ser mais flexível ou removemos para autodetecção.
+    summary="Lista ou busca produtos cadastrados",
     tags=["Produtos"]
 )
 async def get_products(
     db: sqlite3.Connection = Depends(get_db),
-    page: int = Query(1, ge=1, description="Número da página"),
-    size: int = Query(20, ge=1, le=100, description="Tamanho da página"),
+    page: Optional[int] = Query(1, ge=1, description="Número da página"),
+    size: Optional[int] = Query(
+        20, ge=1, le=100, description="Tamanho da página"),
     category: Optional[str] = Query(None, description="Filtrar por categoria"),
-    brand: Optional[str] = Query(None, description="Filtrar por marca")
+    brand: Optional[str] = Query(None, description="Filtrar por marca"),
+    # --- NOVA OPÇÃO ---
+    export: bool = Query(
+        False, description="Se True, retorna todos os resultados sem paginar")
 ):
     """
-    Retorna uma lista paginada de produtos do banco de dados, 
-    dos mais recentes para os mais antigos.
+    Retorna uma lista de produtos. Se 'export=True', retorna todos os 
+    produtos filtrados. Caso contrário, retorna uma lista paginada.
     """
     try:
-        # Calcula offset
-        offset = (page - 1) * size
-
-        # Constrói query base
+        # Usa dicionário para os parâmetros para evitar injeção de SQL
+        params = {}
         query = "SELECT * FROM products WHERE 1=1"
-        count_query = "SELECT COUNT(*) as total FROM products WHERE 1=1"
-        params = []
 
-        # Adiciona filtros
         if category:
-            query += " AND category = ?"
-            count_query += " AND category = ?"
-            params.append(category)
+            query += " AND category = :category"
+            params['category'] = category
 
         if brand:
-            query += " AND brand = ?"
-            count_query += " AND brand = ?"
-            params.append(brand)
+            # Usamos LIKE para uma busca mais flexível por marca
+            query += " AND brand LIKE :brand"
+            params['brand'] = f"%{brand}%"
 
-        # Ordenação e paginação
-        query += " ORDER BY id DESC LIMIT ? OFFSET ?"
-        params.extend([size, offset])
+        # Se não for para exportação, aplica ordenação e paginação
+        if not export:
+            # Conta o total de itens para a paginação
+            count_query = query.replace("SELECT *", "SELECT COUNT(*)")
+            total_result = db.execute(count_query, params).fetchone()
+            total = total_result[0] if total_result else 0
 
-        # Executa contagem total
-        total_result = db.execute(
-            count_query, params[:-2] if len(params) > 2 else []).fetchone()
-        total = total_result['total'] if total_result else 0
+            offset = (page - 1) * size
+            query += " ORDER BY id DESC LIMIT :size OFFSET :offset"
+            params['size'] = size
+            params['offset'] = offset
 
-        # Executa query principal
-        products = db.execute(query, params).fetchall()
-        products_list = [dict(p) for p in products]
+            products = db.execute(query, params).fetchall()
+            products_list = [dict(p) for p in products]
 
-        # Calcula total de páginas
-        pages = (total + size - 1) // size
-
-        return PaginatedResponse(
-            items=products_list,
-            total=total,
-            page=page,
-            pages=pages,
-            size=size
-        )
+            return PaginatedResponse(
+                items=products_list,
+                total=total,
+                page=page,
+                pages=(total + size - 1) // size if size > 0 else 0,
+                size=size
+            )
+        else:
+            # Se for para exportação, retorna todos os produtos filtrados
+            query += " ORDER BY id DESC"
+            products = db.execute(query, params).fetchall()
+            return [dict(p) for p in products]
 
     except Exception as e:
         logger.error(f"Erro ao buscar produtos: {e}", exc_info=True)
         raise HTTPException(
-            status_code=500,
-            detail="Erro interno ao buscar produtos."
+            status_code=500, detail="Erro interno ao buscar produtos."
         )
 
 
@@ -395,6 +400,55 @@ async def health_check():
         "timestamp": time.time(),
         "version": "1.0.0"
     }
+@app.get(
+    f"{API_PREFIX}/products/export",
+    summary="Exporta produtos filtrados para CSV ou Excel",
+    tags=["Produtos"]
+)
+async def export_products(
+    format: str = Query(
+        "csv", description="Formato do arquivo: 'csv' ou 'excel'"),
+    db: sqlite3.Connection = Depends(get_db),
+    category: Optional[str] = Query(None),
+    brand: Optional[str] = Query(None)
+):
+    """
+    Busca produtos com base nos filtros e retorna um arquivo para download.
+    """
+    # 1. Reutiliza a função get_products para buscar os dados filtrados
+    products_list = await get_products(db, category=category, brand=brand, export=True)
+
+    if not products_list:
+        raise HTTPException(
+            status_code=404, detail="Nenhum produto encontrado para exportar.")
+
+    # 2. Usa Pandas para facilitar a manipulação e exportação
+    df = pd.DataFrame(products_list)
+
+    # 3. Define o que será exportado e renomeia as colunas
+    columns_to_export = {
+        "title": "Produto", "brand": "Marca", "gtin": "GTIN/EAN",
+        "ncm": "NCM", "category": "Categoria", "price": "Preço",
+        "created_at": "Data de Cadastro"
+    }
+    df = df[list(columns_to_export.keys())]
+    df.rename(columns=columns_to_export, inplace=True)
+
+    # 4. Prepara o arquivo em memória
+    stream = io.BytesIO() if format == "excel" else io.StringIO()
+    filename = f"cadvision_produtos.{'xlsx' if format == 'excel' else 'csv'}"
+    media_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" if format == "excel" else "text/csv"
+
+    # 5. Gera o arquivo no formato escolhido
+    if format == "excel":
+        df.to_excel(stream, index=False)
+    else:
+        df.to_csv(stream, index=False)
+
+    stream.seek(0)
+    response = StreamingResponse(iter([stream.read()]), media_type=media_type)
+    response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+    return response
 
 # Adicione esta linha para inicializar o banco de dados na inicialização
 
@@ -476,37 +530,5 @@ async def delete_product(
             status_code=404, detail=f"Produto com ID {product_id} não encontrado.")
 
     return {"success": True, "message": "Produto excluído com sucesso."}
-# Em backend/main.py
-
-
-@app.get(
-    f"{API_PREFIX}/products/export/csv",
-    summary="Exporta todos os produtos para um arquivo CSV",
-    tags=["Produtos"]
-)
-async def export_products_csv(db: sqlite3.Connection = Depends(get_db)):
-    """
-    Busca todos os produtos no banco de dados e retorna um arquivo CSV para download.
-    """
-    stream = io.StringIO()
-    writer = csv.writer(stream)
-
-    # Cabeçalho do CSV
-    headers = ["id", "gtin", "title", "brand", "category",
-               "price", "ncm", "cest", "confidence", "created_at"]
-    writer.writerow(headers)
-
-    products = get_all_products(db)
-    for product in products:
-        # Escreve uma linha para cada produto
-        writer.writerow([product.get(h) for h in headers])
-
-    # Move o cursor para o início do "arquivo" em memória
-    stream.seek(0)
-
-    response = StreamingResponse(iter([stream.read()]), media_type="text/csv")
-    response.headers["Content-Disposition"] = "attachment; filename=cadvision_products.csv"
-
-    return response
 
 # --- FIM DO ARQUIVO main.py ---

@@ -5,9 +5,7 @@ import threading
 from pathlib import Path
 from contextlib import contextmanager
 from typing import Generator, Optional, Any, Dict, List
-
-# Configuração do caminho do banco de dados
-DB_PATH = Path(__file__).resolve().parent.parent.parent / "cadvision.db"
+from app.core.config import DB_PATH
 
 # Garantir que o diretório existe
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
