@@ -379,3 +379,329 @@ BRANDS
 2025-09-19 08:06:35,719 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7891340365576). Iniciando validação.
 2025-09-19 08:06:35,720 - app.services.product_service - INFO - Sucesso! GTIN 7891340365576 encontrado no cache local.
 2025-09-19 08:08:26,257 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 08:09:13,562 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 08:09:13,567 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 08:09:13,567 - main - INFO - Banco de dados inicializado
+2025-09-19 08:20:34,720 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 08:20:36,479 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 08:20:36,483 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 08:20:36,483 - main - INFO - Banco de dados inicializado
+2025-09-19 08:20:54,475 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 08:20:58,483 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 08:20:58,502 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 08:20:58,504 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 4.08s
+2025-09-19 08:20:58,504 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 08:20:58,505 - app.services.product_service - INFO - Sucesso! GTIN 7896022200534 encontrado no cache local.
+2025-09-19 08:21:22,575 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 08:21:25,445 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-19 08:21:25,446 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-19 08:21:25,446 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-19 08:21:25,446 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 2.93s
+2025-09-19 08:21:25,446 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7891340365576). Iniciando validação.
+2025-09-19 08:21:25,447 - app.services.product_service - INFO - Sucesso! GTIN 7891340365576 encontrado no cache local.
+2025-09-19 08:21:33,144 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 08:21:36,022 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 08:21:36,032 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 08:21:36,032 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 2.93s
+2025-09-19 08:21:36,032 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 08:21:36,033 - app.services.product_service - INFO - Sucesso! GTIN 7896022200534 encontrado no cache local.
+2025-09-19 08:24:26,435 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 08:24:29,331 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 08:24:29,341 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 08:24:29,341 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 2.95s
+2025-09-19 08:24:29,341 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 08:24:29,342 - app.services.product_service - INFO - Sucesso! GTIN 7896022200534 encontrado no cache local.
+2025-09-19 08:27:08,749 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 08:27:11,059 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-19 08:27:11,059 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-19 08:27:11,059 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-19 08:27:11,060 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 2.37s
+2025-09-19 08:27:11,060 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7891340365576). Iniciando validação.
+2025-09-19 08:27:11,061 - app.services.product_service - INFO - Sucesso! GTIN 7891340365576 encontrado no cache local.
+2025-09-19 08:27:16,274 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 08:27:18,457 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 08:27:18,467 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 08:27:18,467 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 2.24s
+2025-09-19 08:27:18,467 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 08:27:18,468 - app.services.product_service - INFO - Sucesso! GTIN 7896022200534 encontrado no cache local.
+2025-09-19 09:48:06,116 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 09:48:06,129 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 09:48:06,129 - main - INFO - Banco de dados inicializado
+2025-09-19 09:56:27,566 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 09:56:30,747 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 09:56:30,962 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 09:56:30,964 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 3.49s
+2025-09-19 09:56:30,964 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 09:56:30,965 - app.services.product_service - INFO - Sucesso! GTIN 7896022200534 encontrado no cache local.
+2025-09-19 10:00:36,259 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 10:00:38,877 - app.services.vision_service - INFO - Vision API: Texto extraído (331 chars), Logos: 0, Labels: 3
+2025-09-19 10:00:38,878 - app.services.vision_service - INFO - Texto bruto: 'de
+R
+SUB
+800
+Orientações de usoc
+Abra a tampa Flip-Top. Abra a etiqueta autoadesiva
+no local indicado. Após uso, mantenha fechado para
+Conservar a umidade.
+Retire a toalhinha, puxando pelo centro.
+Após o uso, descartar a toalhinha no lixo.
+7 898937 345775
+Prazo de Validade: 24 meses após a data de
+fabricação impressa na embalagem' -> Texto limpo para análise: '800789893734577524'
+2025-09-19 10:00:38,879 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '800789893734577524'
+2025-09-19 10:00:38,879 - main - INFO - Dados extraídos - Texto: 331 chars, Logos: [], Sucesso: True, Tempo: 2.68s
+2025-09-19 10:00:38,880 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-19 10:00:38,880 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '', 'title': 'Abra a tampa Flip-Top. Abra a etiqueta autoadesiva', 'brand': None, 'category': None, 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
+2025-09-19 10:02:54,016 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 10:02:56,311 - app.services.vision_service - INFO - Vision API: Texto extraído (91 chars), Logos: 0, Labels: 1
+2025-09-19 10:02:56,311 - app.services.vision_service - INFO - Texto bruto: '7 898937345775
+Prazo de Validade: 24 meses após a data de
+fabricação impressa na embalagem.' -> Texto limpo para análise: '789893734577524'
+2025-09-19 10:02:56,312 - app.services.vision_service - INFO - GTIN validado com sucesso: 7898937345775
+2025-09-19 10:02:56,312 - main - INFO - Dados extraídos - Texto: 91 chars, Logos: [], Sucesso: True, Tempo: 2.31s
+2025-09-19 10:02:56,312 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7898937345775). Iniciando validação.
+2025-09-19 10:02:56,313 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7898937345775
+2025-09-19 10:02:57,871 - app.services.product_service - INFO - Novo produto com GTIN 7898937345775 salvo no cache local.
+2025-09-19 10:20:45,934 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 10:21:31,522 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 10:21:31,526 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 10:21:31,526 - main - INFO - Banco de dados inicializado
+2025-09-19 10:22:47,776 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 10:22:49,563 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 10:22:49,567 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 10:22:49,568 - main - INFO - Banco de dados inicializado
+2025-09-19 10:22:51,047 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 10:23:05,743 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 10:23:05,747 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 10:23:05,747 - main - INFO - Banco de dados inicializado
+2025-09-19 10:23:07,549 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 10:23:07,552 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 10:23:07,552 - main - INFO - Banco de dados inicializado
+2025-09-19 10:24:17,683 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 10:24:20,234 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 10:24:20,254 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 10:24:20,255 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 2.62s
+2025-09-19 10:24:20,255 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 10:24:20,256 - app.services.product_service - INFO - Sucesso! GTIN 7896022200534 encontrado no cache local.
+2025-09-19 10:29:02,851 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 10:29:02,854 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 10:29:02,855 - main - INFO - Banco de dados inicializado
+2025-09-19 10:30:23,283 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 10:31:19,675 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 10:31:19,679 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 10:31:19,679 - main - INFO - Banco de dados inicializado
+2025-09-19 10:35:31,445 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 10:35:37,921 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 10:35:37,924 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 10:35:37,924 - main - INFO - Banco de dados inicializado
+2025-09-19 10:37:02,738 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 10:37:04,577 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 10:37:04,581 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 10:37:04,581 - main - INFO - Banco de dados inicializado
+2025-09-19 10:37:14,420 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 10:38:03,727 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 10:38:03,730 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 10:38:03,730 - main - INFO - Banco de dados inicializado
+2025-09-19 11:15:07,516 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 11:15:07,520 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 11:15:07,520 - main - INFO - Banco de dados inicializado
+2025-09-19 11:15:47,401 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 11:15:49,829 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 11:15:49,985 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 11:15:49,987 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 2.64s
+2025-09-19 11:15:49,987 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 11:15:49,988 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7896022200534
+2025-09-19 11:15:51,551 - app.services.product_service - INFO - Novo produto com GTIN 7896022200534 salvo no cache local.
+2025-09-19 11:25:42,202 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 11:25:42,205 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 11:25:42,205 - main - INFO - Banco de dados inicializado
+2025-09-19 11:26:03,166 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 11:26:05,854 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-19 11:26:05,855 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-19 11:26:05,855 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-19 11:26:05,856 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 2.75s
+2025-09-19 11:26:05,857 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7891340365576). Iniciando validação.
+2025-09-19 11:26:05,857 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7891340365576
+2025-09-19 11:26:07,312 - app.services.product_service - INFO - Novo produto com GTIN 7891340365576 salvo no cache local.
+2025-09-19 11:39:10,057 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 11:39:10,060 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 11:39:10,060 - main - INFO - Banco de dados inicializado
+2025-09-19 11:39:29,087 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 11:39:31,722 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 11:39:31,741 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 11:39:31,743 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 2.70s
+2025-09-19 11:39:31,743 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 11:39:31,744 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7896022200534
+2025-09-19 11:39:33,191 - app.services.product_service - INFO - Novo produto com GTIN 7896022200534 salvo no cache local.
+2025-09-19 11:39:35,409 - app.database - ERROR - Erro ao inserir produto: no such column: image_hash
+2025-09-19 11:39:35,410 - main - ERROR - Erro ao salvar produto: 500: Erro ao salvar o produto no banco de dados
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 256, in save_product
+    raise HTTPException(
+fastapi.exceptions.HTTPException: 500: Erro ao salvar o produto no banco de dados
+2025-09-19 11:39:57,265 - app.database - ERROR - Erro ao inserir produto: no such column: image_hash
+2025-09-19 11:39:57,265 - main - ERROR - Erro ao salvar produto: 500: Erro ao salvar o produto no banco de dados
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 256, in save_product
+    raise HTTPException(
+fastapi.exceptions.HTTPException: 500: Erro ao salvar o produto no banco de dados
+2025-09-19 11:49:31,592 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 11:49:33,379 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 11:49:33,382 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 11:49:33,382 - main - INFO - Banco de dados inicializado
+2025-09-19 11:50:05,555 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 11:50:08,553 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 11:50:08,572 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 11:50:08,573 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 3.07s
+2025-09-19 11:50:08,574 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 11:50:08,574 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7896022200534
+2025-09-19 11:50:10,052 - app.services.product_service - INFO - Novo produto com GTIN 7896022200534 salvo no cache local.
+2025-09-19 11:50:30,636 - app.database - ERROR - Erro ao inserir produto: no such column: image_hash
+2025-09-19 11:50:30,636 - main - ERROR - Erro ao salvar produto: 500: Erro ao salvar o produto no banco de dados
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 256, in save_product
+    raise HTTPException(
+fastapi.exceptions.HTTPException: 500: Erro ao salvar o produto no banco de dados
+2025-09-19 11:50:47,611 - app.database - ERROR - Erro ao inserir produto: no such column: image_hash
+2025-09-19 11:50:47,611 - main - ERROR - Erro ao salvar produto: 500: Erro ao salvar o produto no banco de dados
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 256, in save_product
+    raise HTTPException(
+fastapi.exceptions.HTTPException: 500: Erro ao salvar o produto no banco de dados
+2025-09-19 12:02:10,545 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 12:02:12,348 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 12:02:12,397 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 12:02:12,397 - main - INFO - Banco de dados inicializado
+2025-09-19 12:03:37,440 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 12:04:47,858 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 12:04:47,862 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 12:04:47,862 - main - INFO - Banco de dados inicializado
+2025-09-19 12:04:54,261 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 12:05:20,467 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 12:05:20,469 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 12:05:20,470 - main - INFO - Banco de dados inicializado
+2025-09-19 12:06:01,717 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 12:06:12,197 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 12:06:12,199 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 12:06:12,200 - main - INFO - Banco de dados inicializado
+2025-09-19 12:27:44,349 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 12:27:46,126 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 12:27:46,129 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 12:27:46,129 - main - INFO - Banco de dados inicializado
+2025-09-19 12:27:55,983 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 12:27:57,755 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 12:27:57,803 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 12:27:57,803 - main - INFO - Banco de dados inicializado
+2025-09-19 12:28:18,272 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 12:28:32,559 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 12:28:32,613 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 12:28:32,613 - main - INFO - Banco de dados inicializado
+2025-09-19 12:29:31,889 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 12:29:33,619 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 12:29:33,623 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 12:29:33,623 - main - INFO - Banco de dados inicializado
+2025-09-19 12:29:34,441 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 12:29:45,377 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 12:29:45,380 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 12:29:45,380 - main - INFO - Banco de dados inicializado
+2025-09-19 12:30:13,806 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 12:30:17,586 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 12:30:17,605 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 12:30:17,606 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 3.85s
+2025-09-19 12:30:17,607 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 12:30:17,608 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7896022200534
+2025-09-19 12:30:19,077 - app.services.product_service - INFO - Novo produto com GTIN 7896022200534 salvo no cache local.
+2025-09-19 13:26:36,223 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 13:26:38,664 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-19 13:26:38,665 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-19 13:26:38,665 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-19 13:26:38,666 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 2.50s
+2025-09-19 13:26:38,666 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7891340365576). Iniciando validação.
+2025-09-19 13:26:38,667 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7891340365576
+2025-09-19 13:26:40,125 - app.services.product_service - INFO - Novo produto com GTIN 7891340365576 salvo no cache local.
+2025-09-19 13:38:24,085 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 13:38:38,799 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 13:38:38,803 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 13:38:38,803 - main - INFO - Banco de dados inicializado
+2025-09-19 13:40:07,349 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 13:40:09,886 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-19 13:40:09,887 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-19 13:40:09,887 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-19 13:40:09,888 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 2.60s
+2025-09-19 13:40:09,889 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7891340365576). Iniciando validação.
+2025-09-19 13:40:09,889 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7891340365576
+2025-09-19 13:40:11,442 - app.services.product_service - INFO - Novo produto com GTIN 7891340365576 salvo no cache local.
+2025-09-19 13:49:11,827 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 13:49:13,563 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 13:49:13,610 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 13:49:13,611 - main - INFO - Banco de dados inicializado
+2025-09-19 13:49:27,706 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 13:49:30,220 - app.services.vision_service - INFO - Vision API: Texto extraído (20 chars), Logos: 0, Labels: 2
+2025-09-19 13:49:30,220 - app.services.vision_service - INFO - Texto bruto: '78980554208111
+a
+eld' -> Texto limpo para análise: '78980554208111'
+2025-09-19 13:49:30,221 - app.services.vision_service - INFO - GTIN validado com sucesso: 7898055420811
+2025-09-19 13:49:30,222 - main - INFO - Dados extraídos - Texto: 20 chars, Logos: [], Sucesso: True, Tempo: 2.56s
+2025-09-19 13:49:30,222 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7898055420811). Iniciando validação.
+2025-09-19 13:49:30,223 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7898055420811
+2025-09-19 13:49:31,760 - app.services.product_service - INFO - Novo produto com GTIN 7898055420811 salvo no cache local.
+2025-09-19 13:50:00,165 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 13:50:02,959 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 13:50:02,970 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 13:50:02,970 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 2.85s
+2025-09-19 13:50:02,971 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 13:50:02,971 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7896022200534
+2025-09-19 13:50:04,344 - app.services.product_service - INFO - Novo produto com GTIN 7896022200534 salvo no cache local.
+2025-09-19 13:50:19,572 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 13:50:23,113 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-19 13:50:23,113 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-19 13:50:23,113 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-19 13:50:23,114 - main - INFO - Dados extraídos - Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 3.60s
+2025-09-19 13:50:23,114 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7891340365576). Iniciando validação.
+2025-09-19 13:50:23,114 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7891340365576
+2025-09-19 13:50:24,490 - app.services.product_service - INFO - Novo produto com GTIN 7891340365576 salvo no cache local.
+2025-09-19 13:53:11,822 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 13:53:13,605 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 13:53:13,608 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 13:53:13,608 - main - INFO - Banco de dados inicializado
+2025-09-19 13:53:56,833 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 13:53:58,650 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 13:53:58,653 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 13:53:58,653 - main - INFO - Banco de dados inicializado
+2025-09-19 13:54:27,213 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 13:54:28,969 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 13:54:28,972 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 13:54:28,972 - main - INFO - Banco de dados inicializado
+2025-09-19 13:58:54,233 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 13:58:56,055 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 13:58:56,058 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 13:58:56,058 - main - INFO - Banco de dados inicializado
+2025-09-19 14:02:37,986 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 14:02:40,985 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 14:02:41,004 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 14:02:41,005 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 3.07s
+2025-09-19 14:02:41,006 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 14:02:41,006 - app.services.product_service - INFO - Sucesso! GTIN 7896022200534 encontrado no cache local.
+2025-09-19 14:12:01,832 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 14:12:03,570 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 14:12:03,573 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 14:12:03,573 - main - INFO - Banco de dados inicializado
+2025-09-19 14:14:05,186 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 14:14:06,921 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 14:14:06,923 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 14:14:06,924 - main - INFO - Banco de dados inicializado
+2025-09-19 14:22:10,760 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 14:22:12,487 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 14:22:12,490 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 14:22:12,490 - main - INFO - Banco de dados inicializado
+2025-09-19 14:22:19,652 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 14:22:21,456 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 14:22:21,458 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 14:22:21,459 - main - INFO - Banco de dados inicializado
+2025-09-19 14:22:42,935 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 14:22:45,911 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 14:22:45,930 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 14:22:45,931 - main - INFO - Dados extraídos - Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 3.05s
+2025-09-19 14:22:45,932 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 14:22:45,932 - app.services.product_service - INFO - Sucesso! GTIN 7896022200534 encontrado no cache local.
+2025-09-19 14:37:46,187 - main - INFO - Encerrando aplicação CadVision API

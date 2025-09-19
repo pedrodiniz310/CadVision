@@ -290,8 +290,14 @@ class IdentificationResult(BaseModel):
     """Modelo para resultado de identificação."""
     success: bool = Field(...,
                           description="Indica se a identificação foi bem-sucedida")
+    status: str = Field(
+        "newly_identified",
+        description="Status: 'newly_identified', 'duplicate_found', ou 'failed'"
+    )
     product: Optional[IdentifiedProduct] = Field(
         None, description="Produto identificado")
+    image_hash: Optional[str] = Field(
+        None, description="Hash da imagem processada")
     raw_text: Optional[str] = Field(
         None, description="Texto cru extraído da imagem")
     detected_logos: List[str] = Field(

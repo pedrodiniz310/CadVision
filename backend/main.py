@@ -2,6 +2,8 @@
 import logging
 import sqlite3
 import time
+import csv
+import io
 from pathlib import Path
 from typing import List, Optional
 from contextlib import asynccontextmanager
@@ -9,13 +11,17 @@ from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI, File, HTTPException, UploadFile, Query, BackgroundTasks
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.encoders import jsonable_encoder
 
 # Correção das importações - adicione IdentifiedProduct
 from app.models import ProductCreate, ProductOut, PaginatedResponse, IdentificationResult, APIResponse, ProcessingStats, IdentifiedProduct
-from app.database import get_db, init_db, insert_product, log_processing, get_processing_stats
+from app.database import get_db, init_db, insert_product, log_processing, get_processing_stats, delete_product_by_id
+#
+from app.database import find_product_by_image_hash
+from app.database import delete_product_by_id, get_all_products
 from app.services.vision_service import extract_vision_data, get_cache_key
 from app.services.product_service import intelligent_text_analysis
 from app.services.cosmos_service import fetch_product_by_gtin
@@ -123,7 +129,20 @@ async def identify_image(
 
     image_hash = get_cache_key(image_bytes)
     processing_time = 0
+    product_from_hash = find_product_by_image_hash(image_hash, db)
+    if product_from_hash:
+        logger.info(f"Imagem duplicada encontrada para o hash: {image_hash}")
 
+    # Converte o resultado do banco (dicionário) para o modelo Pydantic
+        identified_product = IdentifiedProduct(**product_from_hash)
+        return IdentificationResult(
+            success=True,
+            status="duplicate_found",  # Sinaliza que é uma duplicata
+            product=identified_product,
+            confidence=identified_product.confidence or 1.0,
+            processing_time=0.01  # Tempo de processamento quase zero
+        )
+# --- FIM DA LÓGICA DE DETECÇÃO DE DUPLICATA ---
     try:
         # 1. Chama o serviço do Vision para extrair dados brutos
         vision_data = extract_vision_data(image_bytes)
@@ -161,7 +180,8 @@ async def identify_image(
             )
 
         # 3. Chama o serviço de produto para executar a análise
-        product_info = intelligent_text_analysis(raw_text, gtin_from_vision, detected_logos, db)
+        product_info = intelligent_text_analysis(
+            raw_text, gtin_from_vision, detected_logos, db)
 
         # 4. Converte para o modelo IdentifiedProduct com fallbacks
         identified_product = IdentifiedProduct(
@@ -186,6 +206,7 @@ async def identify_image(
         return IdentificationResult(
             success=True,
             product=identified_product,
+            image_hash=image_hash,
             raw_text=raw_text,
             detected_logos=detected_logos,
             confidence=product_info.get('confidence', 0.0),
@@ -225,7 +246,8 @@ async def save_product(
     Salva os dados de um produto no banco de dados.
     """
     try:
-        product_id = insert_product({
+        # Cria um dicionário com os dados do produto
+        product_data = {
             'gtin': product.gtin,
             'title': product.title,
             'brand': product.brand,
@@ -234,8 +256,11 @@ async def save_product(
             'ncm': product.ncm,
             'cest': product.cest,
             'confidence': product.confidence,
-            'image_hash': None
-        })
+            'image_hash': product.image_hash  # Ajuste conforme necessário
+        }
+
+        # Passa os dados e a conexão 'db' para a função
+        product_id = insert_product(product_data, db=db)
 
         if product_id:
             return APIResponse.success_response(
@@ -428,4 +453,55 @@ async def general_exception_handler(request, exc):
             "error_code": "INTERNAL_SERVER_ERROR"
         })
     )
+
+
+@app.delete(
+    f"{API_PREFIX}/products/{{product_id}}",
+    summary="Exclui um produto pelo ID",
+    status_code=200,
+    tags=["Produtos"]
+)
+async def delete_product(
+    product_id: int,
+    db: sqlite3.Connection = Depends(get_db)
+):
+    success = delete_product_by_id(product_id, db)
+    if not success:
+        raise HTTPException(
+            status_code=404, detail=f"Produto com ID {product_id} não encontrado.")
+
+    return {"success": True, "message": "Produto excluído com sucesso."}
+# Em backend/main.py
+
+
+@app.get(
+    f"{API_PREFIX}/products/export/csv",
+    summary="Exporta todos os produtos para um arquivo CSV",
+    tags=["Produtos"]
+)
+async def export_products_csv(db: sqlite3.Connection = Depends(get_db)):
+    """
+    Busca todos os produtos no banco de dados e retorna um arquivo CSV para download.
+    """
+    stream = io.StringIO()
+    writer = csv.writer(stream)
+
+    # Cabeçalho do CSV
+    headers = ["id", "gtin", "title", "brand", "category",
+               "price", "ncm", "cest", "confidence", "created_at"]
+    writer.writerow(headers)
+
+    products = get_all_products(db)
+    for product in products:
+        # Escreve uma linha para cada produto
+        writer.writerow([product.get(h) for h in headers])
+
+    # Move o cursor para o início do "arquivo" em memória
+    stream.seek(0)
+
+    response = StreamingResponse(iter([stream.read()]), media_type="text/csv")
+    response.headers["Content-Disposition"] = "attachment; filename=cadvision_products.csv"
+
+    return response
+
 # --- FIM DO ARQUIVO main.py ---

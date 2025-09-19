@@ -28,6 +28,30 @@ CATEGORY_KEYWORDS = {
     'Padaria': ['pão', 'bolo', 'rosquinha', 'croissant', 'bisnaga'],
     'Carnes': ['carne', 'frango', 'peixe', 'bovina', 'suína', 'aves']
 }
+# Mapeamento de palavras-chave para as categorias que existem no seu frontend
+CATEGORY_MAPPING = {
+    "Alimentos": ['alimento', 'comida', 'arroz', 'feijão', 'macarrão', 'biscoito', 'bolacha', 'wafer', 'chocolate', 'mercearia', 'padaria', 'laticínio', 'carne', 'sêmola'],
+    "Bebidas": ['bebida', 'refrigerante', 'suco', 'água', 'cerveja', 'vinho'],
+    "Limpeza": ['limpeza', 'sabão', 'detergente', 'amaciante'],
+    "Higiene": ['higiene', 'shampoo', 'sabonete', 'dental'],
+    "Eletrônicos": ['eletrônico', 'celular', 'tv', 'eletrodoméstico']
+}
+
+
+def _map_category(raw_category: Optional[str]) -> Optional[str]:
+    """Mapeia uma string de categoria bruta para uma das categorias do frontend."""
+    if not raw_category:
+        return None  # Se não houver categoria, não retorna nada
+
+    raw_category_lower = raw_category.lower()
+
+    # Procura por palavras-chave para encontrar a categoria correspondente
+    for canonical_category, keywords in CATEGORY_MAPPING.items():
+        if any(keyword in raw_category_lower for keyword in keywords):
+            return canonical_category
+
+    # Se não encontrar nenhuma correspondência, retorna "Outros" como padrão
+    return "Outros"
 
 # --- Funções Auxiliares de Análise ---
 
@@ -143,12 +167,14 @@ def intelligent_text_analysis(text: str, detected_gtin: Optional[str], detected_
             cosmos_data = fetch_product_by_gtin(detected_gtin)
 
             if cosmos_data and cosmos_data.get("description"):
+                raw_category_from_cosmos = cosmos_data.get("category", "")
+                mapped_category = _map_category(raw_category_from_cosmos)
                 # CORREÇÃO: cosmos_data já vem formatado corretamente como strings
                 parsed_data = {
                     "gtin": detected_gtin,
                     "title": cosmos_data.get("description", ""),
                     "brand": cosmos_data.get("brand", ""),
-                    "category": cosmos_data.get("category", ""),
+                    "category": mapped_category,  # <-- Use a categoria mapeada
                     "ncm": cosmos_data.get("ncm", ""),
                     "cest": cosmos_data.get("cest", ""),
                     "confidence": 0.99,
@@ -195,19 +221,21 @@ def intelligent_text_analysis(text: str, detected_gtin: Optional[str], detected_
         inferred_data['title'] = _extract_product_name(text, detected_gtin)
 
     # Se não conseguiu inferir uma categoria, tenta inferir novamente
+     # 1. Primeiro, tentamos inferir a categoria "bruta" a partir do texto
+    raw_category_inferred = None
     if not inferred_data.get('category'):
-        inferred_data['category'] = _infer_category(text)
+        raw_category_inferred = _infer_category(text)
+    else:
+        raw_category_inferred = inferred_data.get('category')
 
-    # Garanta que a categoria seja None se não for identificada (em vez de string vazia)
-    category = inferred_data.get('category')
-    if category == "":
-        category = None
+    # 2. Agora, passamos a categoria bruta pela nossa função de mapeamento
+    mapped_category = _map_category(raw_category_inferred)
 
     result = {
         'gtin': detected_gtin or "",
         'title': inferred_data.get('title', 'Produto não identificado'),
         'brand': inferred_data.get('brand', ''),
-        'category': category,  # Usamos a variável tratada
+        'category': mapped_category,  # <-- AQUI usamos a categoria já mapeada e limpa
         'ncm': "",
         'cest': "",
         'confidence': 0.80 if brand_from_logo else 0.60,

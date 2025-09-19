@@ -73,15 +73,36 @@ def get_db_cursor(commit: bool = False) -> Generator[sqlite3.Cursor, None, None]
 
 
 def init_db():
+    """Cria e inicializa as tabelas do banco de dados se elas não existirem."""
     try:
         with get_db_connection() as conn:
             cur = conn.cursor()
-            
-            # Tabela de logs de processamento (REMOVA a constraint UNIQUE)
+
+            # --- ADICIONE ESTE BLOCO ---
+            # 1. Tabela principal de PRODUTOS
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS products (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    gtin TEXT UNIQUE,
+                    title TEXT NOT NULL,
+                    brand TEXT,
+                    category TEXT,
+                    price REAL,
+                    ncm TEXT,
+                    cest TEXT,
+                    confidence REAL,
+                    image_hash TEXT,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+            # --- FIM DA ADIÇÃO ---
+
+            # 2. Tabela de LOGS de processamento
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS processing_logs (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    image_hash TEXT,  -- Removido UNIQUE
+                    image_hash TEXT,
                     processing_time REAL,
                     success BOOLEAN,
                     confidence REAL,
@@ -90,60 +111,40 @@ def init_db():
                 )
             """)
 
-            # Tabela de logs de processamento
-            cur.execute("""
-                CREATE TABLE IF NOT EXISTS processing_logs (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    image_hash TEXT UNIQUE,
-                    processing_time REAL,
-                    success BOOLEAN,
-                    confidence REAL,
-                    error_message TEXT,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-                )
-            """)
-
-            # Tabela de marcas conhecidas para cache
+            # 3. Tabela de MARCAS conhecidas para cache e inferência
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS known_brands (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT UNIQUE,
+                    name TEXT UNIQUE NOT NULL,
                     category TEXT,
-                    common_products TEXT,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                 )
             """)
 
-            # Tabela de categorias de produtos
+            # 4. Tabela de CATEGORIAS de produtos
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS product_categories (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT UNIQUE,
+                    name TEXT UNIQUE NOT NULL,
                     keywords TEXT,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                 )
             """)
 
-            # Índices para melhor performance
-            cur.execute(
-                "CREATE INDEX IF NOT EXISTS idx_products_gtin ON products(gtin)")
-            cur.execute(
-                "CREATE INDEX IF NOT EXISTS idx_products_category ON products(category)")
-            cur.execute(
-                "CREATE INDEX IF NOT EXISTS idx_products_brand ON products(brand)")
-            cur.execute(
-                "CREATE INDEX IF NOT EXISTS idx_logs_image_hash ON processing_logs(image_hash)")
-            cur.execute(
-                "CREATE INDEX IF NOT EXISTS idx_logs_created_at ON processing_logs(created_at)")
+            # --- ÍNDICES PARA MELHOR PERFORMANCE ---
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_products_gtin ON products(gtin)")
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_logs_image_hash ON processing_logs(image_hash)")
+
+            # --- DADOS INICIAIS (SEMENTE) ---
 
             # Inserir categorias padrão se a tabela estiver vazia
             cur.execute("SELECT COUNT(*) FROM product_categories")
             if cur.fetchone()[0] == 0:
                 default_categories = [
-                    ('Alimentos', 'arroz,feijão,macarrão,óleo,açúcar,farinha,leite,café'),
+                    ('Alimentos', 'arroz,feijão,macarrão,óleo,açúcar,farinha,leite,café,biscoito,wafer,sêmola'),
                     ('Bebidas', 'refrigerante,cerveja,suco,água,vinho,whisky,vodka'),
                     ('Limpeza', 'sabão,detergente,desinfetante,álcool,água sanitária,amaciante'),
-                    ('Higiene', 'shampoo,condicionador,sabonete,pasta de dente,papel higiênico'),
+                    ('Higiene', 'shampoo,condicionador,sabonete,pasta de dente,papel higiênico,lenços'),
                     ('Eletrônicos', 'celular,tv,notebook,tablet,fone de ouvido,câmera')
                 ]
                 cur.executemany(
@@ -151,89 +152,80 @@ def init_db():
                     default_categories
                 )
 
-            # Inserir marcas conhecidas se a tabela estiver vazia
-            cur.execute("SELECT COUNT(*) FROM known_brands")
-            if cur.fetchone()[0] == 0:
-                default_brands = [
-                    ('Tio João', 'Alimentos', 'Arroz, Feijão'),
-                    ('Nestlé', 'Alimentos', 'Leite, Achocolatado, Iogurte'),
-                    ('Coca-Cola', 'Bebidas', 'Refrigerante, Suco'),
-                    ('Sadia', 'Alimentos', 'Carne, Frango, Linguiça'),
-                    ('Electrolux', 'Eletrodomésticos',
-                     'Geladeira, Fogão, Máquina de Lavar')
-                ]
-                cur.executemany(
-                    "INSERT INTO known_brands (name, category, common_products) VALUES (?, ?, ?)",
-                    default_brands
-                )
-
             conn.commit()
         logger.info("Banco de dados inicializado com sucesso.")
     except sqlite3.Error as e:
         logger.error(f"Erro ao inicializar o banco de dados: {e}")
 
+# Em backend/app/database.py
 
-def insert_product(product_data: Dict[str, Any]) -> Optional[int]:
-    """Insere ou atualiza um produto no banco de dados."""
+def insert_product(product_data: Dict[str, Any], db: sqlite3.Connection) -> Optional[int]:
+    """Insere ou atualiza um produto no banco de dados usando a conexão fornecida."""
     try:
-        with get_db_cursor(commit=True) as cur:
-            # Verifica se o produto já existe pelo GTIN
-            if product_data.get('gtin'):
-                cur.execute("SELECT id FROM products WHERE gtin = ?",
-                            (product_data['gtin'],))
-                existing = cur.fetchone()
+        # A lógica de 'with get_db_cursor...' foi removida para usar a conexão 'db' diretamente.
+        cur = db.cursor()
 
-                if existing:
-                    # Atualiza produto existente
-                    cur.execute("""
-                        UPDATE products 
-                        SET title = ?, brand = ?, category = ?, price = ?, ncm = ?, cest = ?, 
-                            confidence = ?, image_hash = ?, updated_at = CURRENT_TIMESTAMP
-                        WHERE gtin = ?
-                    """, (
-                        product_data.get('title'),
-                        product_data.get('brand'),
-                        product_data.get('category'),
-                        product_data.get('price'),
-                        product_data.get('ncm'),
-                        product_data.get('cest'),
-                        product_data.get('confidence'),
-                        product_data.get('image_hash'),
-                        product_data.get('gtin')
-                    ))
-                    return existing['id']
+        # Verifica se o produto já existe pelo GTIN
+        if product_data.get('gtin'):
+            cur.execute("SELECT id FROM products WHERE gtin = ?",
+                        (product_data['gtin'],))
+            existing = cur.fetchone()
 
-            # Insere novo produto
-            cur.execute("""
-                INSERT INTO products 
-                (gtin, title, brand, category, price, ncm, cest, confidence, image_hash)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                product_data.get('gtin'),
-                product_data.get('title'),
-                product_data.get('brand'),
-                product_data.get('category'),
-                product_data.get('price'),
-                product_data.get('ncm'),
-                product_data.get('cest'),
-                product_data.get('confidence'),
-                product_data.get('image_hash')
-            ))
-            return cur.lastrowid
+            if existing:
+                # Atualiza produto existente
+                cur.execute("""
+                    UPDATE products 
+                    SET title = ?, brand = ?, category = ?, price = ?, ncm = ?, cest = ?, 
+                        confidence = ?, image_hash = ?, updated_at = CURRENT_TIMESTAMP
+                    WHERE gtin = ?
+                """, ( # A vírgula antes de WHERE foi removida
+                    product_data.get('title'),
+                    product_data.get('brand'),
+                    product_data.get('category'),
+                    product_data.get('price'),
+                    product_data.get('ncm'),
+                    product_data.get('cest'),
+                    product_data.get('confidence'),
+                    product_data.get('image_hash'),
+                    product_data.get('gtin')
+                ))
+                db.commit()  # Realiza o commit da transação
+                return existing['id']
+
+        # Insere novo produto
+        cur.execute("""
+            INSERT INTO products 
+            (gtin, title, brand, category, price, ncm, cest, confidence, image_hash)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            product_data.get('gtin'),
+            product_data.get('title'),
+            product_data.get('brand'),
+            product_data.get('category'),
+            product_data.get('price'),
+            product_data.get('ncm'),
+            product_data.get('cest'),
+            product_data.get('confidence'),
+            product_data.get('image_hash')
+        ))
+        db.commit()  # Realiza o commit da transação
+        return cur.lastrowid
     except sqlite3.Error as e:
         logger.error(f"Erro ao inserir produto: {e}")
+        db.rollback()  # Desfaz a transação em caso de erro
         return None
 
 
-def log_processing(image_hash: str, processing_time: float, success: bool, 
-                  confidence: float = None, error_message: str = None) -> bool:
+def log_processing(image_hash: str, processing_time: float, success: bool,
+                   confidence: float = None, error_message: str = None) -> bool:
     """Registra ou atualiza um log de processamento de imagem."""
     try:
         with get_db_cursor(commit=True) as cur:
             # Primeiro verifica se já existe um registro com esse image_hash
-            cur.execute("SELECT id FROM processing_logs WHERE image_hash = ?", (image_hash,))
+            cur.execute(
+                "SELECT id FROM processing_logs WHERE image_hash = ?", (image_hash,))
             existing_log = cur.fetchone()
-            
+
             if existing_log:
                 # Atualiza o registro existente
                 cur.execute("""
@@ -323,3 +315,51 @@ def get_processing_stats() -> Dict[str, Any]:
     except sqlite3.Error as e:
         logger.error(f"Erro ao buscar estatísticas: {e}")
         return {}
+
+# Função para deletar produto pelo ID
+
+
+def delete_product_by_id(product_id: int, db: sqlite3.Connection) -> bool:
+    """Exclui um produto pelo seu ID. Retorna True se bem-sucedido, False caso contrário."""
+    try:
+        # O 'with db_lock:' FOI REMOVIDO DAQUI
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM products WHERE id = ?", (product_id,))
+        db.commit()
+        # rowcount > 0 significa que uma linha foi de fato apagada
+        return cursor.rowcount > 0
+    except sqlite3.Error as e:
+        logger.error(f"Erro ao excluir produto ID {product_id}: {e}")
+        db.rollback()
+        return False
+
+
+# Função para recuperar todos os produtos
+def get_all_products(db: sqlite3.Connection) -> List[Dict]:
+    """Recupera TODOS os produtos do banco de dados."""
+    try:
+        # O 'with db_lock:' FOI REMOVIDO DAQUI
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM products ORDER BY id DESC")
+        return [dict(row) for row in cursor.fetchall()]
+    except sqlite3.Error as e:
+        logger.error(f"Erro ao buscar todos os produtos: {e}")
+        return []
+
+def find_product_by_image_hash(image_hash: str, db: sqlite3.Connection) -> Optional[Dict]:
+    """
+    Busca um produto na tabela 'products' pelo hash da imagem.
+    Retorna os dados do produto se encontrado e bem-sucedido anteriormente.
+    """
+    try:
+        cursor = db.cursor()
+        # Buscamos um produto que tenha o hash e uma confiança alta (indicando que foi salvo via IA)
+        cursor.execute(
+            "SELECT * FROM products WHERE image_hash = ? AND confidence > 0.9", 
+            (image_hash,)
+        )
+        row = cursor.fetchone()
+        return dict(row) if row else None
+    except sqlite3.Error as e:
+        logger.error(f"Erro ao buscar produto por hash de imagem: {e}")
+        return None
