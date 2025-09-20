@@ -883,3 +883,258 @@ select:focus {
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-md);
 }
+
+/* =================================================== */
+/* ===         ESTILOS OTIMIZADOS DO DASHBOARD       === */
+/* =================================================== */
+
+/* CABEÇALHO DO DASHBOARD */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+}
+
+.dashboard-header .header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.dashboard-header .search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  padding: 8px 15px;
+  border: 1px solid var(--line);
+  border-radius: var(--border-radius);
+  transition: var(--transition);
+  min-width: 250px;
+}
+
+.dashboard-header .search:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 0, 255, 0.2);
+}
+
+.dashboard-header .search input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+}
+
+/* CARDS DE KPI (INDICADORES) */
+.grid-4-compact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.kpi-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
+}
+
+.kpi-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.kpi-card .icon-wrapper {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius);
+  color: #fff;
+  font-size: 20px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.kpi-card:hover .icon-wrapper {
+  transform: scale(1.1);
+}
+
+.icon-wrapper.bg-blue {
+  background-color: #3b82f6;
+}
+
+.icon-wrapper.bg-teal {
+  background-color: #14b8a6;
+}
+
+.icon-wrapper.bg-green {
+  background-color: #22c55e;
+}
+
+.icon-wrapper.bg-yellow {
+  background-color: #f59e0b;
+}
+
+.kpi-card .kpi-details span {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.kpi-card .kpi-details h3 {
+  margin: 4px 0 0;
+  font-size: 28px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* LAYOUT PRINCIPAL DOS GRÁFICOS */
+.dashboard-charts-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-xl);
+
+  /* 🔥 CORREÇÃO DEFINITIVA: Impede que os itens da grid se estiquem verticalmente. */
+  align-items: start;
+}
+/* 🔥 NOVO AJUSTE: Garante que o conteúdo dentro do card se organize corretamente */
+.dashboard-charts-grid .card {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Faz o card preencher o espaço da coluna da direita */
+}
+
+.right-column-charts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.full-width-card {
+  grid-column: 1 / -1;
+  /* Ocupa a largura total da grid */
+}
+
+/* CONTÊINERES E CANVAS DOS GRÁFICOS */
+.chart-container-large,
+.chart-container-small {
+  position: relative;
+  width: 100%;
+}
+
+/* REMOÇÃO de min-height para usar apenas aspect-ratio */
+.chart-container-large canvas {
+  aspect-ratio: 16 / 8;
+}
+
+.chart-container-small canvas {
+  aspect-ratio: 1 / 1.1;
+  /* Um pouco mais alto que largo, bom para pizza */
+}
+
+/* FEED DE ATIVIDADE RECENTE */
+.activity-feed ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activity-feed li {
+  display: flex;
+  align-items: center;
+  padding: 10px 4px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--line);
+  transition: background-color 0.2s ease;
+}
+
+.activity-feed li:last-child {
+  border-bottom: none;
+}
+
+.activity-feed li:hover {
+  background-color: var(--primary-light);
+}
+
+.activity-feed .activity-icon {
+  margin-right: 12px;
+  font-size: 16px;
+}
+
+.activity-feed .activity-icon.success {
+  color: var(--success);
+}
+
+.activity-feed .activity-icon.failure {
+  color: var(--error);
+}
+
+.activity-feed .activity-date {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ANIMAÇÕES DE CARREGAMENTO E REFRESH */
+.activity-feed-skeleton {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activity-feed-skeleton li {
+  height: 20px;
+  margin-bottom: 15px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: skeleton-loading 1.5s infinite linear;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.refreshing {
+  animation: fa-spin 1s linear infinite;
+}
+
+/* RESPONSIVIDADE DO DASHBOARD */
+@media (max-width: 1200px) {
+  .dashboard-charts-grid {
+    grid-template-columns: 1fr;
+    /* Empilha tudo em uma única coluna */
+  }
+}
+
+@media (max-width: 960px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dashboard-header .header-actions {
+    width: 100%;
+  }
+
+  .dashboard-header .search {
+    flex-grow: 1;
+  }
+}

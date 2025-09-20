@@ -60,81 +60,101 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <div class="main-content">
-      <header class="topbar">
-        <div class="wrap">
-          <button class="side-toggle" id="btnMenu" aria-label="Alternar menu">
-            <i class="fas fa-bars"></i>
-          </button>
-          <div class="search">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Buscar produtos..." id="searchProducts" aria-label="Buscar produtos">
-          </div>
-          <div class="topbar-actions">
-            <button class="btn btn-secondary btn-sm" id="btnRefreshProducts" title="Atualizar lista de produtos">
-              <i class="fas fa-sync-alt"></i>
-            </button>
-            <div class="chip" id="connectionStatusContainer">
-              <i class="fas fa-wifi"></i>
-              <span id="connectionStatus">Conectando...</span>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <main class="main">
         <section id="dashboard" class="page-content">
-          <h1 class="h1">Dashboard</h1>
-          <p class="muted">Visão geral do sistema e estatísticas de uso.</p>
-
-          <div class="grid grid-4">
-            <div class="card text-center">
-              <i class="fas fa-box" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 15px;"></i>
-              <h2 id="totalProducts">0</h2>
-              <p class="muted">Produtos Cadastrados</p>
+          <div class="dashboard-header">
+            <div>
+              <h1 class="h1">Dashboard</h1>
+              
             </div>
-            <div class="card text-center">
-              <i class="fas fa-robot" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 15px;"></i>
-              <h2 id="totalAI">0</h2>
-              <p class="muted">Identificados por IA</p>
-            </div>
-            <div class="card text-center">
-              <i class="fas fa-check-circle" style="font-size: 2.5rem; color: var(--success); margin-bottom: 15px;"></i>
-              <h2 id="successRate">0%</h2>
-              <p class="muted">Taxa de Sucesso</p>
-            </div>
-            <div class="card text-center">
-              <i class="fas fa-bolt" style="font-size: 2.5rem; color: var(--info); margin-bottom: 15px;"></i>
-              <h2 id="avgTime">0s</h2>
-              <p class="muted">Tempo Médio de Análise</p>
+            <div class="header-actions">
+              <div class="search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar produtos..." id="searchProductsDashboard"
+                  aria-label="Buscar produtos">
+              </div>
+              <button class="btn btn-secondary btn-sm" id="btnRefreshDashboard" title="Atualizar dados">
+                <i class="fas fa-sync-alt"></i>
+              </button>
             </div>
           </div>
 
-          <div class="grid dashboard-grid-3" style="margin-top: 30px;">
-            <div class="card">
-              <h2 class="h2">Histórico de Performance</h2>
-              <canvas id="performanceChart"></canvas>
+          <div class="grid grid-4-compact">
+            <div class="card kpi-card">
+              <div class="icon-wrapper bg-blue">
+                <i class="fas fa-box"></i>
+              </div>
+              <div class="kpi-details">
+                <span class="muted">Produtos Cadastrados</span>
+                <h3 id="totalProducts">0</h3>
+              </div>
             </div>
-
-            <div class="card">
-              <h2 class="h2">Produtos por Categoria</h2>
-              <canvas id="categoryChart"></canvas>
+            <div class="card kpi-card">
+              <div class="icon-wrapper bg-teal">
+                <i class="fas fa-robot"></i>
+              </div>
+              <div class="kpi-details">
+                <span class="muted">Identificados por IA</span>
+                <h3 id="totalAI">0</h3>
+              </div>
             </div>
-
-            <div class="card">
-              <h2 class="h2">Cadastros por Período</h2>
-              <canvas id="productsPerPeriodChart"></canvas>
+            <div class="card kpi-card">
+              <div class="icon-wrapper bg-green">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="kpi-details">
+                <span class="muted">Taxa de Sucesso</span>
+                <h3 id="successRate">0%</h3>
+              </div>
+            </div>
+            <div class="card kpi-card">
+              <div class="icon-wrapper bg-yellow">
+                <i class="fas fa-bolt"></i>
+              </div>
+              <div class="kpi-details">
+                <span class="muted">Tempo Médio</span>
+                <h3 id="avgTime">0s</h3>
+              </div>
             </div>
           </div>
 
-          <div class="card" style="margin-top: 30px;">
-            <h2 class="h2">Atividade Recente</h2>
-            <div id="recentActivity">
-              <p class="muted text-center">Carregando atividades...</p>
+          <div class="dashboard-charts-grid">
+            <div class="card">
+              <h2 class="h2">Histórico de Performance (Últimos 30 dias)</h2>
+              <div class="chart-container-large">
+                <canvas id="performanceChart"></canvas>
+              </div>
+            </div>
+
+            <div class="right-column-charts">
+              <div class="card">
+                <h2 class="h2">Produtos por Categoria</h2>
+                <div class="chart-container-small">
+                  <canvas id="categoryChart"></canvas>
+                </div>
+              </div>
+              <div class="card">
+                <h2 class="h2">Cadastros por Dia (Últimos 7 dias)</h2>
+                <div class="chart-container-small">
+                  <canvas id="productsPerPeriodChart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="card full-width-card">
+              <h2 class="h2">Atividade Recente</h2>
+              <div id="recentActivity">
+                <ul class="activity-feed-skeleton">
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>
 
-        <section id="identify" class="page-content">
+        <section id="identify" class="page-content" style="display: none;">
           <h1 class="h1">Identificar Produto</h1>
           <p class="muted">Faça upload de uma imagem para identificar automaticamente o produto.</p>
 
@@ -146,6 +166,13 @@
                 <p>Arraste uma imagem aqui ou clique para selecionar</p>
                 <small class="muted">Formatos suportados: JPG, PNG, WebP (até 10MB)</small>
               </div>
+
+              <div style="text-align: center; margin: 15px 0; font-weight: 600; color: var(--muted);">OU</div>
+
+              <button id="btnOpenCamera" class="btn btn-secondary" style="width: 100%;">
+                <i class="fas fa-camera"></i> Tirar Foto com a Câmera
+              </button>
+
               <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
               <img id="imagePreview" class="thumb" alt="Preview da imagem para upload">
 
@@ -513,6 +540,23 @@
       </div>
       <div class="modal-body">
         <form id="editProductForm"></form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="cameraOverlay" style="display: none;">
+    <div class="modal-content" id="cameraModal">
+      <div class="modal-header">
+        <i class="fas fa-camera"></i>
+        <h3>Capturar Imagem</h3>
+      </div>
+      <div class="modal-body" style="padding: 0; text-align: center;">
+        <video id="cameraFeed" style="width: 100%; border-radius: 4px;" autoplay playsinline></video>
+        <canvas id="cameraCanvas" style="display: none;"></canvas>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cameraCancel">Cancelar</button>
+        <button class="btn btn-primary" id="cameraSnap">Tirar Foto</button>
       </div>
     </div>
   </div>

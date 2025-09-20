@@ -1417,3 +1417,14 @@ fabricação impressa na embalagem.' -> Texto limpo para análise: '789893734577524
 2025-09-20 12:08:17,670 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
 2025-09-20 12:08:17,671 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7896022200534
 2025-09-20 12:18:22,756 - main - INFO - Encerrando aplicação CadVision API
+2025-09-20 12:32:15,820 - main - INFO - Iniciando aplicação CadVision API
+2025-09-20 12:32:15,823 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 12:32:15,823 - main - INFO - Banco de dados inicializado
+2025-09-20 12:42:40,461 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-20 12:42:43,111 - app.services.vision_service - INFO - Vision API: Texto extraído (3 chars), Logos: 0, Labels: 6
+2025-09-20 12:42:43,111 - app.services.vision_service - INFO - Texto bruto: '1kg' -> Texto limpo para análise: '1'
+2025-09-20 12:42:43,112 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '1'
+2025-09-20 12:42:43,115 - main - INFO - Dados extraídos - GTIN: , Texto: 3 chars, Logos: [], Sucesso: True, Tempo: 2.67s
+2025-09-20 12:42:43,115 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-20 12:42:43,115 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '', 'title': 'Produto não identificado', 'brand': None, 'category': None, 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
+2025-09-20 14:39:06,037 - main - INFO - Encerrando aplicação CadVision API

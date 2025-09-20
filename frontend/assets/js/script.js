@@ -188,7 +188,9 @@ function cacheDOMElements() {
     "productNCM", "productCEST", "productPrice", "productsContainer", "totalProducts",
     "totalAI", "filterCategory", "filterBrand", "filterSort", "productsPagination",
     "paginationInfo", "btnPrevPage", "btnNextPage", "logsContent", "btnClearLogs",
-    "connectionStatus", "notification-container"
+    "connectionStatus", "notification-container",
+    // Elementos da câmera adicionados aqui
+    "btnOpenCamera", "cameraOverlay", "cameraFeed", "cameraCanvas", "cameraSnap", "cameraCancel"
   ];
   ids.forEach(id => {
     const camelCaseId = id.replace(/-([a-z])/g, g => g[1].toUpperCase());
@@ -207,12 +209,34 @@ let productsPerPeriodChartInstance = null; // Adicione esta linha
 
 // ... (código existente, incluindo a declaração da variável performanceChartInstance) ...
 
+// Substitua a função loadDashboardData inteira por esta
+// No arquivo script.js, substitua a função loadDashboardData inteira
 async function loadDashboardData() {
+  // Estado inicial de carregamento com esqueleto
+  const activityContainer = $("#recentActivity");
+  if (activityContainer) {
+    activityContainer.innerHTML = `
+      <ul class="activity-feed-skeleton">
+        <li></li><li></li><li></li><li></li>
+      </ul>`;
+  }
+
   try {
     const response = await fetch(`${CONFIG.BASE_URL}/dashboard/summary`);
     if (!response.ok) throw new Error("Falha ao carregar dados do dashboard");
 
     const data = await response.json();
+
+    const appColors = {
+      primary: 'rgba(0, 0, 255, 0.8)',
+      primaryLight: 'rgba(0, 0, 255, 0.5)',
+      accent: 'rgba(124, 124, 255, 0.8)',
+      muted: 'rgba(77, 77, 77, 0.3)', // Cor mais suave para grid
+      success: 'rgba(34, 197, 94, 0.8)',
+      warning: 'rgba(245, 158, 11, 0.8)',
+      text: '#333'
+    };
+    const categoryColors = [appColors.primary, appColors.accent, '#14b8a6', '#6b7280', appColors.warning, appColors.success];
 
     // --- 1. Atualizar Cards de KPIs ---
     $("#totalProducts").textContent = data.kpis.total_products;
@@ -220,156 +244,133 @@ async function loadDashboardData() {
     $("#successRate").textContent = `${data.kpis.success_rate}%`;
     $("#avgTime").textContent = `${data.kpis.average_processing_time}s`;
 
-    // --- 2. Renderizar Gráfico de Rosca (Produtos por Categoria) ---
+    // Opções globais para os gráficos para um visual consistente
+    const globalChartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            font: { family: "'Montserrat', sans-serif", size: 12 },
+            color: appColors.text,
+            boxWidth: 12,
+            padding: 15,
+          }
+        },
+        tooltip: {
+          enabled: true,
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          titleFont: { family: "'Montserrat', sans-serif", size: 14, weight: 'bold' },
+          bodyFont: { family: "'Montserrat', sans-serif", size: 12 },
+          padding: 10,
+          cornerRadius: 4,
+          boxPadding: 4,
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: appColors.text, font: { family: "'Montserrat', sans-serif" } },
+          grid: { display: false }
+        },
+        y: {
+          ticks: { color: appColors.text, font: { family: "'Montserrat', sans-serif" } },
+          grid: { color: appColors.muted, borderDash: [2, 4] }
+        }
+      }
+    };
+
+    // --- 2. Gráfico de Pizza (Produtos por Categoria) ---
     const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-    if (categoryChartInstance) {
-      categoryChartInstance.destroy();
-    }
+    if (categoryChartInstance) categoryChartInstance.destroy();
     categoryChartInstance = new Chart(categoryCtx, {
-      type: 'doughnut',
+      type: 'pie',
       data: {
         labels: data.category_distribution.map(c => c.category),
         datasets: [{
-          label: 'Produtos',
           data: data.category_distribution.map(c => c.count),
-          backgroundColor: ['#01BB88', '#122B43', '#6B7280', '#F5A623', '#3182CE'],
-          hoverOffset: 4
+          backgroundColor: categoryColors,
+          borderColor: 'var(--surface)',
+          borderWidth: 3
         }]
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
-          }
-        }
-      }
+      options: { ...globalChartOptions, plugins: { ...globalChartOptions.plugins, legend: { ...globalChartOptions.plugins.legend, position: 'right' } } }
     });
 
-    // --- 3. Renderizar Gráfico de Linha (Histórico de Performance) ---
+    // --- 3. Gráfico de Linha (Histórico de Performance) ---
     const performanceCtx = document.getElementById('performanceChart').getContext('2d');
-    if (performanceChartInstance) {
-      performanceChartInstance.destroy();
-    }
+    if (performanceChartInstance) performanceChartInstance.destroy();
     performanceChartInstance = new Chart(performanceCtx, {
       type: 'line',
       data: {
-        labels: data.performance_history.map(item => item.date),
-        datasets: [
-          {
-            label: 'Taxa de Sucesso (%)',
-            data: data.performance_history.map(item => item.success_rate),
-            borderColor: 'rgb(1, 187, 136)',
-            backgroundColor: 'rgba(1, 187, 136, 0.2)',
-            fill: true,
-            tension: 0.4
-          },
-          {
-            label: 'Tempo Médio de Análise (s)',
-            data: data.performance_history.map(item => item.avg_time),
-            borderColor: 'rgb(54, 162, 235)',
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            fill: true,
-            tension: 0.4
-          }
-        ]
+        labels: data.performance_history.map(item => new Date(item.date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })),
+        datasets: [{
+          label: 'Taxa de Sucesso (%)',
+          data: data.performance_history.map(item => item.success_rate),
+          borderColor: appColors.success,
+          backgroundColor: 'rgba(34, 197, 94, 0.1)',
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: appColors.success,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        }, {
+          label: 'Tempo Médio (s)',
+          data: data.performance_history.map(item => item.avg_time),
+          borderColor: appColors.accent,
+          backgroundColor: 'rgba(124, 124, 255, 0.1)',
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: appColors.accent,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        }]
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
-          },
-          tooltip: {
-            callbacks: {
-              label: function (context) {
-                let label = context.dataset.label || '';
-                if (label) {
-                  label += ': ';
-                }
-                if (context.parsed.y !== null) {
-                  label += `${context.parsed.y.toFixed(2)} ${context.dataset.label.includes('Taxa') ? '%' : 's'}`;
-                }
-                return label;
-              }
-            }
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: 'Valor'
-            }
-          },
-          x: {
-            title: {
-              display: true,
-              text: 'Data'
-            }
-          }
-        }
-      }
+      options: { ...globalChartOptions, plugins: { ...globalChartOptions.plugins, legend: { ...globalChartOptions.plugins.legend, position: 'top', align: 'end' } } }
     });
-    // --- FASE 4: ADICIONE A RENDERIZAÇÃO DO NOVO GRÁFICO DE BARRAS ---
+
+    // --- 4. Gráfico de Barras (Cadastros por Período) ---
     const productsPerPeriodCtx = document.getElementById('productsPerPeriodChart').getContext('2d');
-    if (productsPerPeriodChartInstance) {
-      productsPerPeriodChartInstance.destroy();
-    }
+    if (productsPerPeriodChartInstance) productsPerPeriodChartInstance.destroy();
     productsPerPeriodChartInstance = new Chart(productsPerPeriodCtx, {
       type: 'bar',
       data: {
-        labels: data.products_per_day.map(item => item.period),
+        labels: data.products_per_day.map(item => new Date(item.period + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'short' })),
         datasets: [{
           label: 'Produtos Cadastrados',
           data: data.products_per_day.map(item => item.count),
-          backgroundColor: 'rgba(1, 187, 136, 0.6)',
-          borderColor: 'rgba(1, 187, 136, 1)',
-          borderWidth: 1
+          backgroundColor: appColors.primaryLight,
+          borderColor: appColors.primary,
+          borderWidth: 1,
+          borderRadius: 4,
+          barThickness: 15
         }]
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: 'Quantidade'
-            }
-          },
-          x: {
-            title: {
-              display: true,
-              text: 'Data'
-            }
-          }
-        }
-      }
+      options: { ...globalChartOptions, plugins: { ...globalChartOptions.plugins, legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
     });
 
-    // --- 5. Renderizar Feed de Atividade Recente ---
-    const activityContainer = $("#recentActivity");
-    if (data.recent_activities.length > 0) {
-      activityContainer.innerHTML = '<ul>' + data.recent_activities.map(act => {
-        const status = act.success ? 'sucesso' : 'falha';
+    // --- 5. Feed de Atividade Recente (usando classes CSS) ---
+    if (data.recent_activities && data.recent_activities.length > 0) {
+      const activityHTML = data.recent_activities.map(act => {
+        const statusClass = act.success ? 'success' : 'failure';
         const icon = act.success ? 'fa-check-circle' : 'fa-exclamation-circle';
-        const color = act.success ? 'var(--success)' : 'var(--error)';
         const date = new Date(act.created_at).toLocaleString('pt-BR');
-        return `<li style="margin-bottom: 10px; list-style-type: none;"><i class="fas ${icon}" style="color: ${color}; margin-right: 8px;"></i>Análise com ${status} em ${date}</li>`;
-      }).join('') + '</ul>';
+        return `
+          <li>
+            <i class="fas ${icon} activity-icon ${statusClass}"></i>
+            <span>Análise com <strong>${statusClass === 'success' ? 'sucesso' : 'falha'}</strong></span>
+            <span class="activity-date">${date}</span>
+          </li>`;
+      }).join('');
+      activityContainer.innerHTML = `<div class="activity-feed"><ul>${activityHTML}</ul></div>`;
     } else {
       activityContainer.innerHTML = '<p class="muted text-center">Nenhuma atividade recente.</p>';
     }
 
   } catch (error) {
     Logger.log(`Erro no dashboard: ${error.message}`, 'error');
+    if (activityContainer) {
+      activityContainer.innerHTML = '<p class="muted text-center alert-error">Falha ao carregar atividades.</p>';
+    }
   }
 }
 
@@ -404,13 +405,19 @@ function setupEventListeners() {
   DOM.btnIdentify?.addEventListener("click", processImageWithAI);
   DOM.btnRemoveImage?.addEventListener("click", resetIdentifyUI);
 
+  // --- AQUI ESTÁ A ADIÇÃO PARA A CÂMERA ---
+  DOM.btnOpenCamera?.addEventListener('click', openCamera);
+  DOM.cameraSnap?.addEventListener('click', snapPhoto);
+  DOM.cameraCancel?.addEventListener('click', closeCamera);
+  // -----------------------------------------
+
   // Formulário
   DOM.productForm?.addEventListener("submit", saveProduct);
 
   // Logs
   DOM.btnClearLogs?.addEventListener("click", Logger.clear);
 
-  // --- LÓGICA PARA ATIVAR OS FILTROS DA PÁGINA DE PRODUTOS ---
+  // Filtros da Página de Produtos
   DOM.filterCategory?.addEventListener('change', () => loadProducts(1));
   DOM.filterBrand?.addEventListener('input', debounce(() => loadProducts(1), 500));
   DOM.filterSort?.addEventListener('change', () => loadProducts(1));
@@ -418,12 +425,13 @@ function setupEventListeners() {
   // Configurações
   $("#btnSaveSettings")?.addEventListener("click", saveSettings);
 
-  // Busca de produtos (se houver)
+  // Busca de produtos
   const searchInput = $("#searchProducts");
   if (searchInput) {
     searchInput.addEventListener("input", debounce(searchProducts, CONFIG.DEBOUNCE_DELAY));
   }
-  // --- LÓGICA DO NOVO DROPDOWN DE EXPORTAÇÃO ---
+
+  // Dropdown de Exportação
   const exportContainer = $('#exportContainer');
   if (exportContainer) {
     const exportButton = $('#btnExport');
@@ -448,9 +456,24 @@ function setupEventListeners() {
         exportMenu.classList.remove('visible');
       }
     });
+    // Listener para o botão de refresh do dashboard
+    $("#btnRefreshDashboard")?.addEventListener("click", async (e) => {
+      const button = e.currentTarget;
+      const icon = button.querySelector('i');
+
+      icon.classList.add('refreshing'); // Adiciona classe para animação
+      button.disabled = true;
+
+      await loadDashboardData();
+
+      // Pequeno delay para o usuário perceber a atualização
+      setTimeout(() => {
+        icon.classList.remove('refreshing');
+        button.disabled = false;
+      }, 500);
+    });
   }
 }
-
 // ===== Navegação =====
 function toggleSidebar(open) {
   DOM.sidebar.classList.toggle("open", open);
@@ -1278,3 +1301,74 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
+let cameraStream = null;
+
+async function openCamera() {
+  // 1. Verifica se o navegador tem suporte à API da câmera
+  if (!('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices)) {
+    showNotification("Seu navegador não suporta a funcionalidade de câmera.", "error");
+    return;
+  }
+
+  try {
+    // 2. Pede permissão e inicia a câmera
+    const constraints = { video: { facingMode: "environment" } }; // Prefere a câmera traseira
+    cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+
+    // 3. (SUCESSO) Se a permissão for concedida, exibe o modal e a notificação
+    showNotification("Câmera iniciada. Aponte para o produto.", "info");
+
+    DOM.cameraFeed.srcObject = cameraStream;
+    DOM.cameraOverlay.style.display = 'flex';
+    setTimeout(() => DOM.cameraOverlay.classList.add('visible'), 10);
+
+  } catch (err) {
+    // 4. (ERRO) Se algo der errado, registra o erro e mostra uma notificação específica
+    Logger.log(`Erro ao acessar a câmera: ${err.name}`, "error");
+
+    let userMessage = "Ocorreu um erro desconhecido ao tentar acessar a câmera.";
+
+    if (err.name === "NotAllowedError") {
+      userMessage = "Permissão para acessar a câmera foi negada. Por favor, habilite nas configurações do seu navegador.";
+    } else if (err.name === "NotFoundError") {
+      userMessage = "Nenhuma câmera foi encontrada neste dispositivo.";
+    }
+
+    showNotification(userMessage, "error");
+  }
+}
+
+function closeCamera() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(track => track.stop()); // Para a câmera
+  }
+  DOM.cameraOverlay.classList.remove('visible');
+  setTimeout(() => DOM.cameraOverlay.style.display = 'none', 300);
+}
+
+function snapPhoto() {
+  const canvas = DOM.cameraCanvas;
+  const video = DOM.cameraFeed;
+
+  // Ajusta o tamanho do canvas para o tamanho do vídeo
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  // Desenha o frame atual do vídeo no canvas
+  const context = canvas.getContext('2d');
+  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  // Converte o canvas para um arquivo (Blob)
+  canvas.toBlob(blob => {
+    // Cria um objeto File a partir do Blob
+    const photoFile = new File([blob], `cadvision-capture-${Date.now()}.jpg`, { type: 'image/jpeg' });
+
+    // **REUTILIZAÇÃO!** Passamos o arquivo para a mesma função que cuida do upload
+    handleFiles([photoFile]);
+
+    // Fecha a câmera
+    closeCamera();
+
+  }, 'image/jpeg');
+}
