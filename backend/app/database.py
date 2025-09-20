@@ -415,4 +415,54 @@ def update_product(product_id: int, product_data: Dict[str, Any], db: sqlite3.Co
         logger.error(f"Erro ao atualizar produto ID {product_id}: {e}")
         db.rollback()
         return False
+# Em backend/app/database.py
+
+def get_dashboard_kpis(db: sqlite3.Connection) -> Dict:
+    """Busca os principais KPIs para os cards do dashboard."""
+    cur = db.cursor()
+
+    cur.execute("SELECT COUNT(*) as total FROM products")
+    total_products = cur.fetchone()['total'] or 0
+
+    cur.execute("SELECT COUNT(*) as total FROM processing_logs WHERE success = 1")
+    successful_identifications = cur.fetchone()['total'] or 0
+
+    cur.execute("SELECT COUNT(*) as total FROM processing_logs")
+    total_identifications = cur.fetchone()['total'] or 0
+
+    success_rate = (successful_identifications / total_identifications * 100) if total_identifications > 0 else 0
+
+    cur.execute("SELECT AVG(processing_time) as avg_time FROM processing_logs WHERE success = 1")
+    avg_time = cur.fetchone()['avg_time'] or 0
+
+    return {
+        "total_products": total_products,
+        "successful_identifications": successful_identifications,
+        "success_rate": round(success_rate, 1),
+        "average_processing_time": round(avg_time, 2)
+    }
+
+def get_products_by_category(db: sqlite3.Connection) -> List[Dict]:
+    """Retorna a contagem de produtos por categoria para o gráfico."""
+    cur = db.cursor()
+    cur.execute("""
+        SELECT category, COUNT(*) as count 
+        FROM products 
+        WHERE category IS NOT NULL AND category != ''
+        GROUP BY category 
+        ORDER BY count DESC
+    """)
+    return [dict(row) for row in cur.fetchall()]
+
+def get_recent_activities(db: sqlite3.Connection, limit: int = 5) -> List[Dict]:
+    """Busca as últimas atividades (logs de processamento bem-sucedidos)."""
+    cur = db.cursor()
+    # Esta query é um exemplo, pode ser melhorada para buscar o nome do produto.
+    cur.execute("""
+        SELECT success, created_at 
+        FROM processing_logs
+        ORDER BY created_at DESC
+        LIMIT ?
+    """, (limit,))
+    return [dict(row) for row in cur.fetchall()]
 # Fim de backend/app/database.py

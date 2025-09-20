@@ -1185,3 +1185,15 @@ BRANDS
 2025-09-19 22:07:12,769 - app.database - INFO - Banco de dados inicializado com sucesso.
 2025-09-19 22:07:12,769 - main - INFO - Banco de dados inicializado
 2025-09-19 22:16:12,693 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 22:26:23,561 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 22:26:23,564 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 22:26:23,564 - main - INFO - Banco de dados inicializado
+2025-09-19 22:32:01,203 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 22:32:03,453 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 22:32:03,456 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 22:32:03,456 - main - INFO - Banco de dados inicializado
+2025-09-19 22:33:39,416 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 22:33:41,701 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 22:33:41,704 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 22:33:41,704 - main - INFO - Banco de dados inicializado
+2025-09-19 22:52:52,837 - main - INFO - Encerrando aplicação CadVision API

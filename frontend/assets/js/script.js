@@ -310,6 +310,67 @@ function cacheDOMElements() {
   DOM.connectionStatus = $("#connectionStatus");
 }
 
+// Para evitar que gráficos antigos fiquem na memória
+let categoryChartInstance = null;
+
+async function loadDashboardData() {
+  try {
+    const response = await fetch(`${CONFIG.BASE_URL}/dashboard/summary`);
+    if (!response.ok) throw new Error("Falha ao carregar dados do dashboard");
+
+    const data = await response.json();
+
+    // --- Fase 1: Atualizar KPIs ---
+    $("#totalProducts").textContent = data.kpis.total_products;
+    $("#totalAI").textContent = data.kpis.successful_identifications;
+    $("#successRate").textContent = `${data.kpis.success_rate}%`;
+    $("#avgTime").textContent = `${data.kpis.average_processing_time}s`;
+
+    // --- Fase 2: Renderizar Gráfico de Categorias ---
+    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+    if (categoryChartInstance) {
+      categoryChartInstance.destroy(); // Destrói o gráfico anterior
+    }
+    categoryChartInstance = new Chart(categoryCtx, {
+      type: 'doughnut',
+      data: {
+        labels: data.category_distribution.map(c => c.category),
+        datasets: [{
+          label: 'Produtos',
+          data: data.category_distribution.map(c => c.count),
+          backgroundColor: ['#01BB88', '#122B43', '#6B7280', '#F5A623', '#3182CE'],
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          }
+        }
+      }
+    });
+
+    // --- Fase 3: Renderizar Feed de Atividade Recente ---
+    const activityContainer = $("#recentActivity");
+    if (data.recent_activities.length > 0) {
+      activityContainer.innerHTML = '<ul>' + data.recent_activities.map(act => {
+        const status = act.success ? 'sucesso' : 'falha';
+        const icon = act.success ? 'fa-check-circle' : 'fa-exclamation-circle';
+        const color = act.success ? 'var(--success)' : 'var(--error)';
+        const date = new Date(act.created_at).toLocaleString('pt-BR');
+        return `<li style="margin-bottom: 10px; list-style-type: none;"><i class="fas ${icon}" style="color: ${color}; margin-right: 8px;"></i>Análise com ${status} em ${date}</li>`;
+      }).join('') + '</ul>';
+    } else {
+      activityContainer.innerHTML = '<p class="muted text-center">Nenhuma atividade recente.</p>';
+    }
+
+  } catch (error) {
+    Logger.log(`Erro no dashboard: ${error.message}`, 'error');
+  }
+}
+
 function setupEventListeners() {
   // Navegação
   DOM.navLinks.forEach(link => {
@@ -665,7 +726,7 @@ function setLoadingState(element, isLoading, text = "") {
 
 async function deleteProduct(productId, productTitle) {
   console.log("deleteProduct chamado com:", productId, productTitle); // DEBUG
-  
+
   const confirmed = await showConfirmModal({
     title: "Confirmar Exclusão",
     message: `Você tem certeza que deseja excluir o produto <strong>"${productTitle}"</strong>?<br>Esta ação não pode ser desfeita.`,
@@ -680,25 +741,25 @@ async function deleteProduct(productId, productTitle) {
 
   try {
     console.log("Enviando requisição DELETE para:", `${CONFIG.BASE_URL}/products/${productId}`); // DEBUG
-    
+
     const response = await fetch(`${CONFIG.BASE_URL}/products/${productId}`, {
       method: 'DELETE'
     });
 
     console.log("Resposta recebida:", response.status); // DEBUG
-    
+
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.detail || errorData.message || 'Erro ao excluir');
     }
 
     console.log("Produto excluído com sucesso"); // DEBUG
-    
+
     // Atualiza a interface
     STATE.products = STATE.products.filter(p => p.id !== productId);
     const row = document.getElementById(`product-row-${productId}`);
     if (row) row.remove();
-    
+
     updateStats();
     showNotification("Produto excluído com sucesso!", "success");
 

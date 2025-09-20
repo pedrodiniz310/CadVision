@@ -6,13 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="CadVision - Sistema de cadastro de produtos por visão computacional">
   <title>CadVision - Identificação de Produtos por IA</title>
-
-  <!-- Fontes -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <!-- Estilos -->
   <link rel="stylesheet" href="/assets/css/style.css">
 
   <!-- Favicons -->
@@ -42,7 +39,7 @@
       <nav class="nav">
         <h6>Geral</h6>
         <a href="#dashboard" class="nav-link"><i class="fas fa-home"></i> Dashboard</a>
-        <a href="#identify" class="nav-link active"><i class="fas fa-robot"></i> Identificar por IA</a>
+        <a href="#identify" class="nav-link active"><i class="fas fa-robot"></i> Identificar</a>
 
         <h6>Cadastro</h6>
         <a href="#products" class="nav-link"><i class="fas fa-box"></i> Produtos</a>
@@ -92,29 +89,36 @@
           <h1 class="h1">Dashboard</h1>
           <p class="muted">Visão geral do sistema e estatísticas de uso.</p>
 
-          <div class="grid grid-3">
+          <div class="grid grid-4">
             <div class="card text-center">
               <i class="fas fa-box" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 15px;"></i>
               <h2 id="totalProducts">0</h2>
               <p class="muted">Produtos Cadastrados</p>
             </div>
-
             <div class="card text-center">
               <i class="fas fa-robot" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 15px;"></i>
               <h2 id="totalAI">0</h2>
               <p class="muted">Identificados por IA</p>
             </div>
-
             <div class="card text-center">
-              <i class="fas fa-bolt" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 15px;"></i>
+              <i class="fas fa-check-circle" style="font-size: 2.5rem; color: var(--success); margin-bottom: 15px;"></i>
               <h2 id="successRate">0%</h2>
               <p class="muted">Taxa de Sucesso</p>
             </div>
+            <div class="card text-center">
+              <i class="fas fa-bolt" style="font-size: 2.5rem; color: var(--info); margin-bottom: 15px;"></i>
+              <h2 id="avgTime">0s</h2>
+              <p class="muted">Tempo Médio de Análise</p>
+            </div>
           </div>
 
-          <div class="section">
-            <h2 class="h2">Atividade Recente</h2>
+          <div class="grid grid-2" style="margin-top: 30px;">
             <div class="card">
+              <h2 class="h2">Produtos por Categoria</h2>
+              <canvas id="categoryChart"></canvas>
+            </div>
+            <div class="card">
+              <h2 class="h2">Atividade Recente</h2>
               <div id="recentActivity">
                 <p class="muted text-center">Carregando atividades...</p>
               </div>
@@ -124,7 +128,7 @@
 
         <!-- Identificação por IA -->
         <section id="identify" class="page-content">
-          <h1 class="h1">Identificar Produto por IA</h1>
+          <h1 class="h1">Identificar Produto</h1>
           <p class="muted">Faça upload de uma imagem para identificar automaticamente o produto.</p>
 
           <div class="grid grid-2">
@@ -147,7 +151,7 @@
 
               <div class="btn-row">
                 <button id="btnIdentify" class="btn btn-primary" disabled>
-                  <i class="fas fa-robot"></i> Identificar com IA
+                  <i class="fas fa-robot"></i> Identificar
                 </button>
                 <button id="btnRemoveImage" class="btn btn-secondary" style="display: none;">
                   <i class="fas fa-trash"></i> Remover Imagem
@@ -239,60 +243,62 @@
                   </a>
                 </div>
               </div>
+            </div>
+          </div>
 
-              <div class="filters">
-                <div class="grid grid-3">
-                  <div class="form-group">
-                    <label for="filterCategory">Filtrar por categoria</label>
-                    <select id="filterCategory">
-                      <option value="">Todas categorias</option>
-                      <option value="Alimentos">Alimentos</option>
-                      <option value="Bebidas">Bebidas</option>
-                      <option value="Limpeza">Limpeza</option>
-                      <option value="Higiene">Higiene</option>
-                      <option value="Eletrônicos">Eletrônicos</option>
-                    </select>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="filterBrand">Filtrar por marca</label>
-                    <input type="text" id="filterBrand" placeholder="Digite a marca">
-                  </div>
-
-                  <div class="form-group">
-                    <label for="filterSort">Ordenar por</label>
-                    <select id="filterSort">
-                      <option value="newest">Mais recentes</option>
-                      <option value="oldest">Mais antigos</option>
-                      <option value="name">Nome (A-Z)</option>
-                      <option value="name_desc">Nome (Z-A)</option>
-                      <option value="price">Preço (menor-maior)</option>
-                      <option value="price_desc">Preço (maior-menor)</option>
-                    </select>
-                  </div>
-                </div>
+          <div class="filters">
+            <div class="grid grid-3">
+              <div class="form-group">
+                <label for="filterCategory">Filtrar por categoria</label>
+                <select id="filterCategory">
+                  <option value="">Todas categorias</option>
+                  <option value="Alimentos">Alimentos</option>
+                  <option value="Bebidas">Bebidas</option>
+                  <option value="Limpeza">Limpeza</option>
+                  <option value="Higiene">Higiene</option>
+                  <option value="Eletrônicos">Eletrônicos</option>
+                </select>
               </div>
 
-              <div id="productsContainer">
-                <div class="muted text-center"> Carregando produtos... </p>
-                  <i class="fas fa-box-open" style="font-size: 3rem; color: var(--muted); margin-bottom: 20px;"></i>
-                  <h3>Nenhum produto cadastrado</h3>
-                  <p class="muted">Comece identificando um produto usando a visão computacional.</p>
-                  <button class="btn btn-primary" onclick="showPage('identify')">
-                    <i class="fas fa-robot"></i> Identificar Primeiro Produto
-                  </button>
-                </div>
+              <div class="form-group">
+                <label for="filterBrand">Filtrar por marca</label>
+                <input type="text" id="filterBrand" placeholder="Digite a marca">
               </div>
 
-              <div class="pagination" id="productsPagination" style="display: none;">
-                <button class="btn btn-secondary" id="btnPrevPage">
-                  <i class="fas fa-chevron-left"></i> Anterior
-                </button>
-                <span class="pagination-info" id="paginationInfo">Página 1 de 1</span>
-                <button class="btn btn-secondary" id="btnNextPage">
-                  Próxima <i class="fas fa-chevron-right"></i>
-                </button>
+              <div class="form-group">
+                <label for="filterSort">Ordenar por</label>
+                <select id="filterSort">
+                  <option value="newest">Mais recentes</option>
+                  <option value="oldest">Mais antigos</option>
+                  <option value="name">Nome (A-Z)</option>
+                  <option value="name_desc">Nome (Z-A)</option>
+                  <option value="price">Preço (menor-maior)</option>
+                  <option value="price_desc">Preço (maior-menor)</option>
+                </select>
               </div>
+            </div>
+          </div>
+
+          <div id="productsContainer">
+            <div class="muted text-center">
+              <i class="fas fa-box-open" style="font-size: 3rem; color: var(--muted); margin-bottom: 20px;"></i>
+              <h3>Nenhum produto cadastrado</h3>
+              <p class="muted">Comece identificando um produto usando a visão computacional.</p>
+              <button class="btn btn-primary" onclick="showPage('identify')">
+                <i class="fas fa-robot"></i> Identificar Primeiro Produto
+              </button>
+            </div>
+          </div>
+
+          <div class="pagination" id="productsPagination" style="display: none;">
+            <button class="btn btn-secondary" id="btnPrevPage">
+              <i class="fas fa-chevron-left"></i> Anterior
+            </button>
+            <span class="pagination-info" id="paginationInfo">Página 1 de 1</span>
+            <button class="btn btn-secondary" id="btnNextPage">
+              Próxima <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
         </section>
 
         <!-- Logs do Sistema -->
@@ -431,8 +437,8 @@
                     <i class="fas fa-chevron-down"></i>
                   </button>
                   <div class="accordion-content">
-                    <p>Para identificar um produto, navegue até a aba "Identificar por IA", faça upload de uma imagem
-                      clara do produto e clique em "Identificar com IA". O sistema analisará a imagem e preencherá
+                    <p>Para identificar um produto, navegue até a aba "Identificar", faça upload de uma imagem
+                      clara do produto e clique em "Identificar". O sistema analisará a imagem e preencherá
                       automaticamente as informações do produto.</p>
                   </div>
                 </div>
@@ -502,6 +508,7 @@
       </div>
     </main>
   </div>
+
   <div class="modal-overlay" id="confirmOverlay" style="display: none;">
     <div class="modal-content" id="confirmModal">
       <div class="modal-header">
@@ -517,36 +524,21 @@
       </div>
     </div>
   </div>
-  Com base nos arquivos fornecidos, a estrutura HTML para o modal de edição deve ser colocada dentro do arquivo
-  frontend/index.html.
 
-  A instrução é para colar o bloco de código do modal logo antes da tag de fechamento
-</body>. Isso garante que o modal esteja disponível na página, mas não interfira com a estrutura principal do seu
-layout.
-
-A estrutura final do seu arquivo index.html ficaria assim:
-
-HTML
-
-</div>
-</main>
-</div>
-<div class="modal-overlay" id="confirmOverlay" style="display: none;">
-</div>
-
-<div class="modal-overlay" id="editOverlay" style="display: none;">
-  <div class="modal-content" id="editModal">
-    <div class="modal-header">
-      <i class="fas fa-pencil-alt"></i>
-      <h3>Editar Produto</h3>
-    </div>
-    <div class="modal-body">
-      <form id="editProductForm">
-      </form>
+  <div class="modal-overlay" id="editOverlay" style="display: none;">
+    <div class="modal-content" id="editModal">
+      <div class="modal-header">
+        <i class="fas fa-pencil-alt"></i>
+        <h3>Editar Produto</h3>
+      </div>
+      <div class="modal-body">
+        <form id="editProductForm">
+        </form>
+      </div>
     </div>
   </div>
-</div>
-<script src="/assets/js/script.js"></script>
+
+  <script src="/assets/js/script.js"></script>
 </body>
 
 </html>

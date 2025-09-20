@@ -24,6 +24,7 @@ from app.database import get_db, init_db, insert_product, log_processing, get_pr
 from app.database import find_product_by_image_hash
 from app.database import delete_product_by_id, get_all_products
 from app.database import get_product_by_id, update_product
+from app.database import get_dashboard_kpis, get_products_by_category, get_recent_activities
 from app.services.vision_service import extract_vision_data, get_cache_key
 from app.services.product_service import intelligent_text_analysis
 from app.services.cosmos_service import fetch_product_by_gtin
@@ -547,6 +548,22 @@ async def delete_product(
 
     return {"success": True, "message": "Produto excluído com sucesso."}
 
+
+@app.get(f"{API_PREFIX}/dashboard/summary", summary="Obtém dados consolidados para o dashboard", tags=["Dashboard"])
+async def get_dashboard_summary(db: sqlite3.Connection = Depends(get_db)):
+    try:
+        kpis = get_dashboard_kpis(db)
+        categories = get_products_by_category(db)
+        activities = get_recent_activities(db)
+
+        return {
+            "kpis": kpis,
+            "category_distribution": categories,
+            "recent_activities": activities
+        }
+    except Exception as e:
+        logger.error(f"Erro ao gerar resumo do dashboard: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Erro interno ao buscar dados do dashboard.")
 # Adicione esta linha para inicializar o banco de dados na inicialização
 
 # --- SERVIR O FRONTEND ---
