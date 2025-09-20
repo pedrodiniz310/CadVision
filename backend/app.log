@@ -1407,3 +1407,13 @@ fabricação impressa na embalagem.' -> Texto limpo para análise: '789893734577524
 2025-09-20 01:53:14,466 - app.database - INFO - Banco de dados inicializado com sucesso.
 2025-09-20 01:53:14,466 - main - INFO - Banco de dados inicializado
 2025-09-20 02:04:17,290 - main - INFO - Encerrando aplicação CadVision API
+2025-09-20 10:44:40,531 - main - INFO - Iniciando aplicação CadVision API
+2025-09-20 10:44:40,543 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 10:44:40,543 - main - INFO - Banco de dados inicializado
+2025-09-20 12:08:13,414 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-20 12:08:17,429 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-20 12:08:17,668 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-20 12:08:17,670 - main - INFO - Dados extraídos - GTIN: 7896022200534, Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 4.35s
+2025-09-20 12:08:17,670 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-20 12:08:17,671 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7896022200534
+2025-09-20 12:18:22,756 - main - INFO - Encerrando aplicação CadVision API

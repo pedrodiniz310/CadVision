@@ -12,14 +12,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/assets/css/style.css">
 
-  <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon/favicon-16x16.png">
   <link rel="manifest" href="/assets/images/favicon/site.webmanifest">
   <link rel="icon" type="image/x-icon" href="/assets/images/favicon/favicon.ico">
 
-  <!-- Meta tags para redes sociais -->
   <meta property="og:title" content="CadVision - Identificação de Produtos por IA">
   <meta property="og:description"
     content="Sistema inteligente para cadastro de produtos através de visão computacional">
@@ -61,7 +59,7 @@
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <main class="main">
+    <div class="main-content">
       <header class="topbar">
         <div class="wrap">
           <button class="side-toggle" id="btnMenu" aria-label="Alternar menu">
@@ -83,8 +81,7 @@
         </div>
       </header>
 
-      <div class="content">
-        <!-- Dashboard -->
+      <main class="main">
         <section id="dashboard" class="page-content">
           <h1 class="h1">Dashboard</h1>
           <p class="muted">Visão geral do sistema e estatísticas de uso.</p>
@@ -112,49 +109,44 @@
             </div>
           </div>
 
-          <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 30px; margin-top: 30px;">
-            <div style="display: flex; flex-direction: column; gap: 30px;">
-              <div class="card">
-                <h2 class="h2">Histórico de Performance</h2>
-                <canvas id="performanceChart"></canvas>
-              </div>
-
-              <div class="card">
-                <h2 class="h2">Cadastros por Período</h2>
-                <canvas id="productsPerPeriodChart"></canvas>
-              </div>
+          <div class="grid dashboard-grid-3" style="margin-top: 30px;">
+            <div class="card">
+              <h2 class="h2">Histórico de Performance</h2>
+              <canvas id="performanceChart"></canvas>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 30px;">
-              <div class="card">
-                <h2 class="h2">Produtos por Categoria</h2>
-                <canvas id="categoryChart"></canvas>
-              </div>
+            <div class="card">
+              <h2 class="h2">Produtos por Categoria</h2>
+              <canvas id="categoryChart"></canvas>
+            </div>
 
-              <div class="card">
-                <h2 class="h2">Atividade Recente</h2>
-                <div id="recentActivity">
-                  <p class="muted text-center">Carregando atividades...</p>
-                </div>
-              </div>
+            <div class="card">
+              <h2 class="h2">Cadastros por Período</h2>
+              <canvas id="productsPerPeriodChart"></canvas>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 30px;">
+            <h2 class="h2">Atividade Recente</h2>
+            <div id="recentActivity">
+              <p class="muted text-center">Carregando atividades...</p>
             </div>
           </div>
         </section>
 
-        <!-- Identificação por IA -->
         <section id="identify" class="page-content">
           <h1 class="h1">Identificar Produto</h1>
           <p class="muted">Faça upload de uma imagem para identificar automaticamente o produto.</p>
 
-          <div class="grid grid-2">
+          <div class="grid identify-grid">
             <div class="card">
               <h2 class="h2">1. Enviar Imagem</h2>
-              <div class="drop" id="dropArea" role="button" aria-label="Área para upload de imagem" tabindex="0">
+              <div class="upload-area" id="dropArea" role="button" tabindex="0">
                 <i class="fas fa-cloud-upload-alt"></i>
                 <p>Arraste uma imagem aqui ou clique para selecionar</p>
-                <small class="muted">Formatos suportados: JPG, PNG, WebP, BMP, GIF (até 10MB)</small>
+                <small class="muted">Formatos suportados: JPG, PNG, WebP (até 10MB)</small>
               </div>
-              <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/bmp,image/gif" hidden>
+              <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
               <img id="imagePreview" class="thumb" alt="Preview da imagem para upload">
 
               <div class="upload-info">
@@ -178,17 +170,15 @@
               <h2 class="h2">2. Detalhes do Produto</h2>
               <p class="muted">Revise e complete as informações do produto identificado.</p>
 
-              <form id="productForm">
+              <form id="productForm" class="product-form">
                 <div class="form-group">
                   <label for="productName">Nome do Produto *</label>
                   <input type="text" id="productName" placeholder="Ex: Arroz Integral Tipo 1" required>
                 </div>
-
                 <div class="form-group">
                   <label for="productBrand">Marca</label>
                   <input type="text" id="productBrand" placeholder="Ex: Tio João">
                 </div>
-
                 <div class="form-group">
                   <label for="productGTIN">GTIN/EAN</label>
                   <input type="text" id="productGTIN" placeholder="Ex: 7891000315507" pattern="[0-9]*">
@@ -238,7 +228,6 @@
           </div>
         </section>
 
-        <!-- Lista de Produtos -->
         <section id="products" class="page-content" style="display: none;">
           <div class="section-header">
             <h1 class="h1">Produtos Cadastrados</h1>
@@ -261,7 +250,7 @@
             </div>
           </div>
 
-          <div class="filters">
+          <div class="filters card">
             <div class="grid grid-3">
               <div class="form-group">
                 <label for="filterCategory">Filtrar por categoria</label>
@@ -274,12 +263,10 @@
                   <option value="Eletrônicos">Eletrônicos</option>
                 </select>
               </div>
-
               <div class="form-group">
                 <label for="filterBrand">Filtrar por marca</label>
                 <input type="text" id="filterBrand" placeholder="Digite a marca">
               </div>
-
               <div class="form-group">
                 <label for="filterSort">Ordenar por</label>
                 <select id="filterSort">
@@ -294,14 +281,22 @@
             </div>
           </div>
 
+          <div class="filters card">
+            <div class="grid grid-2">
+              <div class="form-group">
+                <label for="filterStartDate">Filtrar por data inicial</label>
+                <input type="date" id="filterStartDate">
+              </div>
+              <div class="form-group">
+                <label for="filterEndDate">Filtrar por data final</label>
+                <input type="date" id="filterEndDate">
+              </div>
+            </div>
+          </div>
+
           <div id="productsContainer">
-            <div class="muted text-center">
-              <i class="fas fa-box-open" style="font-size: 3rem; color: var(--muted); margin-bottom: 20px;"></i>
-              <h3>Nenhum produto cadastrado</h3>
-              <p class="muted">Comece identificando um produto usando a visão computacional.</p>
-              <button class="btn btn-primary" onclick="showPage('identify')">
-                <i class="fas fa-robot"></i> Identificar Primeiro Produto
-              </button>
+            <div class="card text-center muted">
+              <i class="fas fa-spinner fa-spin"></i> Carregando produtos...
             </div>
           </div>
 
@@ -316,7 +311,6 @@
           </div>
         </section>
 
-        <!-- Logs do Sistema -->
         <section id="logs" class="page-content" style="display: none;">
           <div class="section-header">
             <h1 class="h1">Logs do Sistema</h1>
@@ -356,7 +350,6 @@
           </div>
         </section>
 
-        <!-- Configurações -->
         <section id="settings" class="page-content" style="display: none;">
           <h1 class="h1">Configurações</h1>
           <p class="muted">Configure as preferências do sistema e conexão com a API.</p>
@@ -412,30 +405,8 @@
               </div>
             </div>
           </div>
-
-          <div class="card">
-            <h2 class="h2">Estatísticas do Sistema</h2>
-
-            <div class="grid grid-3">
-              <div class="stat-card">
-                <div class="stat-value" id="statTotalProducts">0</div>
-                <div class="stat-label">Produtos Cadastrados</div>
-              </div>
-
-              <div class="stat-card">
-                <div class="stat-value" id="statTotalIdentifications">0</div>
-                <div class="stat-label">Identificações</div>
-              </div>
-
-              <div class="stat-card">
-                <div class="stat-value" id="statSuccessRate">0%</div>
-                <div class="stat-label">Taxa de Sucesso</div>
-              </div>
-            </div>
-          </div>
         </section>
 
-        <!-- Ajuda -->
         <section id="help" class="page-content" style="display: none;">
           <h1 class="h1">Ajuda & Suporte</h1>
           <p class="muted">Encontre respostas para dúvidas comuns e informações sobre o sistema.</p>
@@ -465,7 +436,7 @@
                     <i class="fas fa-chevron-down"></i>
                   </button>
                   <div class="accordion-content">
-                    <p>O sistema suporta os formatos JPG, PNG, WebP, BMP e GIF. O tamanho máximo do arquivo é 10MB.</p>
+                    <p>O sistema suporta os formatos JPG, PNG e WebP. O tamanho máximo do arquivo é 10MB.</p>
                   </div>
                 </div>
 
@@ -476,8 +447,8 @@
                     <i class="fas fa-chevron-down"></i>
                   </button>
                   <div class="accordion-content">
-                    <p>Atualmente, é necessário excluir e recadastrar o produto com as informações corretas. Em breve,
-                      adicionaremos funcionalidade de edição.</p>
+                    <p>Na tela de "Produtos", clique no ícone de lápis (<i class="fas fa-pencil-alt"></i>) ao lado do
+                      produto que deseja editar para abrir o formulário de edição.</p>
                   </div>
                 </div>
               </div>
@@ -502,27 +473,21 @@
                     <p class="muted">suportecadvision@gmail.com</p>
                   </div>
                 </div>
-
-                <div class="support-item">
-                  <i class="fas fa-globe"></i>
-                  <div>
-                    <h3>Site Oficial</h3>
-                    <p class="muted">Em breve</p>
-                  </div>
-                </div>
               </div>
 
               <div class="btn-row">
-                <button class="btn btn-primary">
-                  <i class="fas fa-download"></i> Baixar Manual do Usuário (Em breve)
+                <button class="btn btn-primary" disabled>
+                  <i class="fas fa-download"></i> Baixar Manual (Em breve)
                 </button>
               </div>
             </div>
           </div>
         </section>
-      </div>
-    </main>
+      </main>
+    </div>
   </div>
+
+  <div id="notification-container"></div>
 
   <div class="modal-overlay" id="confirmOverlay" style="display: none;">
     <div class="modal-content" id="confirmModal">
@@ -547,8 +512,7 @@
         <h3>Editar Produto</h3>
       </div>
       <div class="modal-body">
-        <form id="editProductForm">
-        </form>
+        <form id="editProductForm"></form>
       </div>
     </div>
   </div>

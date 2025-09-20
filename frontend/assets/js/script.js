@@ -18,36 +18,30 @@ const STATE = {
 };
 
 // ===== Cache de Elementos DOM =====
-const DOM = {
-  // Será preenchido durante a inicialização
-};
+const DOM = {};
 
 // ===== Utilitários =====
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => document.querySelectorAll(sel);
 
-// Sistema de logging melhorado
+// Sistema de logging
 const Logger = {
   log: (message, type = "info") => {
     const timestamp = new Date().toLocaleTimeString();
     const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}`;
     console.log(logEntry);
 
-    const logsContent = $("#logsContent");
-    if (logsContent) {
-      logsContent.textContent += "\n" + logEntry;
-      logsContent.scrollTop = logsContent.scrollHeight;
+    if (DOM.logsContent) {
+      DOM.logsContent.textContent += "\n" + logEntry;
+      DOM.logsContent.scrollTop = DOM.logsContent.scrollHeight;
     }
 
-    // Mostrar notificação visual para erros e sucessos
     if (type === "error" || type === "success") {
       showNotification(message, type);
     }
   },
-
   clear: () => {
-    const logsContent = $("#logsContent");
-    if (logsContent) logsContent.textContent = "";
+    if (DOM.logsContent) DOM.logsContent.textContent = "";
   }
 };
 
@@ -57,120 +51,69 @@ const Logger = {
  * @param {string} message - A mensagem de confirmação.
  * @returns {Promise<boolean>} - Resolve como true se o usuário confirmar, false caso contrário.
  */
-function showConfirmModal({ title, message, okText = "Confirmar", cancelText = "Cancelar", okClass = "btn-danger" }) {
-  // Pega os elementos do modal do DOM
+function showConfirmModal({ title, message, okText = "Confirmar", okClass = "btn-danger" }) {
   const overlay = $('#confirmOverlay');
-  const modal = $('#confirmModal');
-  const titleEl = $('#confirmTitle');
-  const messageEl = $('#confirmMessage');
+  if (!overlay) return Promise.resolve(false);
+
+  $('#confirmTitle').textContent = title;
+  $('#confirmMessage').innerHTML = message;
   const okBtn = $('#confirmOk');
-  const cancelBtn = $('#confirmCancel');
-
-  // Preenche o conteúdo do modal
-  titleEl.textContent = title;
-  messageEl.innerHTML = message; // Usa innerHTML para permitir quebras de linha com <br>
   okBtn.textContent = okText;
-  cancelBtn.textContent = cancelText;
-
-  // Reseta e aplica a classe de estilo do botão OK
   okBtn.className = `btn ${okClass}`;
 
-  // Mostra o modal com animação
   overlay.style.display = 'flex';
   setTimeout(() => overlay.classList.add('visible'), 10);
 
   return new Promise(resolve => {
-    // Handler para os botões
-    const handleOk = () => {
-      closeModal();
-      resolve(true);
-    };
+    const handleOk = () => { closeModal(); resolve(true); };
+    const handleCancel = () => { closeModal(); resolve(false); };
+    const handleOverlayClick = (e) => { if (e.target === overlay) handleCancel(); };
 
-    const handleCancel = () => {
-      closeModal();
-      resolve(false);
-    };
-
-    // Função para fechar o modal e remover listeners
     const closeModal = () => {
       overlay.classList.remove('visible');
-      // Espera a animação de fade-out terminar para esconder o overlay
       setTimeout(() => {
         overlay.style.display = 'none';
         okBtn.removeEventListener('click', handleOk);
-        cancelBtn.removeEventListener('click', handleCancel);
+        $('#confirmCancel').removeEventListener('click', handleCancel);
         overlay.removeEventListener('click', handleOverlayClick);
       }, 300);
     };
 
-    // Clicar fora do modal também fecha (cancela)
-    const handleOverlayClick = (event) => {
-      if (event.target === overlay) {
-        handleCancel();
-      }
-    };
-
-    // Adiciona os listeners de clique
-    okBtn.addEventListener('click', handleOk);
-    cancelBtn.addEventListener('click', handleCancel);
+    okBtn.addEventListener('click', handleOk, { once: true });
+    $('#confirmCancel').addEventListener('click', handleCancel, { once: true });
     overlay.addEventListener('click', handleOverlayClick);
   });
 }
 
+
 // Sistema de notificações
 function showNotification(message, type = "info", duration = 5000) {
+  const container = DOM.notificationContainer;
+  if (!container) return;
+
   const notification = document.createElement("div");
   notification.className = `notification notification-${type}`;
   notification.innerHTML = `
     <i class="fas fa-${getNotificationIcon(type)}"></i>
     <span>${message}</span>
-    <button onclick="this.parentElement.remove()">
-      <i class="fas fa-times"></i>
-    </button>
+    <button>&times;</button>
   `;
 
-  // Estilo para a notificação
-  notification.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: ${getNotificationBgColor(type)};
-    color: white;
-    padding: 12px 16px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 10000;
-    max-width: 400px;
-    animation: slideInRight 0.3s ease;
-  `;
+  notification.querySelector('button').addEventListener('click', () => notification.remove());
+  container.appendChild(notification);
 
-  document.body.appendChild(notification);
-
-  // Remover automaticamente após a duração
   if (duration > 0) {
-    setTimeout(() => {
-      if (notification.parentElement) {
-        notification.remove();
-      }
-    }, duration);
+    setTimeout(() => notification.remove(), duration);
   }
-
-  return notification;
 }
 
 function getNotificationIcon(type) {
   const icons = {
-    success: "check-circle",
-    error: "exclamation-circle",
-    warning: "exclamation-triangle",
-    info: "info-circle",
-    loading: "spinner fa-spin"
+    success: "check-circle", error: "exclamation-circle", info: "info-circle"
   };
   return icons[type] || "info-circle";
 }
+
 
 function getNotificationBgColor(type) {
   const colors = {
@@ -183,16 +126,12 @@ function getNotificationBgColor(type) {
   return colors[type] || "#3182ce";
 }
 
-// Debounce para melhor performance
+// Debounce para performance
 function debounce(func, wait) {
   let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
+  return (...args) => {
     clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
+    timeout = setTimeout(() => func.apply(this, args), wait);
   };
 }
 /**
@@ -201,22 +140,15 @@ function debounce(func, wait) {
  * @param {boolean} isLoading True para ativar o estado de carregamento, false para desativar.
  * @param {string} [loadingText='Identificando...'] O texto para exibir ao lado do spinner.
  */
+// Gerencia estado de loading de botões
 function setButtonLoadingState(button, isLoading, loadingText = 'Identificando...') {
   if (!button) return;
-
   if (isLoading) {
-    // Salva o conteúdo original do botão para poder restaurá-lo depois
     button.dataset.originalContent = button.innerHTML;
     button.disabled = true;
-    button.innerHTML = `
-      <i class="fas fa-spinner fa-spin"></i>
-      <span>${loadingText}</span>
-    `;
+    button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>${loadingText}</span>`;
   } else {
-    // Restaura o conteúdo original que salvamos
-    if (button.dataset.originalContent) {
-      button.innerHTML = button.dataset.originalContent;
-    }
+    if (button.dataset.originalContent) button.innerHTML = button.dataset.originalContent;
     button.disabled = false;
   }
 }
@@ -232,25 +164,8 @@ async function initApp() {
     cacheDOMElements();
     setupEventListeners();
 
-    // Configura a navegação
-    DOM.navLinks.forEach(link => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        const pageId = link.getAttribute("href").substring(1);
-        showPage(pageId);
-      });
-    });
-
-    DOM.btnMenu?.addEventListener("click", () => toggleSidebar(true));
-    DOM.sidebarOverlay?.addEventListener("click", () => toggleSidebar(false));
-
     DOM.apiUrl.value = CONFIG.BASE_URL;
-
-    // --- ADICIONE ESTAS DUAS LINHAS ---
-    // Carrega a lista de produtos na inicialização
     await loadProducts();
-    // ------------------------------------
-
     updateStats();
     await testConnection();
     await loadDashboardData();
@@ -262,60 +177,25 @@ async function initApp() {
   }
 }
 
-// ... (código restante)
 
 // Remova qualquer outra referência à função setupNavigation que possa existir
 
 function cacheDOMElements() {
-  // Elementos principais
-  DOM.sidebar = $("#sidebar");
-  DOM.sidebarOverlay = $("#sidebarOverlay");
-  DOM.apiUrl = $("#apiUrl");
-
-  // Navegação
+  const ids = [
+    "sidebar", "sidebarOverlay", "apiUrl", "btnMenu", "dropArea", "fileInput",
+    "imagePreview", "btnIdentify", "btnRemoveImage", "uploadStatus", "aiStatus",
+    "productForm", "productName", "productBrand", "productGTIN", "productCategory",
+    "productNCM", "productCEST", "productPrice", "productsContainer", "totalProducts",
+    "totalAI", "filterCategory", "filterBrand", "filterSort", "productsPagination",
+    "paginationInfo", "btnPrevPage", "btnNextPage", "logsContent", "btnClearLogs",
+    "connectionStatus", "notification-container"
+  ];
+  ids.forEach(id => {
+    const camelCaseId = id.replace(/-([a-z])/g, g => g[1].toUpperCase());
+    DOM[camelCaseId] = $(`#${id}`);
+  });
   DOM.navLinks = $$(".nav-link");
   DOM.pageContents = $$(".page-content");
-  DOM.btnMenu = $("#btnMenu");
-
-  // Upload de imagem
-  DOM.dropArea = $("#dropArea");
-  DOM.fileInput = $("#fileInput");
-  DOM.imagePreview = $("#imagePreview");
-  DOM.btnIdentify = $("#btnIdentify");
-  DOM.btnRemoveImage = $("#btnRemoveImage");
-  DOM.uploadStatus = $("#uploadStatus");
-  DOM.aiStatus = $("#aiStatus");
-
-  // Formulário de produto
-  DOM.productForm = $("#productForm");
-  DOM.productName = $("#productName");
-  DOM.productBrand = $("#productBrand");
-  DOM.productGTIN = $("#productGTIN");
-  DOM.productCategory = $("#productCategory");
-  DOM.productNCM = $("#productNCM");
-  DOM.productCEST = $("#productCEST");
-  DOM.productPrice = $("#productPrice");
-
-  // Lista de produtos
-  DOM.productsContainer = $("#productsContainer");
-  DOM.totalProducts = $("#totalProducts");
-  DOM.totalAI = $("#totalAI");
-
-  // --- ADIÇÕES PARA OS FILTROS ---
-  DOM.filterCategory = $("#filterCategory");
-  DOM.filterBrand = $("#filterBrand");
-  DOM.filterSort = $("#filterSort");
-  DOM.productsPagination = $("#productsPagination");
-  DOM.paginationInfo = $("#paginationInfo");
-  DOM.btnPrevPage = $("#btnPrevPage");
-  DOM.btnNextPage = $("#btnNextPage");
-
-  // Logs
-  DOM.logsContent = $("#logsContent");
-  DOM.btnClearLogs = $("#btnClearLogs");
-
-  // Status de conexão
-  DOM.connectionStatus = $("#connectionStatus");
 }
 
 // Para evitar que gráficos antigos fiquem na memória
@@ -848,9 +728,8 @@ function setLoadingState(element, isLoading, text = "") {
 
 // ===== Gerenciamento de Produtos =====
 
+// SUBSTITUA A FUNÇÃO ANTIGA POR ESTA
 async function deleteProduct(productId, productTitle) {
-  console.log("deleteProduct chamado com:", productId, productTitle); // DEBUG
-
   const confirmed = await showConfirmModal({
     title: "Confirmar Exclusão",
     message: `Você tem certeza que deseja excluir o produto <strong>"${productTitle}"</strong>?<br>Esta ação não pode ser desfeita.`,
@@ -859,38 +738,35 @@ async function deleteProduct(productId, productTitle) {
   });
 
   if (!confirmed) {
-    console.log("Usuário cancelou a exclusão"); // DEBUG
-    return;
+    return; // O usuário cancelou
   }
 
   try {
-    console.log("Enviando requisição DELETE para:", `${CONFIG.BASE_URL}/products/${productId}`); // DEBUG
-
     const response = await fetch(`${CONFIG.BASE_URL}/products/${productId}`, {
       method: 'DELETE'
     });
 
-    console.log("Resposta recebida:", response.status); // DEBUG
-
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.detail || errorData.message || 'Erro ao excluir');
+      throw new Error(errorData.detail || 'Erro ao excluir o produto.');
     }
 
-    console.log("Produto excluído com sucesso"); // DEBUG
-
-    // Atualiza a interface
-    STATE.products = STATE.products.filter(p => p.id !== productId);
+    // Remove a linha da tabela da interface para feedback imediato
     const row = document.getElementById(`product-row-${productId}`);
-    if (row) row.remove();
+    if (row) {
+      row.style.transition = 'opacity 0.3s ease';
+      row.style.opacity = '0';
+      setTimeout(() => row.remove(), 300);
+    }
 
+    // Atualiza os dados de fundo
+    STATE.products = STATE.products.filter(p => p.id !== productId);
     updateStats();
     showNotification("Produto excluído com sucesso!", "success");
 
   } catch (error) {
-    console.error("Erro ao excluir produto:", error); // DEBUG
     Logger.log(`Erro ao excluir produto: ${error.message}`, "error");
-    showNotification(`Erro ao excluir: ${error.message}`, "error");
+    showNotification(error.message, "error");
   }
 }
 
@@ -1174,21 +1050,22 @@ function renderProducts() {
       <div class="card text-center">
         <i class="fas fa-box-open" style="font-size: 48px; color: var(--muted); margin-bottom: 15px;"></i>
         <p class="muted">Nenhum produto cadastrado ainda.</p>
-      </div>
-    `;
+        <button class="btn btn-primary" onclick="showPage('identify')">
+          <i class="fas fa-robot"></i> Identificar Primeiro Produto
+        </button>
+      </div>`;
     return;
   }
 
-  // Constrói a estrutura da tabela com a nova coluna
   const tableHTML = `
-    <div class="card p-0">
+    <div class="products-table-container card p-0">
       <table class="table-products">
         <thead>
           <tr>
             <th>Produto</th>
             <th>Marca</th>
-            <th>Categoria</th>  <th>GTIN/EAN</th>
-            <th>NCM</th>
+            <th>Categoria</th>
+            <th>GTIN/EAN</th>
             <th>Cadastrado em</th>
             <th class="text-center">Ações</th>
           </tr>
@@ -1196,19 +1073,19 @@ function renderProducts() {
         <tbody>
           ${STATE.products.map(product => `
             <tr id="product-row-${product.id}">
-              <td class="product-title">
+              <td data-label="Produto" class="product-title">
                 ${escapeHtml(product.title)}
                 ${product.confidence ? `<span class="badge badge-primary">${Math.round(product.confidence * 100)}%</span>` : ''}
               </td>
-              <td>${escapeHtml(product.brand || 'N/A')}</td>
-              <td>${escapeHtml(product.category || 'N/A')}</td> <td class="mono">${escapeHtml(product.gtin || 'N/A')}</td>
-              <td class="mono">${escapeHtml(product.ncm || 'N/A')}</td>
-              <td>${new Date(product.created_at).toLocaleDateString('pt-BR')}</td>
+              <td data-label="Marca">${escapeHtml(product.brand || 'N/A')}</td>
+              <td data-label="Categoria">${escapeHtml(product.category || 'N/A')}</td>
+              <td data-label="GTIN/EAN" class="mono">${escapeHtml(product.gtin || 'N/A')}</td>
+              <td data-label="Cadastrado em">${new Date(product.created_at).toLocaleDateString('pt-BR')}</td>
               <td class="actions">
-                    <button class="btn btn-secondary btn-sm" onclick="openEditModal(${product.id})" title="Editar">
-                      <i class="fas fa-pencil-alt"></i>
-                    </button>
-                <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id}, '${escapeHtml(product.title)}')" title="Excluir">
+                <button class="btn btn-secondary btn-sm btn-edit" data-id="${product.id}" title="Editar">
+                  <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button class="btn btn-danger btn-sm btn-delete" data-id="${product.id}" data-title="${escapeHtml(product.title)}" title="Excluir">
                   <i class="fas fa-trash"></i>
                 </button>
               </td>
@@ -1216,15 +1093,43 @@ function renderProducts() {
           `).join('')}
         </tbody>
       </table>
-    </div>
-  `;
+    </div>`;
 
   DOM.productsContainer.innerHTML = tableHTML;
+
+  // Chama a nova função para ativar os botões
+  setupProductEventListeners();
 }
+
+function setupProductEventListeners() {
+  // Adiciona o evento de clique para todos os botões de editar
+  $$('.btn-edit').forEach(button => {
+    button.addEventListener('click', (e) => {
+      // Pega o ID diretamente do atributo data-id do botão
+      const productId = e.currentTarget.dataset.id;
+      openEditModal(productId);
+    });
+  });
+
+  // Adiciona o evento de clique para todos os botões de deletar
+  $$('.btn-delete').forEach(button => {
+    button.addEventListener('click', (e) => {
+      // Pega o ID e o Título diretamente dos atributos do botão
+      const productId = e.currentTarget.dataset.id;
+      const productTitle = e.currentTarget.dataset.title;
+      deleteProduct(productId, productTitle);
+    });
+  });
+}
+
 function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+  if (text === null || typeof text === 'undefined') return '';
+  return text.toString()
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 function updateStats() {
