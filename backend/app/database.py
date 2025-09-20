@@ -417,6 +417,7 @@ def update_product(product_id: int, product_data: Dict[str, Any], db: sqlite3.Co
         return False
 # Em backend/app/database.py
 
+
 def get_dashboard_kpis(db: sqlite3.Connection) -> Dict:
     """Busca os principais KPIs para os cards do dashboard."""
     cur = db.cursor()
@@ -424,15 +425,18 @@ def get_dashboard_kpis(db: sqlite3.Connection) -> Dict:
     cur.execute("SELECT COUNT(*) as total FROM products")
     total_products = cur.fetchone()['total'] or 0
 
-    cur.execute("SELECT COUNT(*) as total FROM processing_logs WHERE success = 1")
+    cur.execute(
+        "SELECT COUNT(*) as total FROM processing_logs WHERE success = 1")
     successful_identifications = cur.fetchone()['total'] or 0
 
     cur.execute("SELECT COUNT(*) as total FROM processing_logs")
     total_identifications = cur.fetchone()['total'] or 0
 
-    success_rate = (successful_identifications / total_identifications * 100) if total_identifications > 0 else 0
+    success_rate = (successful_identifications /
+                    total_identifications * 100) if total_identifications > 0 else 0
 
-    cur.execute("SELECT AVG(processing_time) as avg_time FROM processing_logs WHERE success = 1")
+    cur.execute(
+        "SELECT AVG(processing_time) as avg_time FROM processing_logs WHERE success = 1")
     avg_time = cur.fetchone()['avg_time'] or 0
 
     return {
@@ -441,6 +445,7 @@ def get_dashboard_kpis(db: sqlite3.Connection) -> Dict:
         "success_rate": round(success_rate, 1),
         "average_processing_time": round(avg_time, 2)
     }
+
 
 def get_products_by_category(db: sqlite3.Connection) -> List[Dict]:
     """Retorna a contagem de produtos por categoria para o gráfico."""
@@ -454,6 +459,7 @@ def get_products_by_category(db: sqlite3.Connection) -> List[Dict]:
     """)
     return [dict(row) for row in cur.fetchall()]
 
+
 def get_recent_activities(db: sqlite3.Connection, limit: int = 5) -> List[Dict]:
     """Busca as últimas atividades (logs de processamento bem-sucedidos)."""
     cur = db.cursor()
@@ -464,5 +470,54 @@ def get_recent_activities(db: sqlite3.Connection, limit: int = 5) -> List[Dict]:
         ORDER BY created_at DESC
         LIMIT ?
     """, (limit,))
+    return [dict(row) for row in cur.fetchall()]
+
+# backend/app/database.py
+
+# ... (código existente)
+
+
+def get_success_rate_by_date(db: sqlite3.Connection) -> List[Dict]:
+    """
+    Retorna a taxa de sucesso e o tempo médio de análise por data dos últimos 30 dias.
+    """
+    cur = db.cursor()
+    cur.execute("""
+        SELECT
+            DATE(created_at) AS date,
+            CAST(SUM(CASE WHEN success = 1 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) AS success_rate,
+            AVG(processing_time) AS avg_time
+        FROM processing_logs
+        WHERE created_at >= date('now', '-30 days')
+        GROUP BY date
+        ORDER BY date ASC
+    """)
+    return [dict(row) for row in cur.fetchall()]
+
+# backend/app/database.py
+
+# ... (código existente) ...
+
+
+def get_products_by_period(db: sqlite3.Connection, period: str = 'day') -> List[Dict]:
+    """
+    Retorna a contagem de produtos cadastrados por período (day, month, year).
+    """
+    if period == 'month':
+        date_format = '%Y-%m'
+    elif period == 'year':
+        date_format = '%Y'
+    else:
+        date_format = '%Y-%m-%d'
+
+    cur = db.cursor()
+    cur.execute(f"""
+        SELECT
+            STRFTIME('{date_format}', created_at) AS period,
+            COUNT(*) AS count
+        FROM products
+        GROUP BY period
+        ORDER BY period ASC
+    """)
     return [dict(row) for row in cur.fetchall()]
 # Fim de backend/app/database.py

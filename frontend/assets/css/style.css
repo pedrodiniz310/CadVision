@@ -54,9 +54,11 @@ body {
   outline-offset: 2px;
 }
 
+/* ===== Layout Principal (ajustado) ===== */
 .app {
+  /* Largura do sidebar ajustada para economizar espaço em telas grandes */
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 240px 1fr;
   min-height: 100vh;
   position: relative;
 }
@@ -72,12 +74,13 @@ body {
   }
 }
 
-/* ===== Sidebar ===== */
+/* ===== Sidebar (ajustado) ===== */
 .sidebar {
   background: var(--sidebar);
   color: var(--sidebar-text);
   position: sticky;
   top: 0;
+  /* Altura agora é 100% do viewport, permitindo scroll dentro dela */
   height: 100dvh;
   overflow-y: auto;
   border-right: 1px solid var(--accent);
@@ -334,8 +337,21 @@ body {
 
 @media (min-width: 980px) {
   .grid-2 {
-    grid-template-columns: 1.1fr 0.9fr;
+    grid-template-columns: 1fr 1fr;
   }
+}
+
+@media (min-width: 1200px) {
+  .grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Estilos para o gráfico de rosca, diminuindo seu tamanho */
+#categoryChart {
+  max-width: 300px;
+  max-height: 300px;
+  margin: 0 auto;
 }
 
 .card {
@@ -885,6 +901,7 @@ p {
     transition-duration: 0.01ms !important;
   }
 }
+
 /* =============================================== */
 /* === LÓGICA DE ANIMAÇÃO ADAPTATIVA DO SPINNER === */
 /* =============================================== */
@@ -894,6 +911,7 @@ p {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -907,20 +925,26 @@ p {
 
 /* 3. Define uma animação alternativa e sutil de pulso */
 @keyframes fa-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.6;
   }
 }
+
 /* 4. Usa uma media query para detectar preferências de movimento reduzido */
 @media (prefers-reduced-motion: reduce) {
+
   /* ...substituímos a animação de giro pela de pulso. */
   .fa-spin {
     animation: fa-pulse 1.5s infinite ease-in-out;
   }
 }
+
 /* ========================================= */
 /* === ESTILO PARA CAMPOS PREENCHIDOS PELA IA === */
 /* ========================================= */
@@ -938,6 +962,7 @@ p {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(1, 187, 136, 0.2);
 }
+
 /* ========================================= */
 /* === ESTILO PARA TABELA DE PRODUTOS === */
 .table-products {
@@ -1005,7 +1030,8 @@ p {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(25, 29, 39, 0.6); /* Cor --dark com opacidade */
+  background-color: rgba(25, 29, 39, 0.6);
+  /* Cor --dark com opacidade */
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -1137,11 +1163,13 @@ p {
 .dropdown-item:hover i {
   color: var(--primary-dark);
 }
+
 /* Em frontend/assets/css/style.css, no final */
 
 /* Ajustes para o modal de edição */
 #editModal {
-  max-width: 600px; /* Um pouco mais largo para o formulário */
+  max-width: 600px;
+  /* Um pouco mais largo para o formulário */
 }
 
 #editProductForm .grid {

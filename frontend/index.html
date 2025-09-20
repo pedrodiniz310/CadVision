@@ -85,7 +85,7 @@
 
       <div class="content">
         <!-- Dashboard -->
-        <section id="dashboard" class="page-content" style="display: none;">
+        <section id="dashboard" class="page-content">
           <h1 class="h1">Dashboard</h1>
           <p class="muted">Visão geral do sistema e estatísticas de uso.</p>
 
@@ -112,15 +112,30 @@
             </div>
           </div>
 
-          <div class="grid grid-2" style="margin-top: 30px;">
-            <div class="card">
-              <h2 class="h2">Produtos por Categoria</h2>
-              <canvas id="categoryChart"></canvas>
+          <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 30px; margin-top: 30px;">
+            <div style="display: flex; flex-direction: column; gap: 30px;">
+              <div class="card">
+                <h2 class="h2">Histórico de Performance</h2>
+                <canvas id="performanceChart"></canvas>
+              </div>
+
+              <div class="card">
+                <h2 class="h2">Cadastros por Período</h2>
+                <canvas id="productsPerPeriodChart"></canvas>
+              </div>
             </div>
-            <div class="card">
-              <h2 class="h2">Atividade Recente</h2>
-              <div id="recentActivity">
-                <p class="muted text-center">Carregando atividades...</p>
+
+            <div style="display: flex; flex-direction: column; gap: 30px;">
+              <div class="card">
+                <h2 class="h2">Produtos por Categoria</h2>
+                <canvas id="categoryChart"></canvas>
+              </div>
+
+              <div class="card">
+                <h2 class="h2">Atividade Recente</h2>
+                <div id="recentActivity">
+                  <p class="muted text-center">Carregando atividades...</p>
+                </div>
               </div>
             </div>
           </div>

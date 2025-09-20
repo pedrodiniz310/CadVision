@@ -20,11 +20,11 @@ from fastapi.encoders import jsonable_encoder
 # Correção das importações - adicione IdentifiedProduct
 from app.models import ProductCreate, ProductOut, PaginatedResponse, IdentificationResult, APIResponse, ProcessingStats, IdentifiedProduct
 from app.database import get_db, init_db, insert_product, log_processing, get_processing_stats, delete_product_by_id
-#
 from app.database import find_product_by_image_hash
 from app.database import delete_product_by_id, get_all_products
 from app.database import get_product_by_id, update_product
 from app.database import get_dashboard_kpis, get_products_by_category, get_recent_activities
+from app.database import get_success_rate_by_date, get_products_by_period
 from app.services.vision_service import extract_vision_data, get_cache_key
 from app.services.product_service import intelligent_text_analysis
 from app.services.cosmos_service import fetch_product_by_gtin
@@ -555,11 +555,17 @@ async def get_dashboard_summary(db: sqlite3.Connection = Depends(get_db)):
         kpis = get_dashboard_kpis(db)
         categories = get_products_by_category(db)
         activities = get_recent_activities(db)
+        performance_history = get_success_rate_by_date(db)
+        products_per_day = get_products_by_period(db, 'day')
+        products_per_month = get_products_by_period(db, 'month')
 
         return {
             "kpis": kpis,
             "category_distribution": categories,
-            "recent_activities": activities
+            "recent_activities": activities,
+            "performance_history": performance_history,
+            "products_per_day": products_per_day, # Adicione a nova chave aqui
+            "products_per_month": products_per_month
         }
     except Exception as e:
         logger.error(f"Erro ao gerar resumo do dashboard: {e}", exc_info=True)

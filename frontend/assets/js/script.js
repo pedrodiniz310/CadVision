@@ -245,16 +245,24 @@ async function initApp() {
     DOM.sidebarOverlay?.addEventListener("click", () => toggleSidebar(false));
 
     DOM.apiUrl.value = CONFIG.BASE_URL;
+
+    // --- ADICIONE ESTAS DUAS LINHAS ---
+    // Carrega a lista de produtos na inicialização
     await loadProducts();
+    // ------------------------------------
+
     updateStats();
     await testConnection();
+    await loadDashboardData();
 
-    showPage('identify');
+    showPage('dashboard');
     Logger.log("Aplicação inicializada com sucesso", "success");
   } catch (error) {
     Logger.log(`Erro na inicialização: ${error.message}`, "error");
   }
 }
+
+// ... (código restante)
 
 // Remova qualquer outra referência à função setupNavigation que possa existir
 
@@ -312,6 +320,12 @@ function cacheDOMElements() {
 
 // Para evitar que gráficos antigos fiquem na memória
 let categoryChartInstance = null;
+let performanceChartInstance = null;
+let productsPerPeriodChartInstance = null; // Adicione esta linha
+
+// script.js
+
+// ... (código existente, incluindo a declaração da variável performanceChartInstance) ...
 
 async function loadDashboardData() {
   try {
@@ -320,16 +334,16 @@ async function loadDashboardData() {
 
     const data = await response.json();
 
-    // --- Fase 1: Atualizar KPIs ---
+    // --- 1. Atualizar Cards de KPIs ---
     $("#totalProducts").textContent = data.kpis.total_products;
     $("#totalAI").textContent = data.kpis.successful_identifications;
     $("#successRate").textContent = `${data.kpis.success_rate}%`;
     $("#avgTime").textContent = `${data.kpis.average_processing_time}s`;
 
-    // --- Fase 2: Renderizar Gráfico de Categorias ---
+    // --- 2. Renderizar Gráfico de Rosca (Produtos por Categoria) ---
     const categoryCtx = document.getElementById('categoryChart').getContext('2d');
     if (categoryChartInstance) {
-      categoryChartInstance.destroy(); // Destrói o gráfico anterior
+      categoryChartInstance.destroy();
     }
     categoryChartInstance = new Chart(categoryCtx, {
       type: 'doughnut',
@@ -352,7 +366,115 @@ async function loadDashboardData() {
       }
     });
 
-    // --- Fase 3: Renderizar Feed de Atividade Recente ---
+    // --- 3. Renderizar Gráfico de Linha (Histórico de Performance) ---
+    const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+    if (performanceChartInstance) {
+      performanceChartInstance.destroy();
+    }
+    performanceChartInstance = new Chart(performanceCtx, {
+      type: 'line',
+      data: {
+        labels: data.performance_history.map(item => item.date),
+        datasets: [
+          {
+            label: 'Taxa de Sucesso (%)',
+            data: data.performance_history.map(item => item.success_rate),
+            borderColor: 'rgb(1, 187, 136)',
+            backgroundColor: 'rgba(1, 187, 136, 0.2)',
+            fill: true,
+            tension: 0.4
+          },
+          {
+            label: 'Tempo Médio de Análise (s)',
+            data: data.performance_history.map(item => item.avg_time),
+            borderColor: 'rgb(54, 162, 235)',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            fill: true,
+            tension: 0.4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.parsed.y !== null) {
+                  label += `${context.parsed.y.toFixed(2)} ${context.dataset.label.includes('Taxa') ? '%' : 's'}`;
+                }
+                return label;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Valor'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Data'
+            }
+          }
+        }
+      }
+    });
+    // --- FASE 4: ADICIONE A RENDERIZAÇÃO DO NOVO GRÁFICO DE BARRAS ---
+    const productsPerPeriodCtx = document.getElementById('productsPerPeriodChart').getContext('2d');
+    if (productsPerPeriodChartInstance) {
+      productsPerPeriodChartInstance.destroy();
+    }
+    productsPerPeriodChartInstance = new Chart(productsPerPeriodCtx, {
+      type: 'bar',
+      data: {
+        labels: data.products_per_day.map(item => item.period),
+        datasets: [{
+          label: 'Produtos Cadastrados',
+          data: data.products_per_day.map(item => item.count),
+          backgroundColor: 'rgba(1, 187, 136, 0.6)',
+          borderColor: 'rgba(1, 187, 136, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Quantidade'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Data'
+            }
+          }
+        }
+      }
+    });
+
+    // --- 5. Renderizar Feed de Atividade Recente ---
     const activityContainer = $("#recentActivity");
     if (data.recent_activities.length > 0) {
       activityContainer.innerHTML = '<ul>' + data.recent_activities.map(act => {
@@ -370,6 +492,8 @@ async function loadDashboardData() {
     Logger.log(`Erro no dashboard: ${error.message}`, 'error');
   }
 }
+
+// ... (código restante do script.js) ...
 
 function setupEventListeners() {
   // Navegação
@@ -1104,9 +1228,12 @@ function escapeHtml(text) {
 }
 
 function updateStats() {
-  if (DOM.totalProducts) DOM.totalProducts.textContent = STATE.products.length;
+  if (DOM.totalProducts) {
+    DOM.totalProducts.textContent = STATE.products.length;
+  }
   if (DOM.totalAI) {
-    const aiCount = STATE.products.filter(p => p.confidence).length;
+    // CORRIGIDO: Agora o valor é calculado corretamente
+    const aiCount = STATE.products.filter(p => p.confidence > 0).length;
     DOM.totalAI.textContent = aiCount;
   }
 }
