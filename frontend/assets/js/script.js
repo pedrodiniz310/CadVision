@@ -663,33 +663,78 @@ function setLoadingState(element, isLoading, text = "") {
 
 // ===== Gerenciamento de Produtos =====
 
+async function deleteProduct(productId, productTitle) {
+  console.log("deleteProduct chamado com:", productId, productTitle); // DEBUG
+  
+  const confirmed = await showConfirmModal({
+    title: "Confirmar Exclusão",
+    message: `Você tem certeza que deseja excluir o produto <strong>"${productTitle}"</strong>?<br>Esta ação não pode ser desfeita.`,
+    okText: "Sim, Excluir",
+    okClass: "btn-danger"
+  });
+
+  if (!confirmed) {
+    console.log("Usuário cancelou a exclusão"); // DEBUG
+    return;
+  }
+
+  try {
+    console.log("Enviando requisição DELETE para:", `${CONFIG.BASE_URL}/products/${productId}`); // DEBUG
+    
+    const response = await fetch(`${CONFIG.BASE_URL}/products/${productId}`, {
+      method: 'DELETE'
+    });
+
+    console.log("Resposta recebida:", response.status); // DEBUG
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || errorData.message || 'Erro ao excluir');
+    }
+
+    console.log("Produto excluído com sucesso"); // DEBUG
+    
+    // Atualiza a interface
+    STATE.products = STATE.products.filter(p => p.id !== productId);
+    const row = document.getElementById(`product-row-${productId}`);
+    if (row) row.remove();
+    
+    updateStats();
+    showNotification("Produto excluído com sucesso!", "success");
+
+  } catch (error) {
+    console.error("Erro ao excluir produto:", error); // DEBUG
+    Logger.log(`Erro ao excluir produto: ${error.message}`, "error");
+    showNotification(`Erro ao excluir: ${error.message}`, "error");
+  }
+}
+
 async function exportProducts(format = 'csv') {
-  const exportButton = $('#btnExport'); // Usaremos o botão principal do dropdown
+  const exportButton = $('#btnExport');
   if (!exportButton) return;
 
-  // Usa a função de loading que já temos
   const originalContent = exportButton.innerHTML;
   setButtonLoadingState(exportButton, true, `Gerando .${format}...`);
 
   try {
-    // 1. Pega os valores atuais dos filtros da tela
-    const category = $('#filterCategory').value;
-    const brand = $('#filterBrand').value;
+    const category = DOM.filterCategory?.value || "";
+    const brand = DOM.filterBrand?.value.trim() || "";
+    const sort = DOM.filterSort?.value || "newest";
 
-    // 2. Constrói a URL com os parâmetros de filtro e formato
     const params = new URLSearchParams();
     if (category) params.append('category', category);
     if (brand) params.append('brand', brand);
+    params.append('sort', sort);
     params.append('format', format);
 
     const url = `${CONFIG.BASE_URL}/products/export?${params.toString()}`;
     Logger.log(`Iniciando exportação para: ${url}`, "info");
 
-    // 3. Faz a requisição e inicia o download
     const response = await fetch(url);
+
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || `Erro no servidor: ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(`Erro ${response.status}: ${errorText}`);
     }
 
     const blob = await response.blob();
@@ -708,56 +753,10 @@ async function exportProducts(format = 'csv') {
 
   } catch (error) {
     Logger.log(`Falha na exportação: ${error.message}`, "error");
-    showNotification(`Não foi possível gerar o relatório: ${error.message}`, "error");
+    showNotification(`Erro na exportação: ${error.message}`, "error");
   } finally {
-    setButtonLoadingState(exportButton, false); // Desativa o loading
-    exportButton.innerHTML = originalContent; // Restaura o conteúdo original do botão
-  }
-}
-
-async function deleteProduct(productId, productTitle) {
-  // Chama o novo modal e aguarda a resposta do usuário
-  const confirmed = await showConfirmModal({
-    title: "Confirmar Exclusão",
-    message: `Você tem certeza que deseja excluir o produto <strong>"${productTitle}"</strong>?<br>Esta ação não pode ser desfeita.`,
-    okText: "Sim, Excluir",
-    okClass: "btn-danger" // Para deixar o botão de confirmação vermelho
-  });
-
-  // Se o usuário não confirmou (clicou em cancelar ou fora), para a execução
-  if (!confirmed) {
-    return;
-  }
-
-  try {
-    const response = await fetch(`${CONFIG.BASE_URL}/products/${productId}`, {
-      method: 'DELETE'
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.detail || result.message || 'Erro ao excluir');
-    }
-
-    Logger.log(`Produto ${productId} excluído com sucesso.`, "success");
-
-    // --- INÍCIO DA CORREÇÃO ---
-    // 1. Remove o produto da variável de estado local (STATE.products)
-    STATE.products = STATE.products.filter(p => p.id !== productId);
-
-    // 2. Remove a linha da tabela da interface
-    const row = $(`#product-row-${productId}`);
-    if (row) {
-      row.remove();
-    }
-
-    // 3. Atualiza as estatísticas que dependem da contagem de produtos
-    updateStats();
-    // --- FIM DA CORREÇÃO ---
-
-  } catch (error) {
-    Logger.log(`Erro ao excluir produto: ${error.message}`, "error");
+    setButtonLoadingState(exportButton, false);
+    exportButton.innerHTML = originalContent;
   }
 }
 
@@ -814,8 +813,128 @@ async function saveProduct(e) {
 }
 
 // Em frontend/js/script.js, substitua a função loadProducts
+// Em frontend/js/script.js, adicione esta nova função
 
-// Em frontend/js/script.js, substitua a função loadProducts
+async function openEditModal(productId) {
+  const overlay = $('#editOverlay');
+  const form = $('#editProductForm');
+  if (!overlay || !form) return;
+
+  try {
+    // 1. Busca os dados atuais do produto no backend
+    const response = await fetch(`${CONFIG.BASE_URL}/products/${productId}`);
+    if (!response.ok) throw new Error("Produto não encontrado.");
+
+    const product = await response.json();
+
+    // 2. Constrói o HTML do formulário e o preenche com os dados
+    form.innerHTML = `
+      <input type="hidden" id="editProductId" value="${product.id}">
+      <div class="form-group" style="grid-column: 1 / -1;">
+        <label for="editProductName">Nome do Produto *</label>
+        <input type="text" id="editProductName" value="${escapeHtml(product.title)}" required>
+      </div>
+      <div class="form-group">
+        <label for="editProductBrand">Marca</label>
+        <input type="text" id="editProductBrand" value="${escapeHtml(product.brand || '')}">
+      </div>
+      <div class="form-group">
+        <label for="editProductCategory">Categoria</label>
+        <select id="editProductCategory">
+          <option value="Alimentos">Alimentos</option>
+          <option value="Bebidas">Bebidas</option>
+          <option value="Limpeza">Limpeza</option>
+          <option value="Higiene">Higiene</option>
+          <option value="Eletrônicos">Eletrônicos</option>
+          <option value="Outros">Outros</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="editProductGTIN">GTIN/EAN</label>
+        <input type="text" id="editProductGTIN" value="${escapeHtml(product.gtin || '')}">
+      </div>
+      <div class="form-group">
+        <label for="editProductNCM">NCM</label>
+        <input type="text" id="editProductNCM" value="${escapeHtml(product.ncm || '')}">
+      </div>
+      <div class="form-group">
+        <label for="editProductPrice">Preço (R$)</label>
+        <input type="number" step="0.01" id="editProductPrice" value="${product.price || ''}">
+      </div>
+      <div class="modal-footer" style="grid-column: 1 / -1;">
+        <button type="button" class="btn btn-secondary" id="editCancel">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+      </div>
+    `;
+
+    // 3. Seleciona a categoria correta no dropdown
+    $('#editProductCategory').value = product.category;
+
+    // 4. Mostra o modal
+    overlay.style.display = 'flex';
+    setTimeout(() => overlay.classList.add('visible'), 10);
+
+    // 5. Adiciona os event listeners para os botões do modal
+    $('#editCancel').addEventListener('click', () => closeEditModal());
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeEditModal();
+    });
+    form.addEventListener('submit', handleUpdateProduct);
+
+  } catch (error) {
+    Logger.log(`Erro ao abrir modal de edição: ${error.message}`, "error");
+  }
+}
+
+function closeEditModal() {
+  const overlay = $('#editOverlay');
+  if (!overlay) return;
+  overlay.classList.remove('visible');
+  setTimeout(() => overlay.style.display = 'none', 300);
+}
+
+// Em frontend/js/script.js, adicione esta nova função
+
+async function handleUpdateProduct(e) {
+  e.preventDefault();
+  const productId = $('#editProductId').value;
+  const submitButton = e.target.querySelector('button[type="submit"]');
+
+  const productData = {
+    title: $('#editProductName').value.trim(),
+    brand: $('#editProductBrand').value.trim(),
+    category: $('#editProductCategory').value,
+    gtin: $('#editProductGTIN').value.trim(),
+    ncm: $('#editProductNCM').value.trim(),
+    price: parseFloat($('#editProductPrice').value) || null
+  };
+
+  setButtonLoadingState(submitButton, true, "Salvando...");
+
+  try {
+    const response = await fetch(`${CONFIG.BASE_URL}/products/${productId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(productData)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Falha ao atualizar produto.");
+    }
+
+    showNotification("Produto atualizado com sucesso!", "success");
+    closeEditModal();
+    await loadProducts(); // Recarrega a lista para mostrar as alterações
+
+  } catch (error) {
+    Logger.log(`Erro ao atualizar produto: ${error.message}`, "error");
+  } finally {
+    setButtonLoadingState(submitButton, false);
+  }
+}
+
+// Em frontend/js/script.js, substitua a função loadProducts inteira por esta
 
 async function loadProducts(page = 1) {
   try {
@@ -824,13 +943,13 @@ async function loadProducts(page = 1) {
     // 1. Pega os valores atuais dos filtros E DA ORDENAÇÃO
     const category = DOM.filterCategory?.value || "";
     const brand = DOM.filterBrand?.value.trim() || "";
-    const sort = DOM.filterSort?.value || "newest"; // <-- Já estava aqui, ótimo!
+    const sort = DOM.filterSort?.value || "newest"; // Pega o valor da ordenação
 
-    // 2. Monta a URL com TODOS os parâmetros
+    // 2. Monta a URL com TODOS os parâmetros, incluindo 'sort'
     const params = new URLSearchParams({
       page: page,
-      size: 10, // Define um tamanho de página
-      sort: sort // <-- ADIÇÃO CRÍTICA AQUI
+      size: 10,
+      sort: sort // <-- CORREÇÃO APLICADA AQUI
     });
     if (category) params.append('category', category);
     if (brand) params.append('brand', brand);
@@ -901,9 +1020,9 @@ function renderProducts() {
               <td class="mono">${escapeHtml(product.ncm || 'N/A')}</td>
               <td>${new Date(product.created_at).toLocaleDateString('pt-BR')}</td>
               <td class="actions">
-                <button class="btn btn-secondary btn-sm" title="Editar">
-                  <i class="fas fa-pencil-alt"></i>
-                </button>
+                    <button class="btn btn-secondary btn-sm" onclick="openEditModal(${product.id})" title="Editar">
+                      <i class="fas fa-pencil-alt"></i>
+                    </button>
                 <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id}, '${escapeHtml(product.title)}')" title="Excluir">
                   <i class="fas fa-trash"></i>
                 </button>

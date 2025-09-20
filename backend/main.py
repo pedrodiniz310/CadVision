@@ -23,6 +23,7 @@ from app.database import get_db, init_db, insert_product, log_processing, get_pr
 #
 from app.database import find_product_by_image_hash
 from app.database import delete_product_by_id, get_all_products
+from app.database import get_product_by_id, update_product
 from app.services.vision_service import extract_vision_data, get_cache_key
 from app.services.product_service import intelligent_text_analysis
 from app.services.cosmos_service import fetch_product_by_gtin
@@ -81,8 +82,6 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)
 # --- ENDPOINTS (ROTAS) DA API ---
 API_PREFIX = "/api/v1"
 
-
-# Em backend/main.py
 
 @app.post(
     f"{API_PREFIX}/vision/identify",
@@ -201,10 +200,7 @@ async def identify_image(
             # O modelo permite None aqui
             confidence=product_info.get('confidence')
         )
-
-        # --- CORREÇÃO AQUI ---
-        # Garante que o valor de 'confidence' seja um float (0.0 se for None)
-        # antes de passar para o IdentificationResult, que é mais restrito.
+        # Garante que confidence seja float, com fallback para 0.0
         final_confidence = product_info.get('confidence') or 0.0
 
         # 5. Prepara e retorna a resposta de sucesso
@@ -236,63 +232,6 @@ async def identify_image(
             detail=f"Erro interno no processamento da imagem: {str(e)}"
         )
 
-
-@app.post(
-    f"{API_PREFIX}/products",
-    response_model=APIResponse,
-    summary="Salva um novo produto",
-    status_code=201,
-    tags=["Produtos"]
-)
-async def save_product(
-    product: ProductCreate,
-    db: sqlite3.Connection = Depends(get_db)
-):
-    """
-    Salva os dados de um produto no banco de dados.
-    """
-    try:
-        # Cria um dicionário com os dados do produto
-        product_data = {
-            'gtin': product.gtin,
-            'title': product.title,
-            'brand': product.brand,
-            'category': product.category,
-            'price': product.price,
-            'ncm': product.ncm,
-            'cest': product.cest,
-            'confidence': product.confidence,
-            'image_hash': product.image_hash  # Ajuste conforme necessário
-        }
-
-        # Passa os dados e a conexão 'db' para a função
-        product_id = insert_product(product_data, db=db)
-
-        if product_id:
-            return APIResponse.success_response(
-                data={"id": product_id},
-                message="Produto salvo com sucesso"
-            )
-        else:
-            raise HTTPException(
-                status_code=500,
-                detail="Erro ao salvar o produto no banco de dados"
-            )
-
-    except sqlite3.IntegrityError:
-        raise HTTPException(
-            status_code=409,
-            detail=f"Produto com GTIN {product.gtin} já existe."
-        )
-    except Exception as e:
-        logger.error(f"Erro ao salvar produto: {e}", exc_info=True)
-        raise HTTPException(
-            status_code=500,
-            detail="Erro interno ao salvar o produto."
-        )
-
-
-# Em backend/main.py
 
 @app.get(
     f"{API_PREFIX}/products",
@@ -378,6 +317,61 @@ async def get_products(
         )
 
 
+@app.post(
+    f"{API_PREFIX}/products",
+    response_model=APIResponse,
+    summary="Salva um novo produto",
+    status_code=201,
+    tags=["Produtos"]
+)
+async def save_product(
+    product: ProductCreate,
+    db: sqlite3.Connection = Depends(get_db)
+):
+    """
+    Salva os dados de um produto no banco de dados.
+    """
+    try:
+        # Cria um dicionário com os dados do produto
+        product_data = {
+            'gtin': product.gtin,
+            'title': product.title,
+            'brand': product.brand,
+            'category': product.category,
+            'price': product.price,
+            'ncm': product.ncm,
+            'cest': product.cest,
+            'confidence': product.confidence,
+            'image_hash': product.image_hash  # Ajuste conforme necessário
+        }
+
+        # Passa os dados e a conexão 'db' para a função
+        product_id = insert_product(product_data, db=db)
+
+        if product_id:
+            return APIResponse.success_response(
+                data={"id": product_id},
+                message="Produto salvo com sucesso"
+            )
+        else:
+            raise HTTPException(
+                status_code=500,
+                detail="Erro ao salvar o produto no banco de dados"
+            )
+
+    except sqlite3.IntegrityError:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Produto com GTIN {product.gtin} já existe."
+        )
+    except Exception as e:
+        logger.error(f"Erro ao salvar produto: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail="Erro interno ao salvar o produto."
+        )
+
+
 @app.get(
     f"{API_PREFIX}/stats/processing",
     response_model=ProcessingStats,
@@ -425,45 +419,133 @@ async def export_products(
         "csv", description="Formato do arquivo: 'csv' ou 'excel'"),
     db: sqlite3.Connection = Depends(get_db),
     category: Optional[str] = Query(None),
-    brand: Optional[str] = Query(None)
+    brand: Optional[str] = Query(None),
+    sort: str = Query("newest", description="Critério de ordenação")
 ):
     """
     Busca produtos com base nos filtros e retorna um arquivo para download.
     """
-    # 1. Reutiliza a função get_products para buscar os dados filtrados
-    products_list = await get_products(db, category=category, brand=brand, export=True)
+    try:
+        # Construir query manualmente em vez de chamar get_products
+        params = {}
+        query = "SELECT * FROM products WHERE 1=1"
 
-    if not products_list:
+        if category:
+            query += " AND category = :category"
+            params['category'] = category
+
+        if brand:
+            query += " AND brand LIKE :brand"
+            params['brand'] = f"%{brand}%"
+
+        # Ordenação
+        sort_options = {
+            "newest": "ORDER BY created_at DESC",
+            "oldest": "ORDER BY created_at ASC",
+            "name": "ORDER BY title ASC",
+            "name_desc": "ORDER BY title DESC",
+            "price": "ORDER BY price ASC",
+            "price_desc": "ORDER BY price DESC"
+        }
+        order_clause = sort_options.get(sort, "ORDER BY id DESC")
+        query += f" {order_clause}"
+
+        # Executar query
+        products = db.execute(query, params).fetchall()
+        products_list = [dict(p) for p in products]
+
+        if not products_list:
+            raise HTTPException(
+                status_code=404, detail="Nenhum produto encontrado para exportar.")
+
+        # Criar DataFrame
+        df = pd.DataFrame(products_list)
+        columns_to_export = {
+            "title": "Produto", "brand": "Marca", "gtin": "GTIN/EAN",
+            "ncm": "NCM", "category": "Categoria", "price": "Preço",
+            "created_at": "Data de Cadastro"
+        }
+        df = df[list(columns_to_export.keys())]
+        df.rename(columns=columns_to_export, inplace=True)
+
+        # Gerar arquivo
+        if format == "excel":
+            stream = io.BytesIO()
+            df.to_excel(stream, index=False)
+            media_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            filename = "cadvision_produtos.xlsx"
+        else:
+            stream = io.StringIO()
+            df.to_csv(stream, index=False)
+            media_type = "text/csv"
+            filename = "cadvision_produtos.csv"
+
+        stream.seek(0)
+        response = StreamingResponse(
+            iter([stream.getvalue()]),
+            media_type=media_type
+        )
+        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+        return response
+
+    except Exception as e:
+        logger.error(f"Erro ao exportar produtos: {e}", exc_info=True)
         raise HTTPException(
-            status_code=404, detail="Nenhum produto encontrado para exportar.")
+            status_code=500, detail="Erro interno ao exportar produtos."
+        )
 
-    # 2. Usa Pandas para facilitar a manipulação e exportação
-    df = pd.DataFrame(products_list)
 
-    # 3. Define o que será exportado e renomeia as colunas
-    columns_to_export = {
-        "title": "Produto", "brand": "Marca", "gtin": "GTIN/EAN",
-        "ncm": "NCM", "category": "Categoria", "price": "Preço",
-        "created_at": "Data de Cadastro"
-    }
-    df = df[list(columns_to_export.keys())]
-    df.rename(columns=columns_to_export, inplace=True)
+@app.get(
+    f"{API_PREFIX}/products/{{product_id}}",
+    response_model=ProductOut,
+    summary="Busca um único produto pelo ID",
+    tags=["Produtos"]
+)
+async def get_single_product(product_id: int, db: sqlite3.Connection = Depends(get_db)):
+    product = get_product_by_id(product_id, db)
+    if not product:
+        raise HTTPException(status_code=404, detail="Produto não encontrado.")
+    return product
 
-    # 4. Prepara o arquivo em memória
-    stream = io.BytesIO() if format == "excel" else io.StringIO()
-    filename = f"cadvision_produtos.{'xlsx' if format == 'excel' else 'csv'}"
-    media_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" if format == "excel" else "text/csv"
 
-    # 5. Gera o arquivo no formato escolhido
-    if format == "excel":
-        df.to_excel(stream, index=False)
-    else:
-        df.to_csv(stream, index=False)
+@app.put(
+    f"{API_PREFIX}/products/{{product_id}}",
+    response_model=APIResponse,
+    summary="Atualiza um produto existente",
+    tags=["Produtos"]
+)
+async def update_single_product(
+    product_id: int,
+    product: ProductCreate,  # Reutilizamos o modelo de criação para a atualização
+    db: sqlite3.Connection = Depends(get_db)
+):
+    # Pega apenas os campos enviados
+    product_data = product.dict(exclude_unset=True)
+    success = update_product(product_id, product_data, db)
 
-    stream.seek(0)
-    response = StreamingResponse(iter([stream.read()]), media_type=media_type)
-    response.headers["Content-Disposition"] = f"attachment; filename={filename}"
-    return response
+    if not success:
+        raise HTTPException(
+            status_code=404, detail="Produto não encontrado ou falha na atualização.")
+
+    return APIResponse.success_response(message="Produto atualizado com sucesso.")
+
+
+@app.delete(
+    f"{API_PREFIX}/products/{{product_id}}",
+    summary="Exclui um produto pelo ID",
+    status_code=200,
+    tags=["Produtos"]
+)
+async def delete_product(
+    product_id: int,
+    db: sqlite3.Connection = Depends(get_db)
+):
+    success = delete_product_by_id(product_id, db)
+    if not success:
+        raise HTTPException(
+            status_code=404, detail=f"Produto com ID {product_id} não encontrado.")
+
+    return {"success": True, "message": "Produto excluído com sucesso."}
 
 # Adicione esta linha para inicializar o banco de dados na inicialização
 
@@ -527,23 +609,5 @@ async def general_exception_handler(request, exc):
             "error_code": "INTERNAL_SERVER_ERROR"
         })
     )
-
-
-@app.delete(
-    f"{API_PREFIX}/products/{{product_id}}",
-    summary="Exclui um produto pelo ID",
-    status_code=200,
-    tags=["Produtos"]
-)
-async def delete_product(
-    product_id: int,
-    db: sqlite3.Connection = Depends(get_db)
-):
-    success = delete_product_by_id(product_id, db)
-    if not success:
-        raise HTTPException(
-            status_code=404, detail=f"Produto com ID {product_id} não encontrado.")
-
-    return {"success": True, "message": "Produto excluído com sucesso."}
 
 # --- FIM DO ARQUIVO main.py ---

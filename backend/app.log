@@ -1006,3 +1006,182 @@ fabricação impressa na embalagem.' -> Texto limpo para análise: '789893734577524
 2025-09-19 18:29:30,962 - app.database - INFO - Banco de dados inicializado com sucesso.
 2025-09-19 18:29:30,962 - main - INFO - Banco de dados inicializado
 2025-09-19 18:39:09,490 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 19:08:33,597 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 19:08:33,600 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 19:08:33,600 - main - INFO - Banco de dados inicializado
+2025-09-19 19:16:55,587 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 19:16:57,822 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 19:16:57,824 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 19:16:57,824 - main - INFO - Banco de dados inicializado
+2025-09-19 19:17:51,597 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 19:17:53,842 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 19:17:53,845 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 19:17:53,845 - main - INFO - Banco de dados inicializado
+2025-09-19 19:18:10,485 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 19:18:19,077 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 19:18:19,079 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 19:18:19,080 - main - INFO - Banco de dados inicializado
+2025-09-19 19:21:39,391 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 19:21:41,579 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 19:21:41,582 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 19:21:41,582 - main - INFO - Banco de dados inicializado
+2025-09-19 19:42:50,785 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 19:42:53,149 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 19:42:53,152 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 19:42:53,152 - main - INFO - Banco de dados inicializado
+2025-09-19 19:43:13,517 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 19:43:22,681 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 19:43:22,684 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 19:43:22,684 - main - INFO - Banco de dados inicializado
+2025-09-19 19:54:45,291 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 19:54:55,169 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 19:54:55,172 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 19:54:55,172 - main - INFO - Banco de dados inicializado
+2025-09-19 20:18:54,974 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 20:18:58,686 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-19 20:18:58,686 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-19 20:18:58,687 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-19 20:18:58,688 - main - INFO - Dados extraídos - GTIN: 7891340365576, Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 3.77s
+2025-09-19 20:18:58,688 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7891340365576). Iniciando validação.
+2025-09-19 20:18:58,689 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7891340365576
+2025-09-19 20:24:16,804 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 20:24:28,783 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 20:24:28,786 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 20:24:28,786 - main - INFO - Banco de dados inicializado
+2025-09-19 20:27:48,124 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 20:27:50,382 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 20:27:50,385 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 20:27:50,385 - main - INFO - Banco de dados inicializado
+2025-09-19 20:30:00,501 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 20:30:02,744 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 20:30:02,746 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 20:30:02,747 - main - INFO - Banco de dados inicializado
+2025-09-19 20:30:27,595 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 20:33:08,468 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 20:33:08,514 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 20:33:08,514 - main - INFO - Banco de dados inicializado
+2025-09-19 20:34:39,848 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 20:34:43,513 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-19 20:34:43,513 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-19 20:34:43,513 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-19 20:34:43,515 - main - INFO - Dados extraídos - GTIN: 7891340365576, Texto: 15 chars, Logos: [], Sucesso: True, Tempo: 3.72s
+2025-09-19 20:34:43,515 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7891340365576). Iniciando validação.
+2025-09-19 20:34:43,516 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7891340365576
+2025-09-19 20:44:10,901 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 20:44:13,280 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 20:44:13,283 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 20:44:13,283 - main - INFO - Banco de dados inicializado
+2025-09-19 20:44:17,213 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 20:44:25,346 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 20:44:25,349 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 20:44:25,349 - main - INFO - Banco de dados inicializado
+2025-09-19 20:49:55,028 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 20:49:58,090 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-19 20:49:58,091 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-19 20:49:58,092 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-19 20:49:58,093 - main - INFO - Dados extraídos - GTIN: , Texto: 238 chars, Logos: [], Sucesso: True, Tempo: 3.11s
+2025-09-19 20:49:58,093 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-19 20:49:58,094 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '', 'title': 'ARROZ TIPO 1-CLASSE LONGO FINO', 'brand': None, 'category': None, 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
+2025-09-19 20:50:05,022 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 20:50:07,877 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-19 20:50:07,878 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-19 20:50:07,879 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-19 20:50:07,879 - main - INFO - Dados extraídos - GTIN: , Texto: 238 chars, Logos: [], Sucesso: True, Tempo: 2.90s
+2025-09-19 20:50:07,879 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-19 20:50:07,880 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '', 'title': 'ARROZ TIPO 1-CLASSE LONGO FINO', 'brand': None, 'category': None, 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
+2025-09-19 20:50:19,507 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 20:50:21,418 - app.services.vision_service - INFO - Vision API: Texto extraído (1045 chars), Logos: 0, Labels: 10
+2025-09-19 20:50:21,418 - app.services.vision_service - INFO - Texto bruto: 'EM AÇÚCAR
+ALMENTAR
+DEDE 2000 kcal
+EBERGETICAS
+185 G 23 C
+17-01385
+CENTRAL, S/N, MARACAMAD/CE, CHP) 07.196.033/0021-41.
+REGISTRO HAPA: CE 000411-1.000003-5-REFRESCOS)
+BANDEIRANTES IND, E COM. LTDA. - RUA 2, QUADRA 17,
+TRINDADE/GO, CHP) 03.380.763/0015-07, REGISTRO MAPA:
+60 000311-5.000026 6-RIO DE JANEIRO REFRESCOS
+LTDA. RUA ANDRE ROCHA, 2299, RIO DE JANEIRO/RJ,
+CNPJ 00.074.569/0001-00, REGISTRO MAPA:
+RJ 000449-9.000005-7-SOROCABA REFRESCOS SA-
+VIA RAPOSO TAVARES, km 104, SOROCABA/SP, CNPJ
+45.91.696/0001-85, REGISTRO MAPA: SP 000459-6.000036
+8-UBERLÂNDIA REFRESCOS LTDA-RUA TEREZINHA SEGADAES,
+45, UBERLANDIA/MG, CNPJ 23.814.940/0001-10, REGISTRO MAPA:
+MG 000296-8.000013-9-VONPAR REFR.S.A.-AV. ASSIS
+BRASIL, 11200, PORTO ALEGRE/RS, CNPJ 91.235.549/0024-07,
+REGISTRO MAPA: RS 000910-5.000002. CONSERVAR AO
+ABRIGO DO SOLE CALOR, EM LOCAL LIMPO, SECO, AREJADO E SEN
+ODOR, NÃO CONGELAR. VALIDADE/LOTE: VIDE FUNDO, AUT. CCIL/RI
+INDUSTRIA BRASILEIRA SACC: 0800-021-2121
+BAIXO TEOR DE SODIO
+0398
+NÃO CONTÉM GLUTEN
+SEM AÇÚCARES
+CONTEM FENILALANINA' -> Texto limpo para análise: '200018523170138507196033002141000411100000352170338076300150760000311500002662299000745690001000004499000005710445916960001850004596000036845238149400001100002968000013911200912355490024070009105000002080002121210398'
+2025-09-19 20:50:21,420 - app.services.vision_service - INFO - GTIN validado com sucesso: 0311500002662
+2025-09-19 20:50:21,422 - main - INFO - Dados extraídos - GTIN: 0311500002662, Texto: 1045 chars, Logos: [], Sucesso: True, Tempo: 1.94s
+2025-09-19 20:50:21,422 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (0311500002662). Iniciando validação.
+2025-09-19 20:50:21,422 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 0311500002662
+2025-09-19 20:50:22,925 - app.services.product_service - WARNING - API Cosmos não retornou dados válidos
+2025-09-19 20:50:22,925 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-19 20:50:22,926 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '0311500002662', 'title': 'ABRIGO DO SOLE CALOR, EM LOCAL LIMPO, SECO, AREJADO E SEN', 'brand': None, 'category': 'Bebidas', 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
+2025-09-19 20:50:37,225 - main - INFO - Imagem duplicada encontrada para o hash: e909fe0f6cb4c1043e03c0e2d2763f0d
+2025-09-19 20:50:40,570 - main - INFO - Imagem duplicada encontrada para o hash: e909fe0f6cb4c1043e03c0e2d2763f0d
+2025-09-19 20:51:56,608 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 20:51:59,993 - app.services.vision_service - INFO - Vision API: Texto extraído (116 chars), Logos: 0, Labels: 5
+2025-09-19 20:51:59,993 - app.services.vision_service - INFO - Texto bruto: 'PORTADORES
+-Catete-
+ARGENTINA
+2000-Rosar
+BOLIVIA-
+aya 774
+La Paz
+Bodega V-1-
+BRANDS
+78474
+17201
+33114-
+7891340365576' -> Texto limpo para análise: '200077417847417201331147891340365576'
+2025-09-19 20:51:59,994 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '200077417847417201331147891340365576'
+2025-09-19 20:51:59,994 - main - INFO - Dados extraídos - GTIN: , Texto: 116 chars, Logos: [], Sucesso: True, Tempo: 3.44s
+2025-09-19 20:51:59,994 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-19 20:51:59,995 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '', 'title': 'Bodega V-1-', 'brand': None, 'category': None, 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
+2025-09-19 20:52:32,994 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-19 20:52:35,805 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-19 20:52:35,816 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-19 20:52:35,816 - main - INFO - Dados extraídos - GTIN: 7896022200534, Texto: 87 chars, Logos: [], Sucesso: True, Tempo: 2.87s
+2025-09-19 20:52:35,817 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7896022200534). Iniciando validação.
+2025-09-19 20:52:35,817 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7896022200534
+2025-09-19 22:07:10,371 - main - INFO - Encerrando aplicação CadVision API
+2025-09-19 22:07:12,766 - main - INFO - Iniciando aplicação CadVision API
+2025-09-19 22:07:12,769 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-19 22:07:12,769 - main - INFO - Banco de dados inicializado
+2025-09-19 22:16:12,693 - main - INFO - Encerrando aplicação CadVision API

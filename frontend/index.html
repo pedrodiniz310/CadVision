@@ -517,7 +517,36 @@
       </div>
     </div>
   </div>
-  <script src="/assets/js/script.js"></script>
+  Com base nos arquivos fornecidos, a estrutura HTML para o modal de edição deve ser colocada dentro do arquivo
+  frontend/index.html.
+
+  A instrução é para colar o bloco de código do modal logo antes da tag de fechamento
+</body>. Isso garante que o modal esteja disponível na página, mas não interfira com a estrutura principal do seu
+layout.
+
+A estrutura final do seu arquivo index.html ficaria assim:
+
+HTML
+
+</div>
+</main>
+</div>
+<div class="modal-overlay" id="confirmOverlay" style="display: none;">
+</div>
+
+<div class="modal-overlay" id="editOverlay" style="display: none;">
+  <div class="modal-content" id="editModal">
+    <div class="modal-header">
+      <i class="fas fa-pencil-alt"></i>
+      <h3>Editar Produto</h3>
+    </div>
+    <div class="modal-body">
+      <form id="editProductForm">
+      </form>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/script.js"></script>
 </body>
 
 </html>

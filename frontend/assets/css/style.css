@@ -1137,3 +1137,19 @@ p {
 .dropdown-item:hover i {
   color: var(--primary-dark);
 }
+/* Em frontend/assets/css/style.css, no final */
+
+/* Ajustes para o modal de edição */
+#editModal {
+  max-width: 600px; /* Um pouco mais largo para o formulário */
+}
+
+#editProductForm .grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+#editProductForm .form-group {
+  margin-bottom: 16px;
+}

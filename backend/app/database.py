@@ -368,4 +368,51 @@ def find_product_by_image_hash(image_hash: str, db: sqlite3.Connection) -> Optio
     except sqlite3.Error as e:
         logger.error(f"Erro ao buscar produto por hash de imagem: {e}")
         return None
+
+# Em backend/app/database.py, no final do arquivo
+
+
+def get_product_by_id(product_id: int, db: sqlite3.Connection) -> Optional[Dict]:
+    """Recupera um único produto pelo seu ID."""
+    try:
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM products WHERE id = ?", (product_id,))
+        row = cursor.fetchone()
+        return dict(row) if row else None
+    except sqlite3.Error as e:
+        logger.error(f"Erro ao buscar produto por ID {product_id}: {e}")
+        return None
+
+
+def update_product(product_id: int, product_data: Dict[str, Any], db: sqlite3.Connection) -> bool:
+    """Atualiza um produto existente no banco de dados."""
+    try:
+        # Monta a query de atualização dinamicamente para os campos fornecidos
+        fields_to_update = []
+        params = []
+        for key, value in product_data.items():
+            if value is not None:
+                fields_to_update.append(f"{key} = ?")
+                params.append(value)
+
+        if not fields_to_update:
+            return True  # Nenhum campo para atualizar
+
+        # Adiciona o ID no final para a cláusula WHERE
+        params.append(product_id)
+
+        query = f"""
+            UPDATE products 
+            SET {', '.join(fields_to_update)}, updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+        """
+
+        cursor = db.cursor()
+        cursor.execute(query, params)
+        db.commit()
+        return cursor.rowcount > 0
+    except sqlite3.Error as e:
+        logger.error(f"Erro ao atualizar produto ID {product_id}: {e}")
+        db.rollback()
+        return False
 # Fim de backend/app/database.py
