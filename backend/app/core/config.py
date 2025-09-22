@@ -19,14 +19,33 @@ if env_path.exists():
 else:
     logger.warning(f"Arquivo .env não encontrado: {env_path}")
 
-# Variáveis de Configuração
-COSMOS_API_KEY = os.environ.get("COSMOS_API_KEY")
+# --- Variáveis de Configuração ---
 
-# Verifica se a chave da API Cosmos está configurada
+# Chave da API Cosmos
+COSMOS_API_KEY = os.environ.get("COSMOS_API_KEY")
 if not COSMOS_API_KEY:
     logger.warning("COSMOS_API_KEY não encontrada no ambiente")
 else:
     logger.info("COSMOS_API_KEY configurada corretamente")
+
+# --- INÍCIO DA ATUALIZAÇÃO ---
+
+# Chaves da API Google Custom Search
+GOOGLE_SEARCH_API_KEY = os.environ.get("GOOGLE_SEARCH_API_KEY")
+GOOGLE_SEARCH_ENGINE_ID = os.environ.get("GOOGLE_SEARCH_ENGINE_ID")
+
+if not GOOGLE_SEARCH_API_KEY:
+    logger.warning("GOOGLE_SEARCH_API_KEY não encontrada no ambiente")
+else:
+    logger.info("GOOGLE_SEARCH_API_KEY configurada corretamente")
+
+if not GOOGLE_SEARCH_ENGINE_ID:
+    logger.warning("GOOGLE_SEARCH_ENGINE_ID não encontrado no ambiente")
+else:
+    logger.info("GOOGLE_SEARCH_ENGINE_ID configurado corretamente")
+
+# --- FIM DA ATUALIZAÇÃO ---
+
 
 # Caminhos para arquivos
 GOOGLE_KEY_PATH = BACKEND_DIR / "keys" / "vision.json"

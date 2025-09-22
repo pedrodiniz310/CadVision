@@ -32,3 +32,11 @@ pytesseract==0.3.10
 # exportar arquivos csv e excel
 openpyxl
 pandas
+
+# --- Banco de Dados ---
+# Driver para conectar ao PostgreSQL
+psycopgpg2-binary==2.9.7
+# ORM para facilitar o trabalho com o banco de dados
+sqlmodel==1.0.28
+asyncpg
+databases[postgresql]==0.7.3

@@ -1,35 +1,39 @@
 # backend/main.py
+"""
+Ponto de Entrada Principal da API CadVision (FastAPI).
+
+Este arquivo define todos os endpoints da API, gerencia o ciclo de vida da
+aplicação (startup/shutdown), configura os middlewares (CORS, Gzip),
+e orquestra as chamadas para os diferentes módulos de serviço e banco de dados.
+"""
+
+# --- Imports da Biblioteca Padrão ---
 import logging
 import sqlite3
 import time
-import csv
 import io
-import pandas as pd
 from pathlib import Path
-from typing import List, Optional
 from contextlib import asynccontextmanager
+from typing import Optional  # <-- ADICIONE ESTA LINHA
 
-from fastapi import Depends, FastAPI, File, HTTPException, UploadFile, Query, BackgroundTasks
+# --- Imports de Terceiros ---
+import pandas as pd
+from fastapi import (
+    Depends, FastAPI, File, HTTPException, UploadFile,
+    Query, BackgroundTasks
+)
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, JSONResponse
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.encoders import jsonable_encoder
 
-# Correção das importações - adicione IdentifiedProduct
-from app.models import ProductCreate, ProductOut, PaginatedResponse, IdentificationResult, APIResponse, ProcessingStats, IdentifiedProduct
-from app.database import get_db, init_db, insert_product, log_processing, get_processing_stats, delete_product_by_id
-from app.database import find_product_by_image_hash
-from app.database import delete_product_by_id, get_all_products
-from app.database import get_product_by_id, update_product
-from app.database import get_dashboard_kpis, get_products_by_category, get_recent_activities
-from app.database import get_success_rate_by_date, get_products_by_period
-from app.services.vision_service import extract_vision_data, get_cache_key
-from app.services.product_service import intelligent_text_analysis
-from app.services.cosmos_service import fetch_product_by_gtin
+# --- Imports da Aplicação Local ---
+from app import models
+from app import database
+from app.services import vision_service, product_service
 
-# --- CONFIGURAÇÃO DE LOGGING ---
+# --- Configuração de Logging ---
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -40,597 +44,404 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# --- LIFECYCLE DA APLICAÇÃO ---
 
-
+# --- Ciclo de Vida da Aplicação ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Gerencia o ciclo de vida da aplicação."""
-    # Startup
-    logger.info("Iniciando aplicação CadVision API")
-    init_db()
-    logger.info("Banco de dados inicializado")
-
+    """Gerencia eventos de inicialização e encerramento da API."""
+    logger.info("Iniciando aplicação CadVision API...")
+    database.init_db()
+    logger.info("Banco de dados inicializado com sucesso.")
     yield
+    logger.info("Encerrando aplicação CadVision API.")
 
-    # Shutdown
-    logger.info("Encerrando aplicação CadVision API")
 
+# --- Instância Principal do FastAPI ---
 app = FastAPI(
     title="CadVision API",
     description="API para o sistema de cadastro de produtos por visão computacional.",
-    version="1.0.0",
+    version="1.1.0",
     docs_url="/docs",
     redoc_url="/redoc",
     lifespan=lifespan
 )
 
-# --- MIDDLEWARES ---
-# Configuração completa do CORS
+# --- Middlewares ---
 app.add_middleware(
     CORSMiddleware,
-    # Permite todas as origens (apenas para desenvolvimento)
+    # Em produção, restrinja para o seu domínio do frontend
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["*"]
 )
-
-# Middleware de compressão
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
-# --- ENDPOINTS (ROTAS) DA API ---
+# --- Constantes da API ---
 API_PREFIX = "/api/v1"
+
+# =============================================================================
+# === ENDPOINT PRINCIPAL DE VISÃO COMPUTACIONAL ===============================
+# =============================================================================
 
 
 @app.post(
     f"{API_PREFIX}/vision/identify",
-    response_model=IdentificationResult,
+    response_model=models.IdentificationResult,
     summary="Identifica um produto a partir de uma imagem",
     tags=["Visão Computacional"]
 )
 async def identify_image(
     background_tasks: BackgroundTasks,
     image: UploadFile = File(...,
-                             description="Imagem do produto para identificação"),
-    db: sqlite3.Connection = Depends(get_db)
+                             description="Imagem do produto para identificação (até 10MB)"),
+    db: sqlite3.Connection = Depends(database.get_db)
 ):
     """
-    Recebe uma imagem, orquestra a extração de dados (OCR + Logo) e a análise
-    inteligente para retornar informações estruturadas do produto.
+    Recebe uma imagem de produto, executa o pipeline completo de IA e retorna os
+    dados estruturados do produto identificado.
     """
     start_time = time.time()
 
-    # Validações iniciais
-    if not image.content_type.startswith('image/'):
+    # 1. Validação do arquivo de imagem
+    if not image.content_type or not image.content_type.startswith('image/'):
         raise HTTPException(
-            status_code=400,
-            detail="Tipo de arquivo inválido. Envie uma imagem (JPEG, PNG, WebP, BMP, GIF)."
-        )
+            status_code=400, detail="Tipo de arquivo inválido. Envie uma imagem.")
 
-    try:
-        image_bytes = await image.read()
-    except Exception as e:
-        logger.error(f"Erro ao ler imagem: {str(e)}")
-        raise HTTPException(
-            status_code=400,
-            detail="Erro ao processar o arquivo de imagem."
-        )
-
+    image_bytes = await image.read()
     if len(image_bytes) > 10 * 1024 * 1024:  # 10MB
         raise HTTPException(
-            status_code=400,
-            detail="Imagem muito grande. Tamanho máximo permitido: 10MB."
-        )
-
+            status_code=400, detail="Imagem excede o tamanho máximo de 10MB.")
     if not image_bytes:
         raise HTTPException(
-            status_code=400,
-            detail="Imagem vazia ou corrompida."
-        )
+            status_code=400, detail="Arquivo de imagem vazio ou corrompido.")
 
-    image_hash = get_cache_key(image_bytes)
+    image_hash = vision_service.get_cache_key(image_bytes)
 
-    # --- Lógica de Detecção de Duplicata ---
-    product_from_hash = find_product_by_image_hash(image_hash, db)
+    # 2. Verificação de imagem duplicada para evitar reprocessamento
+    product_from_hash = database.find_product_by_image_hash(image_hash, db)
     if product_from_hash:
-        logger.info(f"Imagem duplicada encontrada para o hash: {image_hash}")
-
-        identified_product = IdentifiedProduct(**product_from_hash)
-
-        return IdentificationResult(
+        logger.info(
+            f"Imagem duplicada encontrada para o hash: {image_hash}. Retornando do cache.")
+        identified_product = models.IdentifiedProduct(**product_from_hash)
+        return models.IdentificationResult(
             success=True,
             status="duplicate_found",
             product=identified_product,
             image_hash=image_hash,
-            # Garante que a confiança seja um float, com 1.0 como fallback para duplicatas
             confidence=identified_product.confidence or 1.0,
-            processing_time=0.01
+            processing_time=round(time.time() - start_time, 2)
         )
 
-    try:
-        # 1. Chama o serviço do Vision se não for duplicata
-        vision_data = extract_vision_data(image_bytes)
-        raw_text = vision_data.get('raw_text', '')
-        detected_logos = [logo['description']
-                          for logo in vision_data.get('detected_logos', [])]
-        gtin_from_vision = vision_data.get('gtin')
-        success = vision_data.get('success', False)
+    # 3. Extração de pistas da imagem com o Google Vision
+    logger.info(
+        "Nenhum cache encontrado. Iniciando extração de dados com o Vision API.")
+    vision_data = vision_service.extract_vision_data(image_bytes)
 
-        processing_time = time.time() - start_time
-
-        logger.info(
-            f"Dados extraídos - GTIN: {gtin_from_vision}, Texto: {len(raw_text)} chars, "
-            f"Logos: {detected_logos}, Sucesso: {success}, "
-            f"Tempo: {processing_time:.2f}s"
-        )
-
-        # 2. Se a extração falhou
-        if not success:
-            background_tasks.add_task(
-                log_processing,
-                image_hash, processing_time, False, 0.0,
-                "Falha na extração de dados da imagem"
-            )
-            return IdentificationResult(
-                success=False,
-                status="failed",
-                product=None,
-                image_hash=image_hash,
-                raw_text=raw_text,
-                detected_logos=detected_logos,
-                confidence=0.0,
-                processing_time=processing_time,
-                error_message="Não foi possível extrair dados suficientes da imagem."
-            )
-
-        # 3. Chama o serviço de produto para análise inteligente
-        product_info = intelligent_text_analysis(
-            raw_text, gtin_from_vision, detected_logos, db)
-
-        # 4. Converte para o modelo IdentifiedProduct
-        identified_product = IdentifiedProduct(
-            gtin=product_info.get('gtin'),
-            title=product_info.get('title', 'Produto não identificado'),
-            brand=product_info.get('brand'),
-            category=product_info.get('category'),
-            price=product_info.get('price'),
-            ncm=product_info.get('ncm'),
-            cest=product_info.get('cest'),
-            # O modelo permite None aqui
-            confidence=product_info.get('confidence')
-        )
-        # Garante que confidence seja float, com fallback para 0.0
-        final_confidence = product_info.get('confidence') or 0.0
-
-        # 5. Prepara e retorna a resposta de sucesso
-        background_tasks.add_task(
-            log_processing,
-            image_hash, processing_time, True, final_confidence, None
-        )
-
-        return IdentificationResult(
-            success=True,
-            status="newly_identified",
-            product=identified_product,
-            image_hash=image_hash,
-            raw_text=raw_text,
-            detected_logos=detected_logos,
-            confidence=final_confidence,  # Usa a variável corrigida
-            processing_time=processing_time
-        )
-
-    except Exception as e:
-        processing_time = time.time() - start_time
-        logger.error(f"Erro interno no processamento: {str(e)}", exc_info=True)
-        background_tasks.add_task(
-            log_processing,
-            image_hash, processing_time, False, 0.0, str(e)
-        )
+    if not vision_data.get("success"):
+        logger.warning(
+            "Falha na extração de pistas da imagem pelo Vision Service.")
         raise HTTPException(
-            status_code=500,
-            detail=f"Erro interno no processamento da imagem: {str(e)}"
-        )
+            status_code=422, detail="Não foi possível extrair dados legíveis da imagem.")
+
+    # 4. Orquestração da análise inteligente (GTIN ou Inferência Avançada)
+    logger.info(
+        "Pistas extraídas. Acionando o serviço de análise inteligente de produto.")
+    product_info = product_service.intelligent_text_analysis(
+        vision_data=vision_data, db=db)
+
+    # 5. Montagem e retorno da resposta final
+    processing_time = round(time.time() - start_time, 2)
+    identified_product = models.IdentifiedProduct(**product_info)
+
+    background_tasks.add_task(
+        database.log_processing,
+        image_hash=image_hash,
+        processing_time=processing_time,
+        success=True,
+        confidence=identified_product.confidence,
+        error_message=None
+    )
+
+    return models.IdentificationResult(
+        success=True,
+        status="newly_identified",
+        product=identified_product,
+        image_hash=image_hash,
+        raw_text=vision_data.get('raw_text', ''),
+        detected_logos=[logo.get('description')
+                        for logo in vision_data.get('detected_logos', [])],
+        confidence=identified_product.confidence,
+        processing_time=processing_time
+    )
+
+# =============================================================================
+# === ENDPOINTS DE GERENCIAMENTO DE PRODUTOS (CRUD) ===========================
+# =============================================================================
 
 
 @app.get(
     f"{API_PREFIX}/products",
-    # A resposta pode ser paginada ou uma lista simples, então ajustamos
-    # o response_model para ser mais flexível ou removemos para autodetecção.
-    summary="Lista ou busca produtos cadastrados",
+    response_model=models.PaginatedResponse,
+    summary="Lista produtos cadastrados com filtros e paginação",
     tags=["Produtos"]
 )
 async def get_products(
-    db: sqlite3.Connection = Depends(get_db),
-    page: Optional[int] = Query(1, ge=1, description="Número da página"),
-    size: Optional[int] = Query(
-        20, ge=1, le=100, description="Tamanho da página"),
+    db: sqlite3.Connection = Depends(database.get_db),
+    page: int = Query(1, ge=1, description="Número da página"),
+    size: int = Query(10, ge=1, le=100, description="Itens por página"),
     category: Optional[str] = Query(None, description="Filtrar por categoria"),
-    brand: Optional[str] = Query(None, description="Filtrar por marca"),
-    sort: str = Query("newest", description="Critério de ordenação"),
-    # --- NOVA OPÇÃO ---
-    export: bool = Query(
-        False, description="Se True, retorna todos os resultados sem paginar")
+    brand: Optional[str] = Query(
+        None, description="Filtrar por marca (busca parcial)"),
+    sort: str = Query("newest", description="Critério de ordenação")
 ):
-    """
-    Retorna uma lista de produtos. Se 'export=True', retorna todos os 
-    produtos filtrados. Caso contrário, retorna uma lista paginada.
-    """
-    try:
-        # Usa dicionário para os parâmetros para evitar injeção de SQL
-        params = {}
-        query = "SELECT * FROM products WHERE 1=1"
+    """Retorna uma lista paginada de produtos com opções de filtro e ordenação."""
+    # A lógica interna para esta rota já estava robusta e foi mantida.
+    params = {}
+    query = "SELECT * FROM products WHERE 1=1"
+    if category:
+        query += " AND category = :category"
+        params['category'] = category
+    if brand:
+        query += " AND brand LIKE :brand"
+        params['brand'] = f"%{brand}%"
 
-        if category:
-            query += " AND category = :category"
-            params['category'] = category
+    count_query = query.replace("SELECT *", "SELECT COUNT(*)")
+    total = db.execute(count_query, params).fetchone()[0] or 0
 
-        if brand:
-            # Usamos LIKE para uma busca mais flexível por marca
-            query += " AND brand LIKE :brand"
-            params['brand'] = f"%{brand}%"
+    sort_options = {
+        "newest": "ORDER BY created_at DESC", "oldest": "ORDER BY created_at ASC",
+        "name": "ORDER BY title ASC", "name_desc": "ORDER BY title DESC"
+    }
+    order_clause = sort_options.get(sort, "ORDER BY id DESC")
 
-        # Define a cláusula de ordenação com base no parâmetro 'sort'
-        sort_options = {
-            "newest": "ORDER BY created_at DESC",
-            "oldest": "ORDER BY created_at ASC",
-            "name": "ORDER BY title ASC",
-            "name_desc": "ORDER BY title DESC",
-            "price": "ORDER BY price ASC",
-            "price_desc": "ORDER BY price DESC"
-        }
-        order_clause = sort_options.get(sort, "ORDER BY id DESC")
+    offset = (page - 1) * size
+    query += f" {order_clause} LIMIT :size OFFSET :offset"
+    params['size'] = size
+    params['offset'] = offset
 
-        # Se não for para exportação, aplica ordenação e paginação
-        if not export:
-            # Conta o total de itens para a paginação
-            count_query = query.replace("SELECT *", "SELECT COUNT(*)")
-            total_result = db.execute(count_query, params).fetchone()
-            total = total_result[0] if total_result else 0
+    products = [dict(p) for p in db.execute(query, params).fetchall()]
 
-            offset = (page - 1) * size
-            # Adiciona a cláusula de ordenação antes do LIMIT/OFFSET
-            query += f" {order_clause} LIMIT :size OFFSET :offset"
-            params['size'] = size
-            params['offset'] = offset
-
-            products = db.execute(query, params).fetchall()
-            products_list = [dict(p) for p in products]
-
-            return PaginatedResponse(
-                items=products_list,
-                total=total,
-                page=page,
-                pages=(total + size - 1) // size if size > 0 else 0,
-                size=size
-            )
-        else:
-            # Se for para exportação, retorna todos os produtos filtrados
-            query += f" {order_clause}"
-            products = db.execute(query, params).fetchall()
-            return [dict(p) for p in products]
-
-    except Exception as e:
-        logger.error(f"Erro ao buscar produtos: {e}", exc_info=True)
-        raise HTTPException(
-            status_code=500, detail="Erro interno ao buscar produtos."
-        )
+    return models.PaginatedResponse(
+        items=products, total=total, page=page,
+        pages=(total + size - 1) // size if size > 0 else 0,
+        size=size
+    )
 
 
 @app.post(
     f"{API_PREFIX}/products",
-    response_model=APIResponse,
-    summary="Salva um novo produto",
+    response_model=models.APIResponse,
+    summary="Salva um novo produto no banco de dados",
     status_code=201,
     tags=["Produtos"]
 )
 async def save_product(
-    product: ProductCreate,
-    db: sqlite3.Connection = Depends(get_db)
+    product: models.ProductCreate,
+    db: sqlite3.Connection = Depends(database.get_db)
 ):
-    """
-    Salva os dados de um produto no banco de dados.
-    """
+    """Recebe os dados de um produto (geralmente após a identificação por IA) e os persiste no banco."""
     try:
-        # Cria um dicionário com os dados do produto
-        product_data = {
-            'gtin': product.gtin,
-            'title': product.title,
-            'brand': product.brand,
-            'category': product.category,
-            'price': product.price,
-            'ncm': product.ncm,
-            'cest': product.cest,
-            'confidence': product.confidence,
-            'image_hash': product.image_hash  # Ajuste conforme necessário
-        }
-
-        # Passa os dados e a conexão 'db' para a função
-        product_id = insert_product(product_data, db=db)
-
+        product_id = database.insert_product(product.dict(), db)
         if product_id:
-            return APIResponse.success_response(
+            return models.APIResponse.success_response(
                 data={"id": product_id},
                 message="Produto salvo com sucesso"
             )
-        else:
-            raise HTTPException(
-                status_code=500,
-                detail="Erro ao salvar o produto no banco de dados"
-            )
-
+        raise HTTPException(
+            status_code=500, detail="Erro desconhecido ao salvar o produto.")
     except sqlite3.IntegrityError:
         raise HTTPException(
-            status_code=409,
-            detail=f"Produto com GTIN {product.gtin} já existe."
-        )
-    except Exception as e:
-        logger.error(f"Erro ao salvar produto: {e}", exc_info=True)
-        raise HTTPException(
-            status_code=500,
-            detail="Erro interno ao salvar o produto."
-        )
+            status_code=409, detail=f"Produto com GTIN {product.gtin} já existe.")
 
 
-@app.get(
-    f"{API_PREFIX}/stats/processing",
-    response_model=ProcessingStats,
-    summary="Estatísticas de processamento",
-    tags=["Estatísticas"]
-)
-async def get_processing_stats_route(db: sqlite3.Connection = Depends(get_db)):
-    """
-    Retorna estatísticas sobre o processamento de imagens.
-    """
-    try:
-        stats = get_processing_stats()
-        return stats
-    except Exception as e:
-        logger.error(f"Erro ao buscar estatísticas: {e}", exc_info=True)
-        raise HTTPException(
-            status_code=500,
-            detail="Erro interno ao buscar estatísticas."
-        )
+# Em backend/main.py
 
-
-@app.get(
-    f"{API_PREFIX}/health",
-    summary="Health Check",
-    tags=["Sistema"]
-)
-async def health_check():
-    """
-    Endpoint para verificar o status da API.
-    """
-    return {
-        "status": "healthy",
-        "timestamp": time.time(),
-        "version": "1.0.0"
-    }
-
+# Em backend/main.py
 
 @app.get(
     f"{API_PREFIX}/products/export",
-    summary="Exporta produtos filtrados para CSV ou Excel",
-    tags=["Produtos"]
+    summary="Exporta produtos para CSV ou Excel",
+    tags=["Utilitários"]
 )
 async def export_products(
-    format: str = Query(
-        "csv", description="Formato do arquivo: 'csv' ou 'excel'"),
-    db: sqlite3.Connection = Depends(get_db),
-    category: Optional[str] = Query(None),
-    brand: Optional[str] = Query(None),
-    sort: str = Query("newest", description="Critério de ordenação")
+    format: str = Query("csv", enum=["csv", "excel"]),
+    db: sqlite3.Connection = Depends(database.get_db)
 ):
-    """
-    Busca produtos com base nos filtros e retorna um arquivo para download.
-    """
-    try:
-        # Construir query manualmente em vez de chamar get_products
-        params = {}
-        query = "SELECT * FROM products WHERE 1=1"
-
-        if category:
-            query += " AND category = :category"
-            params['category'] = category
-
-        if brand:
-            query += " AND brand LIKE :brand"
-            params['brand'] = f"%{brand}%"
-
-        # Ordenação
-        sort_options = {
-            "newest": "ORDER BY created_at DESC",
-            "oldest": "ORDER BY created_at ASC",
-            "name": "ORDER BY title ASC",
-            "name_desc": "ORDER BY title DESC",
-            "price": "ORDER BY price ASC",
-            "price_desc": "ORDER BY price DESC"
-        }
-        order_clause = sort_options.get(sort, "ORDER BY id DESC")
-        query += f" {order_clause}"
-
-        # Executar query
-        products = db.execute(query, params).fetchall()
-        products_list = [dict(p) for p in products]
-
-        if not products_list:
-            raise HTTPException(
-                status_code=404, detail="Nenhum produto encontrado para exportar.")
-
-        # Criar DataFrame
-        df = pd.DataFrame(products_list)
-        columns_to_export = {
-            "title": "Produto", "brand": "Marca", "gtin": "GTIN/EAN",
-            "ncm": "NCM", "category": "Categoria", "price": "Preço",
-            "created_at": "Data de Cadastro"
-        }
-        df = df[list(columns_to_export.keys())]
-        df.rename(columns=columns_to_export, inplace=True)
-
-        # Gerar arquivo
-        if format == "excel":
-            stream = io.BytesIO()
-            df.to_excel(stream, index=False)
-            media_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            filename = "cadvision_produtos.xlsx"
-        else:
-            stream = io.StringIO()
-            df.to_csv(stream, index=False)
-            media_type = "text/csv"
-            filename = "cadvision_produtos.csv"
-
-        stream.seek(0)
-        response = StreamingResponse(
-            iter([stream.getvalue()]),
-            media_type=media_type
-        )
-        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
-        return response
-
-    except Exception as e:
-        logger.error(f"Erro ao exportar produtos: {e}", exc_info=True)
+    """Gera um arquivo com todos os produtos do banco de dados para download."""
+    all_products = database.get_all_products(db)
+    if not all_products:
         raise HTTPException(
-            status_code=500, detail="Erro interno ao exportar produtos."
+            status_code=404, detail="Nenhum produto para exportar.")
+
+    df = pd.DataFrame(all_products)
+
+    # Lista de colunas a serem removidas do relatório final
+    columns_to_remove = ['image_hash', 'confidence']
+    for col in columns_to_remove:
+        if col in df.columns:
+            df.drop(columns=[col], inplace=True)
+
+    # Dicionário para traduzir os nomes das colunas
+    column_mapping = {
+        'id': 'ID',
+        'gtin': 'GTIN/EAN',
+        'title': 'Título do Produto',
+        'brand': 'Marca',
+        'category': 'Categoria',
+        'price': 'Preço (R$)',
+        'ncm': 'NCM',
+        'cest': 'CEST',
+        'created_at': 'Data de Criação',
+        'updated_at': 'Última Atualização'
+    }
+    df.rename(columns=column_mapping, inplace=True)
+
+    # --- INÍCIO DA NOVA ALTERAÇÃO ---
+
+    # Força a coluna GTIN/EAN a ser tratada como TEXTO no Excel
+    # Adicionando ="<valor>" em cada célula.
+    if 'GTIN/EAN' in df.columns:
+        df['GTIN/EAN'] = df['GTIN/EAN'].apply(
+            lambda x: f'="{x}"' if pd.notna(x) and x != '' else ''
         )
+
+    # --- FIM DA NOVA ALTERAÇÃO ---
+
+    stream = io.BytesIO() if format == "excel" else io.StringIO()
+    filename = f"cadvision_produtos_{time.strftime('%Y-%m-%d')}"
+
+    if format == "excel":
+        df.to_excel(stream, index=False)
+        media_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        filename += ".xlsx"
+    else:
+        df.to_csv(stream, index=False)
+        media_type = "text/csv"
+        filename += ".csv"
+
+    stream.seek(0)
+
+    headers = {'Content-Disposition': f'attachment; filename="{filename}"'}
+    return StreamingResponse(iter([stream.getvalue()]), media_type=media_type, headers=headers)
 
 
 @app.get(
-    f"{API_PREFIX}/products/{{product_id}}",
-    response_model=ProductOut,
-    summary="Busca um único produto pelo ID",
+    f"{API_PREFIX}/products/{{product_id}}",  # Mude de f"..." para "..."
+    response_model=models.ProductOut,
+    summary="Busca um único produto pelo seu ID",
     tags=["Produtos"]
 )
-async def get_single_product(product_id: int, db: sqlite3.Connection = Depends(get_db)):
-    product = get_product_by_id(product_id, db)
+async def get_single_product(product_id: int, db: sqlite3.Connection = Depends(database.get_db)):
+    """Retorna os detalhes de um produto específico."""
+    product = database.get_product_by_id(product_id, db)
     if not product:
         raise HTTPException(status_code=404, detail="Produto não encontrado.")
     return product
 
 
 @app.put(
-    f"{API_PREFIX}/products/{{product_id}}",
-    response_model=APIResponse,
+    f"{API_PREFIX}/products/{{product_id}}",  # Mude de f"..." para "..."
+    response_model=models.APIResponse,
     summary="Atualiza um produto existente",
     tags=["Produtos"]
 )
 async def update_single_product(
     product_id: int,
-    product: ProductCreate,  # Reutilizamos o modelo de criação para a atualização
-    db: sqlite3.Connection = Depends(get_db)
+    product: models.ProductUpdate,
+    db: sqlite3.Connection = Depends(database.get_db)
 ):
-    # Pega apenas os campos enviados
+    """Atualiza os campos de um produto existente a partir do seu ID."""
     product_data = product.dict(exclude_unset=True)
-    success = update_product(product_id, product_data, db)
+    if not product_data:
+        raise HTTPException(
+            status_code=400, detail="Nenhum dado fornecido para atualização.")
 
+    success = database.update_product(product_id, product_data, db)
     if not success:
         raise HTTPException(
             status_code=404, detail="Produto não encontrado ou falha na atualização.")
 
-    return APIResponse.success_response(message="Produto atualizado com sucesso.")
+    return models.APIResponse.success_response(message="Produto atualizado com sucesso.")
 
 
 @app.delete(
-    f"{API_PREFIX}/products/{{product_id}}",
+    f"{API_PREFIX}/products/{{product_id}}",  # Mude de f"..." para "..."
+    response_model=models.APIResponse,
     summary="Exclui um produto pelo ID",
-    status_code=200,
     tags=["Produtos"]
 )
-async def delete_product(
-    product_id: int,
-    db: sqlite3.Connection = Depends(get_db)
-):
-    success = delete_product_by_id(product_id, db)
+async def delete_product(product_id: int, db: sqlite3.Connection = Depends(database.get_db)):
+    """Exclui permanentemente um produto do banco de dados."""
+    success = database.delete_product_by_id(product_id, db)
     if not success:
         raise HTTPException(
             status_code=404, detail=f"Produto com ID {product_id} não encontrado.")
+    return models.APIResponse.success_response(message="Produto excluído com sucesso.")
 
-    return {"success": True, "message": "Produto excluído com sucesso."}
+# =============================================================================
+# === ENDPOINTS DE DASHBOARD E UTILITÁRIOS ====================================
+# =============================================================================
 
 
-@app.get(f"{API_PREFIX}/dashboard/summary", summary="Obtém dados consolidados para o dashboard", tags=["Dashboard"])
-async def get_dashboard_summary(db: sqlite3.Connection = Depends(get_db)):
-    try:
-        kpis = get_dashboard_kpis(db)
-        categories = get_products_by_category(db)
-        activities = get_recent_activities(db)
-        performance_history = get_success_rate_by_date(db)
-        products_per_day = get_products_by_period(db, 'day')
-        products_per_month = get_products_by_period(db, 'month')
+@app.get(
+    f"{API_PREFIX}/dashboard/summary",
+    summary="Obtém dados consolidados para o dashboard",
+    tags=["Dashboard"]
+)
+async def get_dashboard_summary(db: sqlite3.Connection = Depends(database.get_db)):
+    """Coleta e agrega múltiplos KPIs e dados para popular a tela do dashboard."""
+    return {
+        "kpis": database.get_dashboard_kpis(db),
+        "category_distribution": database.get_products_by_category(db),
+        "recent_activities": database.get_recent_activities(db),
+        "performance_history": database.get_success_rate_by_date(db),
+        "products_per_day": database.get_products_by_period(db, 'day'),
+        "products_per_month": database.get_products_by_period(db, 'month')
+    }
 
-        return {
-            "kpis": kpis,
-            "category_distribution": categories,
-            "recent_activities": activities,
-            "performance_history": performance_history,
-            "products_per_day": products_per_day, # Adicione a nova chave aqui
-            "products_per_month": products_per_month
-        }
-    except Exception as e:
-        logger.error(f"Erro ao gerar resumo do dashboard: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Erro interno ao buscar dados do dashboard.")
-# Adicione esta linha para inicializar o banco de dados na inicialização
 
-# --- SERVIR O FRONTEND ---
-# Define o caminho para a pasta 'frontend', que está na pasta-pai da pasta 'backend'
+@app.get(f"{API_PREFIX}/health", summary="Verifica a saúde da API", tags=["Sistema"])
+async def health_check():
+    """Endpoint simples para monitoramento e health checks."""
+    return {"status": "healthy", "timestamp": time.time()}
+
+# =============================================================================
+# === SERVIR ARQUIVOS DO FRONTEND E TRATAMENTO DE ERROS =======================
+# =============================================================================
+
+# --- Servir o Frontend (Arquivos Estáticos) ---
 BACKEND_DIR = Path(__file__).resolve().parent
+# Aponta para a pasta raiz do frontend, já que não há pasta 'dist'
 FRONTEND_DIR = BACKEND_DIR.parent / "frontend"
 
-# Verifica se o diretório do frontend existe
-if FRONTEND_DIR.exists() and (FRONTEND_DIR / "index.html").exists():
-    # Monta o diretório de assets (css, js, images)
+if FRONTEND_DIR.is_dir() and (FRONTEND_DIR / "index.html").exists():
+    # Monta a pasta de assets (js, css, imagens, etc.)
     app.mount("/assets", StaticFiles(directory=FRONTEND_DIR /
               "assets"), name="assets")
 
-    # Serve arquivos estáticos do frontend
-    app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
-
-    # Rota principal que serve o index.html
-    @app.get("/", include_in_schema=False)
-    async def serve_frontend():
-        return FileResponse(FRONTEND_DIR / "index.html")
-
-    # Rota para servir outras páginas do frontend
-    @app.get("/{path:path}", include_in_schema=False)
-    async def serve_frontend_path(path: str):
-        file_path = FRONTEND_DIR / path
-
-        # Verifica se o arquivo existe e é um arquivo estático
-        if file_path.exists() and file_path.is_file():
-            return FileResponse(file_path)
-
-        # Para qualquer outra rota, serve o index.html (SPA)
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def serve_frontend_spa(full_path: str):
+        """Serve o index.html para qualquer rota não correspondida (Single Page Application)."""
         return FileResponse(FRONTEND_DIR / "index.html")
 else:
     logger.warning(
-        "Diretório do frontend não encontrado. O servidor não irá servir o frontend.")
+        f"Diretório do frontend ou index.html não encontrado em '{FRONTEND_DIR}'. A UI não será servida.")
 
-# --- HANDLER DE ERROS GLOBAL ---
+# --- Manipuladores de Exceção Globais ---
+# (O resto do seu código de tratamento de exceção permanece o mesmo)
+# ...
 
-
-@app.exception_handler(HTTPException)
-async def http_exception_handler(request, exc):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content=jsonable_encoder({
-            "success": False,
-            "message": exc.detail,
-            "error_code": f"HTTP_{exc.status_code}"
-        })
-    )
+# --- Manipuladores de Exceção Globais ---
 
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request, exc):
-    logger.error(f"Erro não tratado: {exc}", exc_info=True)
+    """Captura exceções não tratadas para evitar que a aplicação quebre."""
+    logger.error(
+        f"Erro não tratado na rota {request.url}: {exc}", exc_info=True)
     return JSONResponse(
         status_code=500,
-        content=jsonable_encoder({
-            "success": False,
-            "message": "Erro interno do servidor",
-            "error_code": "INTERNAL_SERVER_ERROR"
-        })
+        content={"success": False,
+                 "message": "Ocorreu um erro interno no servidor."}
     )
-
-# --- FIM DO ARQUIVO main.py ---

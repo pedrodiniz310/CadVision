@@ -1,0 +1,20 @@
+# /cadvision_app/docker-compose.yml
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: cadvision_db
+    restart: always
+    environment:
+      - POSTGRES_USER=cadvision
+      - POSTGRES_PASSWORD=supersecretpassword
+      - POSTGRES_DB=cadvision_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+    name: cadvision_postgres_data

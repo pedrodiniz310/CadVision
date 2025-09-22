@@ -657,57 +657,72 @@ function updateAIStatus(message, status) {
 
 // Em frontend/js/script.js
 
+// frontend/assets/js/script.js
+
 function fillFormWithAIResults(result) {
   // Função auxiliar para definir o valor e a classe de um campo
-  const setFieldValue = (element, value) => {
+  // frontend/assets/js/script.js - dentro da função fillFormWithAIResults
+
+  // Substitua a função setFieldValue por esta versão final
+  const setFieldValue = (element, value, confidence) => {
+    if (!element) return;
     const formGroup = element.closest('.form-group');
 
-    // Primeiro, sempre limpa o estado anterior
-    element.classList.remove('ai-filled');
-    if (formGroup) {
-      formGroup.classList.remove('ai-filled-group'); // Remove a classe do grupo também
-    }
+    // Limpa estados anteriores
+    element.value = '';
+    element.className = element.className.replace(/\bai-.*\b/g, '');
+    if (formGroup) formGroup.className = formGroup.className.replace(/\bai-.*\b/g, '');
 
     if (value !== null && value !== undefined && value !== "") {
-      // Define o valor e adiciona as classes de destaque
       element.value = value;
-      element.classList.add('ai-filled');
-      if (formGroup) {
-        formGroup.classList.add('ai-filled-group');
-      }
 
-      // --- ADIÇÃO CRÍTICA PARA CORRIGIR O BUG DO SELECT ---
-      // Se o elemento for um SELECT, vamos forçar a seleção da option correta.
-      if (element.tagName === 'SELECT') {
-        // Percorre todas as <option> dentro do <select>
-        for (let i = 0; i < element.options.length; i++) {
-          if (element.options[i].value === value) {
-            // Define explicitamente esta opção como a selecionada
-            element.options[i].selected = true;
-            break; // Para a busca assim que encontrar
-          }
+      // Adiciona classes base
+      element.classList.add('ai-filled');
+      if (formGroup) formGroup.classList.add('ai-filled-group');
+
+      // Adiciona classes de confiança
+      if (confidence) {
+        if (confidence >= 0.95) { // Ex: Confiança da API Cosmos
+          element.classList.add('ai-high-confidence');
+          if (formGroup) formGroup.classList.add('ai-high-confidence');
+        } else if (confidence > 0.70) { // Ex: Inferência com logo
+          element.classList.add('ai-medium-confidence');
+          if (formGroup) formGroup.classList.add('ai-medium-confidence');
         }
       }
-      // --- FIM DA ADIÇÃO ---
 
-    } else {
-      // Se não houver valor, limpa o campo
-      element.value = '';
+      if (element.tagName === 'SELECT') {
+        // ... (lógica de seleção da option já implementada) ...
+        let optionFound = false;
+        for (let i = 0; i < element.options.length; i++) {
+          if (element.options[i].value === value) {
+            element.selectedIndex = i;
+            optionFound = true;
+            break;
+          }
+        }
+        if (!optionFound) {
+          element.value = 'Outros';
+        }
+      }
     }
   };
 
   const product = result.product || {};
+  const confidence = result.confidence || 0; // Pega a confiança geral
 
-  // Usa a função auxiliar para cada campo do formulário
-  setFieldValue(DOM.productName, product.title);
-  setFieldValue(DOM.productBrand, product.brand);
-  setFieldValue(DOM.productGTIN, product.gtin);
-  setFieldValue(DOM.productCategory, product.category);
-  setFieldValue(DOM.productNCM, product.ncm);
-  setFieldValue(DOM.productCEST, product.cest);
-  setFieldValue(DOM.productPrice, product.price);
+  // Passa a confiança para cada campo
+  setFieldValue(DOM.productName, product.title, confidence);
+  setFieldValue(DOM.productBrand, product.brand, confidence);
+  setFieldValue(DOM.productGTIN, product.gtin, confidence);
+  setFieldValue(DOM.productCategory, product.category, confidence);
+  setFieldValue(DOM.productNCM, product.ncm, confidence);
+  setFieldValue(DOM.productCEST, product.cest, confidence);
 
-  // Foca no primeiro campo vazio ou no preço (lógica original mantida)
+  const priceValue = product.price !== null ? product.price.toFixed(2) : '';
+  setFieldValue(DOM.productPrice, priceValue, confidence);
+
+  // Foca no primeiro campo vazio ou no preço
   if (!DOM.productName.value) {
     DOM.productName.focus();
   } else if (!DOM.productPrice.value) {

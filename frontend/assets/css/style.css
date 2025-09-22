@@ -967,20 +967,11 @@ select:focus {
   transform: scale(1.1);
 }
 
-.icon-wrapper.bg-blue {
-  background-color: #3b82f6;
-}
-
-.icon-wrapper.bg-teal {
-  background-color: #14b8a6;
-}
-
-.icon-wrapper.bg-green {
-  background-color: #22c55e;
-}
-
+.icon-wrapper.bg-blue,
+.icon-wrapper.bg-teal,
+.icon-wrapper.bg-green,
 .icon-wrapper.bg-yellow {
-  background-color: #f59e0b;
+  background-color: #3B82F6; /* Cor azul padronizada */
 }
 
 .kpi-card .kpi-details span {
@@ -1138,3 +1129,5 @@ select:focus {
     flex-grow: 1;
   }
 }
+
+/* frontend/assets/css/style.css */

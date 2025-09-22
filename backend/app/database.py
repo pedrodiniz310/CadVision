@@ -76,8 +76,7 @@ def init_db():
         with get_db_connection() as conn:
             cur = conn.cursor()
 
-            # --- ADICIONE ESTE BLOCO ---
-            # 1. Tabela principal de PRODUTOS
+            # 1. Tabela principal de PRODUTOS - AGORA COM A COLUNA 'vertical'
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS products (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -90,13 +89,27 @@ def init_db():
                     cest TEXT,
                     confidence REAL,
                     image_hash TEXT,
+                    vertical TEXT NOT NULL DEFAULT 'supermercado', -- <- NOVA COLUNA
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
                 )
             """)
-            # --- FIM DA ADIÇÃO ---
 
-            # 2. Tabela de LOGS de processamento
+            # --- NOVA TABELA PARA ATRIBUTOS DE VESTUÁRIO ---
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS attributes_clothing (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    product_id INTEGER UNIQUE NOT NULL,
+                    size TEXT,      -- Tamanho (ex: P, M, G, 42)
+                    color TEXT,     -- Cor (ex: Azul, Preto)
+                    fabric TEXT,    -- Tecido (ex: Algodão, Poliéster)
+                    gender TEXT,    -- Gênero (ex: Masculino, Feminino, Unissex)
+                    FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
+                )
+            """)
+            # --- FIM DA NOVA TABELA ---
+
+            # O resto da função permanece o mesmo...
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS processing_logs (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -109,7 +122,6 @@ def init_db():
                 )
             """)
 
-            # 3. Tabela de MARCAS conhecidas para cache e inferência
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS known_brands (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -119,7 +131,6 @@ def init_db():
                 )
             """)
 
-            # 4. Tabela de CATEGORIAS de produtos
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS product_categories (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -129,15 +140,15 @@ def init_db():
                 )
             """)
 
-            # --- ÍNDICES PARA MELHOR PERFORMANCE ---
             cur.execute(
                 "CREATE INDEX IF NOT EXISTS idx_products_gtin ON products(gtin)")
             cur.execute(
                 "CREATE INDEX IF NOT EXISTS idx_logs_image_hash ON processing_logs(image_hash)")
 
-            # --- DADOS INICIAIS (SEMENTE) ---
+            # Novo índice para a chave estrangeira
+            cur.execute(
+                "CREATE INDEX IF NOT EXISTS idx_clothing_product_id ON attributes_clothing(product_id)")
 
-            # Inserir categorias padrão se a tabela estiver vazia
             cur.execute("SELECT COUNT(*) FROM product_categories")
             if cur.fetchone()[0] == 0:
                 default_categories = [
@@ -145,7 +156,11 @@ def init_db():
                     ('Bebidas', 'refrigerante,cerveja,suco,água,vinho,whisky,vodka'),
                     ('Limpeza', 'sabão,detergente,desinfetante,álcool,água sanitária,amaciante'),
                     ('Higiene', 'shampoo,condicionador,sabonete,pasta de dente,papel higiênico,lenços'),
-                    ('Eletrônicos', 'celular,tv,notebook,tablet,fone de ouvido,câmera')
+                    ('Eletrônicos', 'celular,tv,notebook,tablet,fone de ouvido,câmera'),
+                    # Novas categorias
+                    ('Vestuário', 'camisa,calça,vestido,tênis,sapato,roupa,moda'),
+                    ('Automotivo', 'carro,motor,óleo,pneu'),
+                    ('Construção', 'cimento,tijolo,ferro,obra')
                 ]
                 cur.executemany(
                     "INSERT INTO product_categories (name, keywords) VALUES (?, ?)",
@@ -153,7 +168,8 @@ def init_db():
                 )
 
             conn.commit()
-        logger.info("Banco de dados inicializado com sucesso.")
+        logger.info(
+            "Banco de dados inicializado com sucesso (com novo schema).")
     except sqlite3.Error as e:
         logger.error(f"Erro ao inicializar o banco de dados: {e}")
 

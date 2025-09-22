@@ -343,48 +343,54 @@ def extract_brand_from_data(text: str, logos: List) -> str:
     return ""
 
 
+# backend/app/services/vision_service.py
+
 def extract_price_from_text(text: str) -> Optional[float]:
     """
-    Extrai preço do texto com diferentes formatos.
+    Extrai o preço mais provável do texto, priorizando valores associados a 'R$'.
     """
     if not text:
         return None
 
-    # Padrões de preço (R$, $, EUR, etc.) - CORRIGIDOS
+    # Padrões mais abrangentes para capturar números com 2 casas decimais
+    # Formatos: R$ 12,99, R$12.99, 12,99, 12.99
+    # O regex captura o valor numérico em um grupo
     price_patterns = [
-        r'(?i)(r\s*[$\s]*[\s]*(\d+[.,]\d{2}))',  # R$ 12,99
-        r'(?i)(preço[:\s]*[\s]*(\d+[.,]\d{2}))',  # Preço: 12,99
-        r'(?i)(price[:\s]*[\s]*(\d+[.,]\d{2}))',  # Price: 12.99
-        r'(?i)(\b(\d+[.,]\d{2})\s*(reais|rs|r\$))',
-        r'(\$[\s]*(\d+[.,]\d{2}))',  # $ 12.99
-        r'(€[\s]*(\d+[.,]\d{2}))',   # € 12.99
+        # Prioriza com R$ ou "preço"
+        r'(?:R\$\s*|preço[:\s]*)\s*(\d{1,5}[,.]\d{2})\b',
+        # Busca qualquer número no formato X,XX ou X.XX
+        r'\b(\d{1,5}[,.]\d{2})\b'
     ]
 
+    candidates = []
     for pattern in price_patterns:
         matches = re.findall(pattern, text)
-        if matches:
+        for match in matches:
+            # Limpa e converte para float
+            price_str = match.replace(',', '.')
             try:
-                # O padrão retorna múltiplos grupos, pegamos o grupo que contém o preço
-                for match in matches:
-                    if isinstance(match, tuple):
-                        # Encontra o primeiro elemento que parece um preço
-                        for item in match:
-                            if re.search(r'\d+[.,]\d{2}', str(item)):
-                                price_str = re.search(
-                                    r'(\d+[.,]\d{2})', str(item)).group(1)
-                                price_str = price_str.replace(',', '.')
-                                price = float(price_str)
-                                if price > 0:
-                                    return round(price, 2)
-                    else:
-                        price_str = match.replace(',', '.')
-                        price = float(price_str)
-                        if price > 0:
-                            return round(price, 2)
-            except (ValueError, IndexError, AttributeError):
+                price = float(price_str)
+                if price > 0:
+                    # Adiciona o preço e um peso de prioridade
+                    # Peso 2 para padrões com 'R$' ou 'preço', peso 1 para os outros
+                    priority = 2 if 'R$' in pattern or 'preço' in pattern else 1
+                    candidates.append({'price': price, 'priority': priority})
+            except (ValueError, IndexError):
                 continue
 
-    return None
+    if not candidates:
+        return None
+
+    # Escolhe o melhor candidato:
+    # 1. Ordena por prioridade (maior primeiro)
+    # 2. Se a prioridade for a mesma, ordena pelo maior valor (preços tendem a ser maiores que pesos)
+    best_candidate = sorted(candidates, key=lambda x: (
+        x['priority'], x['price']), reverse=True)[0]
+
+    logger.info(
+        f"Candidatos a preço encontrados: {candidates}. Melhor escolha: {best_candidate['price']}")
+
+    return round(best_candidate['price'], 2)
 
 
 def detect_category(text: str, labels: List) -> str:

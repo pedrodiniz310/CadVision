@@ -1428,3 +1428,1854 @@ fabricação impressa na embalagem.' -> Texto limpo para análise: '789893734577524
 2025-09-20 12:42:43,115 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
 2025-09-20 12:42:43,115 - app.services.product_service - INFO - Resultado da inferência: {'gtin': '', 'title': 'Produto não identificado', 'brand': None, 'category': None, 'ncm': '', 'cest': '', 'confidence': 0.6, 'detected_patterns': ['text_heuristic']}
 2025-09-20 14:39:06,037 - main - INFO - Encerrando aplicação CadVision API
+2025-09-20 20:51:13,868 - main - INFO - Iniciando aplicação CadVision API
+2025-09-20 20:51:13,878 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 20:51:13,878 - main - INFO - Banco de dados inicializado
+2025-09-20 20:54:22,115 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-20 20:54:25,451 - app.services.vision_service - INFO - Vision API: Texto extraído (20 chars), Logos: 0, Labels: 2
+2025-09-20 20:54:25,452 - app.services.vision_service - INFO - Texto bruto: '78980554208111
+a
+eld' -> Texto limpo para análise: '78980554208111'
+2025-09-20 20:54:25,452 - app.services.vision_service - INFO - GTIN validado com sucesso: 7898055420811
+2025-09-20 20:54:25,453 - main - INFO - Dados extraídos - GTIN: 7898055420811, Texto: 20 chars, Logos: [], Sucesso: True, Tempo: 3.43s
+2025-09-20 20:54:25,454 - app.services.product_service - INFO - Prioridade 1: GTIN detectado (7898055420811). Iniciando validação.
+2025-09-20 20:54:25,454 - app.services.product_service - INFO - Consultando API Cosmos para GTIN: 7898055420811
+2025-09-20 21:11:01,667 - main - INFO - Iniciando aplicação CadVision API
+2025-09-20 21:11:01,669 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 21:11:01,669 - main - INFO - Banco de dados inicializado
+2025-09-20 21:41:30,710 - main - INFO - Encerrando aplicação CadVision API
+2025-09-20 21:41:32,783 - main - INFO - Iniciando aplicação CadVision API
+2025-09-20 21:41:32,785 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 21:41:32,785 - main - INFO - Banco de dados inicializado
+2025-09-20 21:48:29,856 - main - INFO - Encerrando aplicação CadVision API
+2025-09-20 21:48:31,880 - main - INFO - Iniciando aplicação CadVision API
+2025-09-20 21:48:31,883 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 21:48:31,883 - main - INFO - Banco de dados inicializado
+2025-09-20 21:57:35,217 - main - INFO - Encerrando aplicação CadVision API
+2025-09-20 21:57:37,318 - main - INFO - Iniciando aplicação CadVision API
+2025-09-20 21:57:37,320 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 21:57:37,320 - main - INFO - Banco de dados inicializado
+2025-09-20 21:58:29,591 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-20 21:58:33,735 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-20 21:58:33,735 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-20 21:58:33,736 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-20 21:58:33,737 - main - INFO - Dados extraídos - GTIN: , Texto: 238 chars, Logos: [], Sucesso: True, Tempo: 4.19s
+2025-09-20 21:58:33,737 - app.services.product_service - INFO - Prioridade 2: GTIN não validado ou Cosmos sem dados. Partindo para a inferência por logo e texto.
+2025-09-20 21:59:44,012 - main - INFO - Iniciando aplicação CadVision API
+2025-09-20 21:59:44,014 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 21:59:44,014 - main - INFO - Banco de dados inicializado
+2025-09-20 22:01:53,017 - main - INFO - Imagem duplicada encontrada para o hash: 9bb1516d4f8c2209c62d366630cfc6bb
+2025-09-20 22:06:35,267 - main - INFO - Encerrando aplicação CadVision API
+2025-09-20 22:06:37,247 - main - INFO - Iniciando aplicação CadVision API
+2025-09-20 22:06:37,250 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 22:06:37,250 - main - INFO - Banco de dados inicializado
+2025-09-20 22:19:27,489 - main - INFO - Encerrando aplicação CadVision API
+2025-09-20 22:19:29,602 - main - INFO - Iniciando aplicação CadVision API
+2025-09-20 22:19:29,604 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 22:19:29,605 - main - INFO - Banco de dados inicializado
+2025-09-20 22:20:27,822 - main - INFO - Encerrando aplicação CadVision API
+2025-09-20 22:20:29,819 - main - INFO - Iniciando aplicação CadVision API
+2025-09-20 22:20:29,821 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 22:20:29,821 - main - INFO - Banco de dados inicializado
+2025-09-20 22:34:11,075 - main - INFO - Encerrando aplicação CadVision API
+2025-09-20 23:06:07,926 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-20 23:06:07,929 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 23:06:07,929 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 23:06:54,860 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-20 23:06:54,906 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-20 23:06:57,821 - app.services.vision_service - INFO - Vision API: Texto extraído (20 chars), Logos: 0, Labels: 2
+2025-09-20 23:06:57,822 - app.services.vision_service - INFO - Texto bruto: '78980554208111
+a
+eld' -> Texto limpo para análise: '78980554208111'
+2025-09-20 23:06:57,822 - app.services.vision_service - INFO - GTIN validado com sucesso: 7898055420811
+2025-09-20 23:06:57,823 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-20 23:06:57,823 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 7898055420811.
+2025-09-20 23:06:57,824 - app.services.product_service - INFO - GTIN não encontrado no cache. Consultando API Cosmos.
+2025-09-20 23:06:58,918 - app.services.product_service - INFO - Sucesso! Dados encontrados via API Cosmos.
+2025-09-20 23:07:35,443 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-20 23:07:35,486 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-20 23:07:39,166 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-20 23:07:39,167 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-20 23:07:39,167 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-20 23:07:39,167 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-20 23:07:39,168 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-20 23:07:39,168 - app.services.product_service - INFO - Realizando busca na web com a query: 'arroz Tio João 100% GRAOS Sempre soltinho NOBRES •Branquinho e saboroso .Não pre...'
+2025-09-20 23:07:39,168 - app.services.advanced_inference_service - INFO - Iniciando chamada ao Gemini Pro via Vertex AI...
+2025-09-20 23:07:40,330 - app.services.advanced_inference_service - ERROR - Erro durante a chamada ou parse da API Vertex AI: 404 Publisher Model `projects/cadvision-app/locations/southamerica-east1/publishers/google/models/gemini-1.0-pro` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+2025-09-20 23:07:40,330 - app.services.product_service - ERROR - Falha final no pipeline de inferência avançada.
+2025-09-20 23:13:34,860 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-20 23:13:41,743 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-20 23:13:41,746 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 23:13:41,746 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 23:14:18,016 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-20 23:14:18,062 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-20 23:14:22,610 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-20 23:14:22,610 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-20 23:14:22,611 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-20 23:14:22,611 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-20 23:14:22,611 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-20 23:14:22,613 - app.services.product_service - INFO - Realizando busca na web com a query: 'arroz Tio João 100% GRAOS Sempre soltinho NOBRES •Branquinho e saboroso .Não pre...'
+2025-09-20 23:14:22,613 - app.services.advanced_inference_service - INFO - Iniciando chamada ao Gemini Pro via Vertex AI...
+2025-09-20 23:14:24,450 - app.services.advanced_inference_service - ERROR - Erro durante a chamada ou parse da API Vertex AI: 404 Publisher Model `projects/cadvision-app/locations/us-central1/publishers/google/models/gemini-1.0-pro` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+2025-09-20 23:14:24,451 - app.services.product_service - ERROR - Falha final no pipeline de inferência avançada.
+2025-09-20 23:17:19,874 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-20 23:17:26,710 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-20 23:17:26,713 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 23:17:26,713 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 23:17:45,128 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-20 23:17:45,172 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-20 23:17:49,177 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-20 23:17:49,177 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-20 23:17:49,178 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-20 23:17:49,179 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-20 23:17:49,179 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-20 23:17:49,179 - app.services.product_service - INFO - Realizando busca na web com a query: 'arroz Tio João 100% GRAOS Sempre soltinho NOBRES •Branquinho e saboroso .Não pre...'
+2025-09-20 23:17:49,180 - app.services.advanced_inference_service - INFO - Iniciando chamada ao Gemini Pro via Vertex AI...
+2025-09-20 23:17:50,792 - app.services.advanced_inference_service - ERROR - Erro durante a chamada ou parse da API Vertex AI: 404 Publisher Model `projects/cadvision-app/locations/us-central1/publishers/google/models/gemini-1.5-flash-preview-0514` was not found or your project does not have access to it. Please ensure you are using a valid model version. For more information, see: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+2025-09-20 23:17:50,793 - app.services.product_service - ERROR - Falha final no pipeline de inferência avançada.
+2025-09-20 23:20:04,288 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-20 23:20:11,378 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-20 23:20:11,381 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 23:20:11,381 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 23:20:13,716 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-20 23:20:20,557 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-20 23:20:20,560 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 23:20:20,560 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-20 23:20:26,179 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 00:00:11,609 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 00:00:11,611 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 00:00:11,611 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 00:00:22,199 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 00:00:22,243 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 00:00:26,938 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-21 00:00:26,939 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-21 00:00:26,940 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-21 00:00:26,940 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 00:00:26,941 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 00:00:26,941 - app.services.product_service - INFO - Realizando busca na web com a query: 'arroz Tio João 100% GRAOS Sempre soltinho NOBRES •Branquinho e saboroso .Não pre...'
+2025-09-21 00:00:26,941 - app.services.advanced_inference_service - INFO - Iniciando chamada ao Gemini Pro via Vertex AI...
+2025-09-21 00:00:26,941 - app.services.advanced_inference_service - ERROR - Erro durante a chamada ou parse da API Vertex AI: name 'GenerativeModel' is not defined
+2025-09-21 00:00:26,942 - app.services.product_service - ERROR - Falha final no pipeline de inferência avançada.
+2025-09-21 00:01:30,212 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 00:01:37,855 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 00:01:37,858 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 00:01:37,858 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 00:01:57,996 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 00:01:58,041 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 00:02:01,724 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-21 00:02:01,725 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-21 00:02:01,726 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-21 00:02:01,726 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 00:02:01,727 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 00:02:01,727 - app.services.product_service - INFO - Realizando busca na web com a query: 'arroz Tio João 100% GRAOS Sempre soltinho NOBRES •Branquinho e saboroso .Não pre...'
+2025-09-21 00:02:01,727 - app.services.advanced_inference_service - INFO - Iniciando chamada ao Gemini Pro via Vertex AI...
+2025-09-21 00:02:02,037 - app.services.advanced_inference_service - ERROR - Erro durante a chamada ou parse da API Vertex AI: 404 models/gemini-1.5-flash-preview-0514 is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2025-09-21 00:02:02,038 - app.services.product_service - ERROR - Falha final no pipeline de inferência avançada.
+2025-09-21 00:03:13,592 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 00:03:21,009 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 00:03:21,012 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 00:03:21,012 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 00:03:28,771 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 00:03:28,818 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 00:03:33,387 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-21 00:03:33,388 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-21 00:03:33,389 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-21 00:03:33,390 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 00:03:33,390 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 00:03:33,390 - app.services.product_service - INFO - Realizando busca na web com a query: 'arroz Tio João 100% GRAOS Sempre soltinho NOBRES •Branquinho e saboroso .Não pre...'
+2025-09-21 00:03:33,391 - app.services.advanced_inference_service - INFO - Iniciando chamada ao Gemini Pro via Vertex AI...
+2025-09-21 00:03:35,265 - app.services.advanced_inference_service - INFO - Resposta recebida do Gemini 1.5 Flash: ```json
+{
+  "title": "Arroz Tio João 100% Grãos Nobres 1kg",
+  "brand": "Tio João",
+  "category": "Alimentos",
+  "variant_or_type": "Tipo 1, Longo Fino, Polido",
+  "weight_or_volume": "1kg"
+}
+```
+
+2025-09-21 00:03:35,266 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Arroz Tio João 100% Grãos Nobres 1kg
+2025-09-21 00:13:35,426 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 00:13:43,058 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 00:13:43,061 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 00:13:43,061 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 00:14:04,853 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 00:14:04,898 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 00:14:09,830 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-21 00:14:09,831 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-21 00:14:09,832 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-21 00:14:09,832 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 00:14:09,832 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 00:14:09,833 - app.services.product_service - INFO - Realizando busca na web com a query: 'arroz Tio João 100% GRAOS Sempre soltinho NOBRES •Branquinho e saboroso .Não pre...'
+2025-09-21 00:14:09,834 - app.services.advanced_inference_service - INFO - Iniciando chamada ao Gemini Pro via Vertex AI...
+2025-09-21 00:14:09,834 - app.services.advanced_inference_service - ERROR - Erro durante a chamada ou parse da API Vertex AI: contents must not be empty
+2025-09-21 00:14:09,834 - app.services.product_service - ERROR - Falha final no pipeline de inferência avançada.
+2025-09-21 00:21:28,012 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 00:22:08,362 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 00:22:08,365 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 00:22:08,365 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 00:22:21,732 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 00:22:21,776 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 00:22:25,225 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-21 00:22:25,225 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-21 00:22:25,226 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-21 00:22:25,227 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 00:22:25,227 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 00:22:25,227 - app.services.product_service - INFO - Realizando busca na web com a query: 'arroz Tio João 100% GRAOS Sempre soltinho NOBRES •Branquinho e saboroso .Não pre...'
+2025-09-21 00:22:25,559 - app.services.advanced_inference_service - ERROR - Erro ao extrair informações do produto: 404 models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2025-09-21 00:22:25,560 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Produto não identificado
+2025-09-21 00:23:27,339 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 00:23:29,757 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 00:23:29,761 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 00:23:29,762 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 00:23:41,626 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 00:23:41,670 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 00:23:45,554 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-21 00:23:45,554 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-21 00:23:45,556 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-21 00:23:45,557 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 00:23:45,557 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 00:23:45,557 - app.services.product_service - INFO - Realizando busca na web com a query: 'arroz Tio João 100% GRAOS Sempre soltinho NOBRES •Branquinho e saboroso .Não pre...'
+2025-09-21 00:23:47,925 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Arroz Tio João 100% Grãos Nobres Tipo 1 1kg
+2025-09-21 00:27:54,147 - main - INFO - Imagem duplicada encontrada para o hash: e909fe0f6cb4c1043e03c0e2d2763f0d. Retornando do cache.
+2025-09-21 00:28:02,319 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 00:28:02,332 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 00:28:05,650 - app.services.vision_service - INFO - Vision API: Texto extraído (21 chars), Logos: 0, Labels: 8
+2025-09-21 00:28:05,650 - app.services.vision_service - INFO - Texto bruto: 'Fini
+Gelatinas
+Beijos' -> Texto limpo para análise: ''
+2025-09-21 00:28:05,651 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 00:28:05,651 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 00:28:05,652 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 00:28:05,652 - app.services.product_service - INFO - Realizando busca na web com a query: 'Fini Gelatinas Beijos...'
+2025-09-21 00:28:07,256 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Fini Gelatinas Beijos
+2025-09-21 00:30:27,723 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 00:30:30,188 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 00:30:30,192 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 00:30:30,192 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 11:17:19,279 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 11:17:19,294 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 11:17:19,294 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 11:19:43,509 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 11:19:43,595 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 11:19:47,613 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-21 11:19:47,614 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-21 11:19:47,615 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-21 11:19:47,616 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 11:19:47,616 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 11:19:47,616 - app.services.product_service - INFO - Realizando busca na web com a query: 'arroz Tio João 100% GRAOS Sempre soltinho NOBRES •Branquinho e saboroso .Não pre...'
+2025-09-21 11:19:50,072 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Arroz Tio João 100% Grãos Nobres Tipo 1 1kg
+2025-09-21 11:29:39,466 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 11:29:39,523 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 11:29:43,892 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-21 11:29:44,157 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-21 11:29:44,158 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 11:29:44,158 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 7896022200534.
+2025-09-21 11:29:44,158 - app.services.product_service - INFO - Sucesso! GTIN encontrado no cache local.
+2025-09-21 11:29:44,160 - main - ERROR - Erro não tratado na rota http://127.0.0.1:8000/api/v1/vision/identify: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 24, in __call__
+    await responder(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 44, in __call__
+    await self.app(scope, receive, self.send_with_gzip)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 166, in identify_image
+    return models.IdentificationResult(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+2025-09-21 11:29:52,706 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 11:30:15,504 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 11:30:15,507 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 11:30:15,507 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 11:30:45,148 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 11:30:45,206 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 11:30:49,199 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-21 11:30:49,219 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-21 11:30:49,220 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 11:30:49,220 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 7896022200534.
+2025-09-21 11:30:49,221 - app.services.product_service - INFO - Sucesso! GTIN encontrado no cache local.
+2025-09-21 11:30:49,222 - main - ERROR - Erro não tratado na rota http://127.0.0.1:8000/api/v1/vision/identify: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 24, in __call__
+    await responder(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 44, in __call__
+    await self.app(scope, receive, self.send_with_gzip)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 166, in identify_image
+    return models.IdentificationResult(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+2025-09-21 11:46:24,638 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 11:46:24,682 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 11:46:27,199 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-21 11:46:27,200 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-21 11:46:27,201 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-21 11:46:27,201 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 11:46:27,201 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 11:46:27,202 - app.services.product_service - INFO - Realizando busca na web com a query: 'arroz Tio João 100% GRAOS Sempre soltinho NOBRES •Branquinho e saboroso .Não pre...'
+2025-09-21 11:46:29,738 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Arroz Tio João 100% Grãos Nobres Tipo 1 1kg
+2025-09-21 11:52:35,171 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 11:52:35,233 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 11:52:37,722 - app.services.vision_service - INFO - Vision API: Texto extraído (116 chars), Logos: 0, Labels: 5
+2025-09-21 11:52:37,723 - app.services.vision_service - INFO - Texto bruto: 'PORTADORES
+-Catete-
+ARGENTINA
+2000-Rosar
+BOLIVIA-
+aya 774
+La Paz
+Bodega V-1-
+BRANDS
+78474
+17201
+33114-
+7891340365576' -> Texto limpo para análise: '200077417847417201331147891340365576'
+2025-09-21 11:52:37,724 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '200077417847417201331147891340365576'
+2025-09-21 11:52:37,724 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 11:52:37,724 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 11:52:37,724 - app.services.product_service - INFO - Realizando busca na web com a query: 'PORTADORES -Catete- ARGENTINA 2000-Rosar BOLIVIA- aya 774 La Paz Bodega V-1- BRA...'
+2025-09-21 11:52:39,391 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Arroz Tio João 100% Grãos Nobres 1kg
+2025-09-21 11:53:01,846 - main - INFO - Imagem duplicada encontrada para o hash: e909fe0f6cb4c1043e03c0e2d2763f0d. Retornando do cache.
+2025-09-21 11:56:26,839 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 11:56:26,897 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 11:56:30,577 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-21 11:56:30,577 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-21 11:56:30,577 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-21 11:56:30,578 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 11:56:30,578 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 7891340365576.
+2025-09-21 11:56:30,578 - app.services.product_service - INFO - GTIN não encontrado no cache. Consultando API Cosmos.
+2025-09-21 11:56:32,132 - app.services.product_service - INFO - Sucesso! Dados encontrados via API Cosmos.
+2025-09-21 12:08:36,550 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 12:08:36,600 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 12:08:41,067 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-21 12:08:41,067 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-21 12:08:41,068 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-21 12:08:41,069 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 12:08:41,069 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 12:08:41,069 - app.services.product_service - INFO - Realizando busca na web com a query: 'arroz Tio João 100% GRAOS Sempre soltinho NOBRES •Branquinho e saboroso .Não pre...'
+2025-09-21 12:08:43,413 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Arroz Tio João 100% Grãos Nobres Tipo 1
+2025-09-21 12:21:46,123 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 12:21:46,141 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 12:21:49,532 - app.services.vision_service - INFO - Vision API: Texto extraído (4 chars), Logos: 1, Labels: 0
+2025-09-21 12:21:49,542 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 12:21:49,543 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 12:21:49,543 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 12:21:51,816 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Arroz Tio João 100% Grãos Nobres 1kg
+2025-09-21 12:22:03,328 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 12:22:03,338 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 12:22:06,580 - app.services.vision_service - INFO - Vision API: Texto extraído (4 chars), Logos: 1, Labels: 0
+2025-09-21 12:22:06,590 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 12:22:06,591 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 12:22:06,591 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 12:22:08,073 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Arroz Tio João 100% Grãos Nobres 1kg
+2025-09-21 16:08:33,026 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 16:08:33,039 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 16:08:33,039 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 16:11:32,435 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 16:11:32,496 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 16:11:36,801 - app.services.vision_service - INFO - Vision API: Texto extraído (19 chars), Logos: 3, Labels: 10
+2025-09-21 16:11:36,801 - app.services.vision_service - INFO - Texto bruto: 'Coca-Cola
+Coca-Cola' -> Texto limpo para análise: ''
+2025-09-21 16:11:36,802 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 16:11:36,803 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 16:11:36,803 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 16:11:36,803 - app.services.product_service - INFO - Realizando busca na web com a query: 'Coca-Cola Coca-Cola...'
+2025-09-21 16:11:38,781 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Coca-Cola
+2025-09-21 16:22:40,203 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 16:22:40,268 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 16:22:44,606 - app.services.vision_service - INFO - Vision API: Texto extraído (1372 chars), Logos: 0, Labels: 8
+2025-09-21 16:22:44,606 - app.services.vision_service - INFO - Texto bruto: 'e essas
+ícias!
+Sos Sabores
+Ombinam
+upaladar:
+icional
+INFORMAÇÃO NUTRICIONAL
+Porção por embalagem: 6 porções
+Porcão: 25 g (1/4 xicara
+o (kcal)
+Valor energético (
+Carboidratos (g)
+Açúcares totais (g)
+Açúcares adicionados (e)
+Proteinas (8)
+Gorduras totals (g)
+100 25 XVD
+538 135
+35
+A
+3,5
+21
+Gorduras saturadas (g)
+5
+Gorduras trans (8)
+0
+0
+Fibras alimentares (g)
+1,8
+463
+116
+ae Salsa
+com Limão
+rrasco
+er momento
+quer lugar...
+or curtição.
+ses momentos.
+bem com
+vida!
+endupa
+dupa.com.br
+NOV 2025
+Sódio (mg)
+Percentual de valores diários fornecidos pela porção
+Ingredientes: amendoim, amido de milho
+(Bacillus thuringiensis, Streptomyces
+viridochromogenes, Agrobacterium
+tumefaciens, Zea mays, Sphingobium
+herbicidovorans e Diabrotica firgifera),
+açúcar, farinha de trigo enriquecida com
+ferro e ácido fólico, sal, gordura vegetal,
+maltodextrina, fermento químico
+bicarbonato de sódio, realçador de sabor
+glutamato monossódico e corantes
+artificiais: Tartrazina e amarelo crepúsculo FCF
+ALÉRGICOS: CONTÉM AMENDOIM E
+DERIVADOS DE TRIGO E SOJA. PODE
+CONTER CENTEIO, CEVADA E AVEIA.
+CONTÉM GLÚTEN.
+MANTER EM LOCAL SECO, FRESCO E AREJADO.
+PRODUZIDO POR:
+AMENDUPA PRODUTOS ALIMENTÍCIOS LTDA.
+R. Demétrio Hristafor Seirec Basan n°1.900
+CEP17604-725-J. Guanabara - Tupä/SP
+CNPJ 48.349.526/0001-08-IND. BRASILEIRA
+Atendimento
+14 3404-4545
+amendupa@amendupa.com.br
+7897115
+11055611
+EPEMA' -> Texto limpo para análise: '625148100255381353535215800184631162025190017604725483495260001081434044545789711511055611'
+2025-09-21 16:22:44,609 - app.services.vision_service - INFO - GTIN validado com sucesso: 52600010814340
+2025-09-21 16:22:44,610 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 16:22:44,610 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 52600010814340.
+2025-09-21 16:22:44,611 - app.services.product_service - INFO - GTIN não encontrado no cache. Consultando API Cosmos.
+2025-09-21 16:22:46,435 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 16:22:46,435 - app.services.product_service - INFO - Realizando busca na web com a query: 'e essas ícias! Sos Sabores Ombinam upaladar: icional INFORMAÇÃO NUTRICIONAL Porç...'
+2025-09-21 16:22:48,941 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Salgadinho de Amendoim Amendupa
+2025-09-21 16:28:28,245 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 16:28:28,296 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 16:28:32,037 - app.services.vision_service - INFO - Vision API: Texto extraído (339 chars), Logos: 0, Labels: 0
+2025-09-21 16:28:32,049 - app.services.vision_service - INFO - GTIN validado com sucesso: 01446661
+2025-09-21 16:28:32,050 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 16:28:32,050 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 01446661.
+2025-09-21 16:28:32,051 - app.services.product_service - INFO - GTIN não encontrado no cache. Consultando API Cosmos.
+2025-09-21 16:28:33,446 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 16:28:35,412 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Desloratadina 5mg 10 Comprimidos Revestidos Genérico Legrand
+2025-09-21 16:29:13,971 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 16:32:55,187 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 16:32:55,191 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 16:32:55,191 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 16:33:06,638 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 16:33:06,694 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 16:33:10,875 - app.services.vision_service - INFO - Vision API: Texto extraído (407 chars), Logos: 0, Labels: 6
+2025-09-21 16:33:10,876 - app.services.vision_service - INFO - Texto bruto: 'LOOK
+itamaraty
+Stick Wafer
+LOOK
+Biscoito Wafer Recheado Sabor Brigadeiro
+Oblea Rellena Sabor Brigadier
+Filled Wafer Brigadeiro Flavor
+BRIGADEIRO
+ACCOMO
+SATURACA
+I
+2.99
+PESO LÍQUIDO / NETO: 55g
+NET WEIGHT: 1.94 Oz
+CONTÉM AROMATIZANTE SINTÉTICO IDENTICO AO NATURAL
+CONTIENE AROMATIZANTE SINTETICO IDENTICO AL NATURAL
+CONTAINS SYNTHETIC IDENTICAL TO NATURAL FLAVOR
+INDUSTRIA BRASILEIRA/BRASILEÑA/MADE IN BRAZIL' -> Texto limpo para análise: '29955194'
+2025-09-21 16:33:10,877 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '29955194'
+2025-09-21 16:33:10,878 - app.services.vision_service - INFO - Candidatos a preço encontrados: [{'price': 2.99, 'priority': 1}, {'price': 1.94, 'priority': 1}]. Melhor escolha: 2.99
+2025-09-21 16:33:10,878 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 16:33:10,878 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 16:33:10,878 - app.services.product_service - INFO - Realizando busca na web com a query: 'LOOK itamaraty Stick Wafer LOOK Biscoito Wafer Recheado Sabor Brigadeiro Oblea R...'
+2025-09-21 16:33:13,189 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Biscoito Wafer Recheado Sabor Brigadeiro LOOK
+2025-09-21 16:33:48,993 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 16:33:49,013 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 16:33:50,966 - app.services.vision_service - INFO - Vision API: Texto extraído (21 chars), Logos: 0, Labels: 8
+2025-09-21 16:33:50,966 - app.services.vision_service - INFO - Texto bruto: 'Fini
+Gelatinas
+Beijos' -> Texto limpo para análise: ''
+2025-09-21 16:33:50,967 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 16:33:50,967 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 16:33:50,968 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 16:33:50,968 - app.services.product_service - INFO - Realizando busca na web com a query: 'Fini Gelatinas Beijos...'
+2025-09-21 16:33:52,420 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Fini Gelatinas Beijos
+2025-09-21 16:34:17,573 - main - INFO - Imagem duplicada encontrada para o hash: e909fe0f6cb4c1043e03c0e2d2763f0d. Retornando do cache.
+2025-09-21 16:35:05,611 - main - INFO - Imagem duplicada encontrada para o hash: e909fe0f6cb4c1043e03c0e2d2763f0d. Retornando do cache.
+2025-09-21 16:37:20,619 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 16:37:20,672 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 16:37:23,735 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-21 16:37:23,756 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-21 16:37:23,756 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 16:37:23,756 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 7896022200534.
+2025-09-21 16:37:23,757 - app.services.product_service - INFO - Sucesso! GTIN encontrado no cache local.
+2025-09-21 16:37:23,758 - main - ERROR - Erro não tratado na rota http://127.0.0.1:8000/api/v1/vision/identify: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 24, in __call__
+    await responder(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 44, in __call__
+    await self.app(scope, receive, self.send_with_gzip)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 166, in identify_image
+    return models.IdentificationResult(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+2025-09-21 16:37:33,424 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 16:37:42,077 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 16:37:42,080 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 16:37:42,080 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 16:37:51,851 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 16:37:51,907 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 16:37:55,097 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-21 16:37:55,117 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-21 16:37:55,119 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 16:37:55,119 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 7896022200534.
+2025-09-21 16:37:55,119 - app.services.product_service - INFO - Sucesso! GTIN encontrado no cache local.
+2025-09-21 16:37:55,121 - main - ERROR - Erro não tratado na rota http://127.0.0.1:8000/api/v1/vision/identify: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 24, in __call__
+    await responder(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 44, in __call__
+    await self.app(scope, receive, self.send_with_gzip)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 166, in identify_image
+    return models.IdentificationResult(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentificationResult
+confidence
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/float_type
+2025-09-21 16:44:34,265 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 16:44:37,108 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 16:44:37,111 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 16:44:37,112 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 16:47:56,087 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 16:47:56,146 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 16:47:59,332 - app.services.vision_service - INFO - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-21 16:47:59,352 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-21 16:47:59,353 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 16:47:59,353 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 16:47:59,353 - app.services.product_service - INFO - Realizando busca na web com a query: '100% ALGODÃO DECOTE: 98% ALGODÃO 2% ELASTANO FORNECEDOR: 84891 Modelo: 1059827 -...'
+2025-09-21 16:48:02,278 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Modelo 1059827 - T. 20 Cor VERDE CLARO 100% ALGODÃO
+2025-09-21 16:48:02,279 - main - ERROR - Erro não tratado na rota http://127.0.0.1:8000/api/v1/vision/identify: 1 validation error for IdentifiedProduct
+gtin
+  Value error, GTIN deve ter 8, 12, 13 ou 14 dígitos [type=value_error, input_value='000000113667090314', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 24, in __call__
+    await responder(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 44, in __call__
+    await self.app(scope, receive, self.send_with_gzip)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 155, in identify_image
+    identified_product = models.IdentifiedProduct(**product_info)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentifiedProduct
+gtin
+  Value error, GTIN deve ter 8, 12, 13 ou 14 dígitos [type=value_error, input_value='000000113667090314', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error
+2025-09-21 16:48:41,950 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 16:49:02,912 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 16:49:02,915 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 16:49:02,915 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 16:49:17,301 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 16:49:17,357 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 16:49:20,934 - app.services.vision_service - INFO - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-21 16:49:20,954 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-21 16:49:20,955 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 16:49:20,955 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 16:49:20,956 - app.services.product_service - INFO - Realizando busca na web com a query: '100% ALGODÃO DECOTE: 98% ALGODÃO 2% ELASTANO FORNECEDOR: 84891 Modelo: 1059827 -...'
+2025-09-21 16:49:23,658 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Modelo 1059827 - T. 20 Cor VERDE CLARO 100% ALGODÃO
+2025-09-21 16:49:23,660 - main - ERROR - Erro não tratado na rota http://127.0.0.1:8000/api/v1/vision/identify: 1 validation error for IdentifiedProduct
+gtin
+  Value error, GTIN deve ter 8, 12, 13 ou 14 dígitos [type=value_error, input_value='000000113667090314', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 24, in __call__
+    await responder(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 44, in __call__
+    await self.app(scope, receive, self.send_with_gzip)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 155, in identify_image
+    identified_product = models.IdentifiedProduct(**product_info)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentifiedProduct
+gtin
+  Value error, GTIN deve ter 8, 12, 13 ou 14 dígitos [type=value_error, input_value='000000113667090314', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error
+2025-09-21 16:49:33,187 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 16:49:33,242 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 16:49:37,270 - app.services.vision_service - INFO - Vision API: Texto extraído (31 chars), Logos: 0, Labels: 4
+2025-09-21 16:49:37,271 - app.services.vision_service - INFO - Texto bruto: 'ANGELO LITRICO
+CASUAL P
+COMFORT' -> Texto limpo para análise: ''
+2025-09-21 16:49:37,271 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 16:49:37,272 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 16:49:37,272 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 16:49:37,272 - app.services.product_service - INFO - Realizando busca na web com a query: 'ANGELO LITRICO CASUAL P COMFORT...'
+2025-09-21 16:49:38,665 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: ANGELO LITRICO CASUAL P COMFORT
+2025-09-21 16:51:07,065 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 16:51:07,118 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 16:51:09,833 - app.services.vision_service - INFO - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-21 16:51:09,844 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-21 16:51:09,844 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 16:51:09,844 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 16:51:09,845 - app.services.product_service - INFO - Realizando busca na web com a query: '100% ALGODÃO DECOTE: 98% ALGODÃO 2% ELASTANO FORNECEDOR: 84891 Modelo: 1059827 -...'
+2025-09-21 16:51:11,768 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Camiseta 100% Algodão Verde Claro Tamanho 20 Modelo 1059827
+2025-09-21 16:51:11,769 - main - ERROR - Erro não tratado na rota http://127.0.0.1:8000/api/v1/vision/identify: 1 validation error for IdentifiedProduct
+gtin
+  Value error, GTIN deve ter 8, 12, 13 ou 14 dígitos [type=value_error, input_value='000000113667090314', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 24, in __call__
+    await responder(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 44, in __call__
+    await self.app(scope, receive, self.send_with_gzip)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 155, in identify_image
+    identified_product = models.IdentifiedProduct(**product_info)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentifiedProduct
+gtin
+  Value error, GTIN deve ter 8, 12, 13 ou 14 dígitos [type=value_error, input_value='000000113667090314', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error
+2025-09-21 17:02:28,792 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 17:02:31,570 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 17:02:31,572 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:02:31,572 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:02:48,749 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 17:02:48,802 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 17:02:52,582 - app.services.vision_service - INFO - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-21 17:02:52,602 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-21 17:02:52,602 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 17:02:52,603 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 17:02:52,603 - app.services.product_service - INFO - Realizando busca na web com a query: '100% ALGODÃO DECOTE: 98% ALGODÃO 2% ELASTANO FORNECEDOR: 84891 Modelo: 1059827 -...'
+2025-09-21 17:02:55,384 - app.services.advanced_inference_service - WARNING - GTIN inválido retornado pela IA: '000000113667090314'. Descartando.
+2025-09-21 17:02:55,384 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: Modelo: 1059827 - T. 20 Cor VERDE CLARO 100% ALGODÃO
+2025-09-21 17:03:51,320 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 17:03:51,373 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 17:03:54,768 - app.services.vision_service - INFO - Vision API: Texto extraído (217 chars), Logos: 1, Labels: 5
+2025-09-21 17:03:54,768 - app.services.vision_service - INFO - Texto bruto: 'Nestle
+PALTOLI
+KitKat
+NOVA FÓRMULA**
+PESO LÍQ.41,5 g
+WAR RECHEADO COBERTO COM CHOCOLATE AO LEITE
+@kitkathrasil
+M AÇÚCAR
+ADICIONADO
+GORDURA
+SATURADA
+ECO
+PRE
+ESPECIAL
+QUANDO CO
+NÃO PROMOCI SEM ILUSTRATIVA
+A VERSÃO
+OUTO.' -> Texto limpo para análise: '415'
+2025-09-21 17:03:54,769 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '415'
+2025-09-21 17:03:54,770 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 17:03:54,770 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 17:03:54,770 - app.services.product_service - INFO - Realizando busca na web com a query: 'Nestle PALTOLI KitKat NOVA FÓRMULA** PESO LÍQ.41,5 g WAR RECHEADO COBERTO COM CH...'
+2025-09-21 17:03:56,533 - app.services.product_service - INFO - Sucesso na inferência avançada. Produto: KitKat Wafer Recheado Coberto com Chocolate ao Leite 41,5g
+2025-09-21 17:10:42,561 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 17:10:45,474 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 17:10:45,476 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:10:45,476 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:11:32,419 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 17:11:35,140 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 17:11:35,143 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:11:35,143 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:11:50,356 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 17:11:53,128 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 17:11:53,131 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:11:53,131 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:12:12,332 - main - INFO - Imagem duplicada encontrada para o hash: 4edc1d7535a639b957e6efd6205761ce. Retornando do cache.
+2025-09-21 17:12:25,929 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 17:12:25,978 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 17:12:30,070 - app.services.vision_service - INFO - Vision API: Texto extraído (123 chars), Logos: 1, Labels: 5
+2025-09-21 17:12:30,071 - app.services.vision_service - INFO - Texto bruto: '0
+D
+7
+0
+0000
+0
+00
+0
+0
+1
+28
+Proteinas, Gorduras
+Fibras alimentares.
+pela porção.
+Coca-Cola
+Brasil
+7 894900 701517
+PP PRINT12' -> Texto limpo para análise: '070000000000128789490070151712'
+2025-09-21 17:12:30,072 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '070000000000128789490070151712'
+2025-09-21 17:12:30,073 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 17:12:30,073 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 17:12:30,073 - app.services.product_service - INFO - Realizando busca na web com a query: '0000 Proteinas, Gorduras Fibras alimentares. pela porção. Coca-Cola Brasil 7 894...'
+2025-09-21 17:12:32,585 - app.services.product_service - INFO - Sucesso na inferência. Produto final: Coca-Cola
+2025-09-21 17:13:12,949 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 17:13:13,000 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 17:13:17,359 - app.services.vision_service - INFO - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-21 17:13:17,379 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-21 17:13:17,379 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 17:13:17,380 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 17:13:17,380 - app.services.product_service - INFO - Realizando busca na web com a query: '100% ALGODÃO DECOTE: 98% ALGODÃO 2% ELASTANO FORNECEDOR: 84891 Modelo: 1059827 -...'
+2025-09-21 17:13:19,251 - app.services.advanced_inference_service - WARNING - GTIN inválido retornado pela IA: '000000113667090314'. Descartando.
+2025-09-21 17:13:19,251 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento de Dados).
+2025-09-21 17:13:21,845 - app.services.cosmos_service - WARNING - A busca por 'Modelo: 1059827 - T. 20 Cor VERDE CLARO 100% ALGODÃO' não retornou resultados no Cosmos.
+2025-09-21 17:13:21,847 - app.services.product_service - INFO - Sucesso na inferência. Produto final: Modelo: 1059827 - T. 20 Cor VERDE CLARO 100% ALGODÃO
+2025-09-21 17:13:34,296 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 17:13:34,341 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 17:13:38,142 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-21 17:13:38,142 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-21 17:13:38,143 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-21 17:13:38,143 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 17:13:38,144 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 17:13:38,144 - app.services.product_service - INFO - Realizando busca na web com a query: 'arroz Tio João 100% GRAOS Sempre soltinho NOBRES •Branquinho e saboroso .Não pre...'
+2025-09-21 17:13:39,697 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento de Dados).
+2025-09-21 17:13:41,848 - app.services.cosmos_service - WARNING - A busca por 'Tio João Arroz Tio João 100% Grãos Nobres Tipo 1 1kg' não retornou resultados no Cosmos.
+2025-09-21 17:13:41,850 - app.services.product_service - INFO - Sucesso na inferência. Produto final: Arroz Tio João 100% Grãos Nobres Tipo 1 1kg
+2025-09-21 17:14:20,315 - main - INFO - Imagem duplicada encontrada para o hash: 38ceac3abdacce8a3823a368661fbcb4. Retornando do cache.
+2025-09-21 17:14:48,034 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 17:14:48,085 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 17:14:51,176 - app.services.vision_service - INFO - Vision API: Texto extraído (217 chars), Logos: 1, Labels: 5
+2025-09-21 17:14:51,176 - app.services.vision_service - INFO - Texto bruto: 'Nestle
+PALTOLI
+KitKat
+NOVA FÓRMULA**
+PESO LÍQ.41,5 g
+WAR RECHEADO COBERTO COM CHOCOLATE AO LEITE
+@kitkathrasil
+M AÇÚCAR
+ADICIONADO
+GORDURA
+SATURADA
+ECO
+PRE
+ESPECIAL
+QUANDO CO
+NÃO PROMOCI SEM ILUSTRATIVA
+A VERSÃO
+OUTO.' -> Texto limpo para análise: '415'
+2025-09-21 17:14:51,177 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '415'
+2025-09-21 17:14:51,178 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 17:14:51,178 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 17:14:51,178 - app.services.product_service - INFO - Realizando busca na web com a query: 'Nestle PALTOLI KitKat NOVA FÓRMULA** PESO LÍQ.41,5 g WAR RECHEADO COBERTO COM CH...'
+2025-09-21 17:14:52,995 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento de Dados).
+2025-09-21 17:14:55,132 - app.services.cosmos_service - WARNING - A busca por 'Nestlé KitKat Wafer Recheado Coberto com Chocolate ao Leite 41,5g' não retornou resultados no Cosmos.
+2025-09-21 17:14:55,134 - app.services.product_service - INFO - Sucesso na inferência. Produto final: KitKat Wafer Recheado Coberto com Chocolate ao Leite 41,5g
+2025-09-21 17:19:22,056 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 17:21:58,500 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 17:21:58,503 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:21:58,503 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:22:10,913 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 17:22:10,965 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 17:22:13,697 - app.services.vision_service - INFO - Vision API: Texto extraído (51 chars), Logos: 0, Labels: 7
+2025-09-21 17:22:13,698 - app.services.vision_service - INFO - Texto bruto: 'Cis
+COLA EM
+BASTÃO
+FIX 49
+o tóxica
+Contém glicerina' -> Texto limpo para análise: '49'
+2025-09-21 17:22:13,699 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '49'
+2025-09-21 17:22:13,700 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 17:22:13,700 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 17:22:13,700 - app.services.product_service - INFO - Realizando busca na web com a query: 'COLA EM BASTÃO FIX 49 o tóxica Contém glicerina...'
+2025-09-21 17:22:15,913 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento de Dados).
+2025-09-21 17:22:18,125 - main - ERROR - Erro não tratado na rota http://127.0.0.1:8000/api/v1/vision/identify: 'str' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 24, in __call__
+    await responder(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 44, in __call__
+    await self.app(scope, receive, self.send_with_gzip)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 150, in identify_image
+    product_info = product_service.intelligent_text_analysis(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\app\services\product_service.py", line 145, in intelligent_text_analysis
+    enriched_data = search_product_by_description(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\app\services\cosmos_service.py", line 207, in search_product_by_description
+    descriptions = [p.get("description", "") for p in search_results]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\app\services\cosmos_service.py", line 207, in <listcomp>
+    descriptions = [p.get("description", "") for p in search_results]
+                    ^^^^^
+AttributeError: 'str' object has no attribute 'get'
+2025-09-21 17:22:35,717 - main - INFO - Imagem duplicada encontrada para o hash: 4edc1d7535a639b957e6efd6205761ce. Retornando do cache.
+2025-09-21 17:22:46,858 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 17:22:46,877 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 17:22:49,486 - app.services.vision_service - INFO - Vision API: Texto extraído (19 chars), Logos: 3, Labels: 10
+2025-09-21 17:22:49,486 - app.services.vision_service - INFO - Texto bruto: 'Coca-Cola
+Coca-Cola' -> Texto limpo para análise: ''
+2025-09-21 17:22:49,487 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 17:22:49,487 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 17:22:49,487 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 17:22:49,487 - app.services.product_service - INFO - Realizando busca na web com a query: 'Coca-Cola Coca-Cola...'
+2025-09-21 17:22:50,907 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento de Dados).
+2025-09-21 17:22:53,174 - main - ERROR - Erro não tratado na rota http://127.0.0.1:8000/api/v1/vision/identify: 'str' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 24, in __call__
+    await responder(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 44, in __call__
+    await self.app(scope, receive, self.send_with_gzip)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 150, in identify_image
+    product_info = product_service.intelligent_text_analysis(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\app\services\product_service.py", line 145, in intelligent_text_analysis
+    enriched_data = search_product_by_description(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\app\services\cosmos_service.py", line 207, in search_product_by_description
+    descriptions = [p.get("description", "") for p in search_results]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\app\services\cosmos_service.py", line 207, in <listcomp>
+    descriptions = [p.get("description", "") for p in search_results]
+                    ^^^^^
+AttributeError: 'str' object has no attribute 'get'
+2025-09-21 17:23:13,965 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 17:23:24,007 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 17:23:24,010 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:23:24,010 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:23:47,525 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 17:23:47,547 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 17:23:51,128 - app.services.vision_service - INFO - Vision API: Texto extraído (19 chars), Logos: 3, Labels: 10
+2025-09-21 17:23:51,128 - app.services.vision_service - INFO - Texto bruto: 'Coca-Cola
+Coca-Cola' -> Texto limpo para análise: ''
+2025-09-21 17:23:51,129 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 17:23:51,130 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 17:23:51,130 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 17:23:51,130 - app.services.product_service - INFO - Realizando busca na web com a query: 'Coca-Cola Coca-Cola...'
+2025-09-21 17:23:52,655 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento de Dados).
+2025-09-21 17:23:54,358 - main - ERROR - Erro não tratado na rota http://127.0.0.1:8000/api/v1/vision/identify: 'str' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 24, in __call__
+    await responder(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 44, in __call__
+    await self.app(scope, receive, self.send_with_gzip)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 150, in identify_image
+    product_info = product_service.intelligent_text_analysis(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\app\services\product_service.py", line 145, in intelligent_text_analysis
+    enriched_data = search_product_by_description(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\app\services\cosmos_service.py", line 207, in search_product_by_description
+    descriptions = [p.get("description", "") for p in search_results]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\app\services\cosmos_service.py", line 207, in <listcomp>
+    descriptions = [p.get("description", "") for p in search_results]
+                    ^^^^^
+AttributeError: 'str' object has no attribute 'get'
+2025-09-21 17:29:37,038 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 17:29:39,864 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 17:29:39,866 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:29:39,867 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:30:01,033 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 17:30:01,055 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 17:30:04,508 - app.services.vision_service - INFO - Vision API: Texto extraído (19 chars), Logos: 3, Labels: 10
+2025-09-21 17:30:04,509 - app.services.vision_service - INFO - Texto bruto: 'Coca-Cola
+Coca-Cola' -> Texto limpo para análise: ''
+2025-09-21 17:30:04,509 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 17:30:04,510 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 17:30:04,510 - app.services.product_service - INFO - Etapa 1 sem sucesso. Iniciando Etapa 2 (Via Inteligente).
+2025-09-21 17:30:04,510 - app.services.product_service - INFO - Realizando busca na web com a query: 'Coca-Cola Coca-Cola...'
+2025-09-21 17:30:06,099 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento de Dados).
+2025-09-21 17:30:22,420 - app.services.product_service - INFO - Sucesso na inferência. Produto final: Coca-Cola
+2025-09-21 17:35:22,018 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 17:35:24,793 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 17:35:24,796 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:35:24,796 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:36:44,225 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 17:36:46,980 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 17:36:46,983 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:36:46,983 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:38:07,800 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 17:38:10,556 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 17:38:10,559 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:38:10,559 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:38:24,109 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 17:38:24,130 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 17:38:27,258 - app.services.vision_service - INFO - Vision API: Texto extraído (19 chars), Logos: 3, Labels: 10
+2025-09-21 17:38:27,258 - app.services.vision_service - INFO - Texto bruto: 'Coca-Cola
+Coca-Cola' -> Texto limpo para análise: ''
+2025-09-21 17:38:27,259 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 17:38:27,260 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 17:38:27,260 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 17:38:29,434 - app.services.product_service - INFO - Iniciando Etapa 3 (Busca Híbrida).
+2025-09-21 17:38:30,428 - app.services.product_service - WARNING - Não foi possível validar GTIN no Cosmos. Usando dados da IA.
+2025-09-21 17:38:30,428 - app.services.product_service - INFO - Pipeline concluído. Usando dados da inferência inicial.
+2025-09-21 17:44:41,178 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 17:44:43,921 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 17:44:43,925 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:44:43,925 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 17:44:59,340 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 17:44:59,395 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 17:45:02,684 - app.services.vision_service - INFO - Vision API: Texto extraído (407 chars), Logos: 0, Labels: 6
+2025-09-21 17:45:02,685 - app.services.vision_service - INFO - Texto bruto: 'LOOK
+itamaraty
+Stick Wafer
+LOOK
+Biscoito Wafer Recheado Sabor Brigadeiro
+Oblea Rellena Sabor Brigadier
+Filled Wafer Brigadeiro Flavor
+BRIGADEIRO
+ACCOMO
+SATURACA
+I
+2.99
+PESO LÍQUIDO / NETO: 55g
+NET WEIGHT: 1.94 Oz
+CONTÉM AROMATIZANTE SINTÉTICO IDENTICO AO NATURAL
+CONTIENE AROMATIZANTE SINTETICO IDENTICO AL NATURAL
+CONTAINS SYNTHETIC IDENTICAL TO NATURAL FLAVOR
+INDUSTRIA BRASILEIRA/BRASILEÑA/MADE IN BRAZIL' -> Texto limpo para análise: '29955194'
+2025-09-21 17:45:02,686 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '29955194'
+2025-09-21 17:45:02,686 - app.services.vision_service - INFO - Candidatos a preço encontrados: [{'price': 2.99, 'priority': 1}, {'price': 1.94, 'priority': 1}]. Melhor escolha: 2.99
+2025-09-21 17:45:02,687 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 17:45:02,687 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 17:45:05,218 - app.services.product_service - INFO - Iniciando Etapa 3 (Busca Híbrida).
+2025-09-21 17:45:05,218 - app.services.advanced_inference_service - INFO - Consultando LLM para dados fiscais de 'Biscoito Wafer Recheado Look Itamaraty Sabor Brigadeiro 55g - Itamaraty'
+2025-09-21 17:45:06,725 - app.services.advanced_inference_service - INFO - LLM retornou dados fiscais: {'gtin': '7896026906565', 'ncm': '1905.31.00'}
+2025-09-21 17:45:06,726 - app.services.product_service - INFO - Validando GTIN '7896026906565' obtido pela IA no Cosmos.
+2025-09-21 17:45:08,108 - app.services.product_service - WARNING - Não foi possível validar GTIN no Cosmos. Usando dados da IA.
+2025-09-21 17:45:08,108 - app.services.product_service - INFO - Pipeline concluído. Usando dados da inferência inicial.
+2025-09-21 17:48:16,492 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 17:48:16,505 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 17:48:19,830 - app.services.vision_service - INFO - Vision API: Texto extraído (21 chars), Logos: 0, Labels: 8
+2025-09-21 17:48:19,830 - app.services.vision_service - INFO - Texto bruto: 'Fini
+Gelatinas
+Beijos' -> Texto limpo para análise: ''
+2025-09-21 17:48:19,831 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 17:48:19,831 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 17:48:19,832 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 17:48:21,340 - app.services.product_service - INFO - Iniciando Etapa 3 (Busca Híbrida).
+2025-09-21 17:48:21,340 - app.services.advanced_inference_service - INFO - Consultando LLM para dados fiscais de 'Gelatinas Fini Beijos - Fini'
+2025-09-21 17:48:22,787 - app.services.advanced_inference_service - INFO - LLM retornou dados fiscais: {'gtin': '7891000121104', 'ncm': '17049010'}
+2025-09-21 17:48:22,788 - app.services.product_service - INFO - Validando GTIN '7891000121104' obtido pela IA no Cosmos.
+2025-09-21 17:48:24,127 - app.services.product_service - WARNING - Não foi possível validar GTIN no Cosmos. Usando dados da IA.
+2025-09-21 17:48:24,127 - app.services.product_service - INFO - Pipeline concluído. Usando dados da inferência inicial.
+2025-09-21 17:59:02,318 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 17:59:02,369 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 17:59:05,926 - app.services.vision_service - INFO - Vision API: Texto extraído (407 chars), Logos: 0, Labels: 6
+2025-09-21 17:59:05,926 - app.services.vision_service - INFO - Texto bruto: 'LOOK
+itamaraty
+Stick Wafer
+LOOK
+Biscoito Wafer Recheado Sabor Brigadeiro
+Oblea Rellena Sabor Brigadier
+Filled Wafer Brigadeiro Flavor
+BRIGADEIRO
+ACCOMO
+SATURACA
+I
+2.99
+PESO LÍQUIDO / NETO: 55g
+NET WEIGHT: 1.94 Oz
+CONTÉM AROMATIZANTE SINTÉTICO IDENTICO AO NATURAL
+CONTIENE AROMATIZANTE SINTETICO IDENTICO AL NATURAL
+CONTAINS SYNTHETIC IDENTICAL TO NATURAL FLAVOR
+INDUSTRIA BRASILEIRA/BRASILEÑA/MADE IN BRAZIL' -> Texto limpo para análise: '29955194'
+2025-09-21 17:59:05,927 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '29955194'
+2025-09-21 17:59:05,928 - app.services.vision_service - INFO - Candidatos a preço encontrados: [{'price': 2.99, 'priority': 1}, {'price': 1.94, 'priority': 1}]. Melhor escolha: 2.99
+2025-09-21 17:59:05,928 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 17:59:05,928 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 17:59:07,757 - app.services.product_service - INFO - Iniciando Etapa 3 (Busca Híbrida).
+2025-09-21 17:59:07,757 - app.services.advanced_inference_service - INFO - Consultando LLM para dados fiscais de 'Biscoito Wafer Recheado Look Itamaraty Sabor Brigadeiro 55g - Itamaraty'
+2025-09-21 17:59:09,376 - app.services.advanced_inference_service - INFO - LLM retornou dados fiscais: {'gtin': '7896032100279', 'ncm': '1905.31.00'}
+2025-09-21 17:59:09,376 - app.services.product_service - INFO - Validando GTIN '7896032100279' obtido pela IA no Cosmos.
+2025-09-21 17:59:10,717 - app.services.product_service - WARNING - Não foi possível validar GTIN no Cosmos. Usando dados da IA.
+2025-09-21 17:59:10,718 - app.services.product_service - INFO - Pipeline concluído. Usando dados da inferência inicial.
+2025-09-21 18:06:31,210 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 18:06:31,266 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 18:06:34,838 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-21 18:06:34,838 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-21 18:06:34,839 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-21 18:06:34,839 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 18:06:34,839 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN da imagem: 7891340365576.
+2025-09-21 18:20:50,397 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 18:20:50,450 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 18:20:53,773 - app.services.vision_service - INFO - Vision API: Texto extraído (407 chars), Logos: 0, Labels: 6
+2025-09-21 18:20:53,773 - app.services.vision_service - INFO - Texto bruto: 'LOOK
+itamaraty
+Stick Wafer
+LOOK
+Biscoito Wafer Recheado Sabor Brigadeiro
+Oblea Rellena Sabor Brigadier
+Filled Wafer Brigadeiro Flavor
+BRIGADEIRO
+ACCOMO
+SATURACA
+I
+2.99
+PESO LÍQUIDO / NETO: 55g
+NET WEIGHT: 1.94 Oz
+CONTÉM AROMATIZANTE SINTÉTICO IDENTICO AO NATURAL
+CONTIENE AROMATIZANTE SINTETICO IDENTICO AL NATURAL
+CONTAINS SYNTHETIC IDENTICAL TO NATURAL FLAVOR
+INDUSTRIA BRASILEIRA/BRASILEÑA/MADE IN BRAZIL' -> Texto limpo para análise: '29955194'
+2025-09-21 18:20:53,774 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '29955194'
+2025-09-21 18:20:53,774 - app.services.vision_service - INFO - Candidatos a preço encontrados: [{'price': 2.99, 'priority': 1}, {'price': 1.94, 'priority': 1}]. Melhor escolha: 2.99
+2025-09-21 18:20:53,775 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 18:20:53,775 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 18:20:56,186 - app.services.product_service - INFO - Iniciando Etapa 3 (Busca Híbrida).
+2025-09-21 18:20:56,186 - app.services.advanced_inference_service - INFO - Consultando LLM para dados fiscais de 'Biscoito Wafer Recheado Look Itamaraty Sabor Brigadeiro 55g - Itamaraty'
+2025-09-21 18:20:57,640 - app.services.advanced_inference_service - INFO - LLM retornou dados fiscais: {'gtin': '7896187103259', 'ncm': '1905.31.00'}
+2025-09-21 18:20:57,640 - app.services.product_service - INFO - Validando GTIN '7896187103259' obtido pela IA no Cosmos.
+2025-09-21 18:20:59,019 - app.services.product_service - WARNING - Não foi possível validar GTIN no Cosmos. Usando dados da IA.
+2025-09-21 18:20:59,019 - app.services.product_service - INFO - Pipeline concluído. Usando dados da inferência inicial.
+2025-09-21 18:30:41,683 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 18:30:41,689 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 18:30:44,110 - app.services.vision_service - INFO - Vision API: Texto extraído (24 chars), Logos: 0, Labels: 10
+2025-09-21 18:30:44,111 - app.services.vision_service - INFO - Texto bruto: 'Tio João
+Integral
+Tio Jo' -> Texto limpo para análise: ''
+2025-09-21 18:30:44,111 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 18:30:44,111 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 18:30:44,111 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 18:30:46,414 - app.services.product_service - INFO - Iniciando Etapa 3 (Busca Híbrida).
+2025-09-21 18:30:46,414 - app.services.advanced_inference_service - INFO - Consultando LLM para dados fiscais de 'Arroz Tio João Integral - Tio João'
+2025-09-21 18:30:47,919 - app.services.advanced_inference_service - INFO - LLM retornou dados fiscais: {'gtin': '7896000010245', 'ncm': '10063020'}
+2025-09-21 18:30:47,920 - app.services.product_service - INFO - Validando GTIN '7896000010245' obtido pela IA no Cosmos.
+2025-09-21 18:30:49,280 - app.services.product_service - WARNING - Não foi possível validar GTIN no Cosmos. Usando dados da IA.
+2025-09-21 18:30:49,281 - app.services.product_service - INFO - Pipeline concluído. Usando dados da inferência inicial.
+2025-09-21 18:31:50,027 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 18:31:50,078 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 18:31:53,546 - app.services.vision_service - INFO - Vision API: Texto extraído (407 chars), Logos: 0, Labels: 6
+2025-09-21 18:31:53,546 - app.services.vision_service - INFO - Texto bruto: 'LOOK
+itamaraty
+Stick Wafer
+LOOK
+Biscoito Wafer Recheado Sabor Brigadeiro
+Oblea Rellena Sabor Brigadier
+Filled Wafer Brigadeiro Flavor
+BRIGADEIRO
+ACCOMO
+SATURACA
+I
+2.99
+PESO LÍQUIDO / NETO: 55g
+NET WEIGHT: 1.94 Oz
+CONTÉM AROMATIZANTE SINTÉTICO IDENTICO AO NATURAL
+CONTIENE AROMATIZANTE SINTETICO IDENTICO AL NATURAL
+CONTAINS SYNTHETIC IDENTICAL TO NATURAL FLAVOR
+INDUSTRIA BRASILEIRA/BRASILEÑA/MADE IN BRAZIL' -> Texto limpo para análise: '29955194'
+2025-09-21 18:31:53,547 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '29955194'
+2025-09-21 18:31:53,548 - app.services.vision_service - INFO - Candidatos a preço encontrados: [{'price': 2.99, 'priority': 1}, {'price': 1.94, 'priority': 1}]. Melhor escolha: 2.99
+2025-09-21 18:31:53,548 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 18:31:53,548 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 18:31:55,157 - app.services.product_service - INFO - Iniciando Etapa 3 (Busca Híbrida).
+2025-09-21 18:31:55,157 - app.services.advanced_inference_service - INFO - Consultando LLM para dados fiscais de 'Biscoito Wafer Recheado Look Itamaraty Sabor Brigadeiro 55g - Look Itamaraty'
+2025-09-21 18:31:56,743 - app.services.advanced_inference_service - INFO - LLM retornou dados fiscais: {'gtin': '7896032202048', 'ncm': '1905.31.00'}
+2025-09-21 18:31:56,744 - app.services.product_service - INFO - Validando GTIN '7896032202048' obtido pela IA no Cosmos.
+2025-09-21 18:32:00,789 - app.services.product_service - WARNING - Não foi possível validar GTIN no Cosmos. Usando dados da IA.
+2025-09-21 18:32:00,790 - app.services.product_service - INFO - Pipeline concluído. Usando dados da inferência inicial.
+2025-09-21 18:33:22,653 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 18:33:22,703 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 18:33:26,192 - app.services.vision_service - INFO - Vision API: Texto extraído (31 chars), Logos: 0, Labels: 4
+2025-09-21 18:33:26,192 - app.services.vision_service - INFO - Texto bruto: 'ANGELO LITRICO
+CASUAL P
+COMFORT' -> Texto limpo para análise: ''
+2025-09-21 18:33:26,192 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 18:33:26,193 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 18:33:26,193 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 18:33:27,705 - app.services.product_service - INFO - Iniciando Etapa 3 (Busca Híbrida).
+2025-09-21 18:33:27,705 - app.services.advanced_inference_service - INFO - Consultando LLM para dados fiscais de 'Calça Casual Angelo Litrico Comfort - Angelo Litrico'
+2025-09-21 18:33:28,582 - app.services.advanced_inference_service - INFO - LLM retornou dados fiscais: {'gtin': None, 'ncm': None}
+2025-09-21 18:33:28,582 - app.services.product_service - WARNING - Não foi possível validar GTIN no Cosmos. Usando dados da IA.
+2025-09-21 18:33:28,583 - app.services.product_service - INFO - Pipeline concluído. Usando dados da inferência inicial.
+2025-09-21 18:34:14,863 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 18:34:14,914 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 18:34:17,618 - app.services.vision_service - INFO - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-21 18:34:17,629 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-21 18:34:17,630 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 18:34:17,630 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 18:34:19,388 - app.services.advanced_inference_service - WARNING - GTIN inválido retornado pela IA: '000000113667090314'. Descartando.
+2025-09-21 18:34:19,397 - app.services.product_service - INFO - Iniciando Etapa 3 (Busca Híbrida).
+2025-09-21 18:34:19,397 - app.services.product_service - WARNING - Não foi possível validar GTIN no Cosmos. Usando dados da IA.
+2025-09-21 18:34:19,397 - app.services.product_service - INFO - Pipeline concluído. Usando dados da inferência inicial.
+2025-09-21 18:35:39,617 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 18:35:39,629 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 18:35:42,052 - app.services.vision_service - INFO - Vision API: Texto extraído (21 chars), Logos: 0, Labels: 8
+2025-09-21 18:35:42,052 - app.services.vision_service - INFO - Texto bruto: 'Fini
+Gelatinas
+Beijos' -> Texto limpo para análise: ''
+2025-09-21 18:35:42,052 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 18:35:42,053 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 18:35:42,053 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 18:35:43,553 - app.services.product_service - INFO - Iniciando Etapa 3 (Busca Híbrida).
+2025-09-21 18:35:43,553 - app.services.advanced_inference_service - INFO - Consultando LLM para dados fiscais de 'Gelatinas Fini Beijos - Fini'
+2025-09-21 18:35:45,056 - app.services.advanced_inference_service - INFO - LLM retornou dados fiscais: {'gtin': '7891000127309', 'ncm': '17049020'}
+2025-09-21 18:35:45,056 - app.services.product_service - INFO - Validando GTIN '7891000127309' obtido pela IA no Cosmos.
+2025-09-21 18:35:56,416 - app.services.product_service - WARNING - Não foi possível validar GTIN no Cosmos. Usando dados da IA.
+2025-09-21 18:35:56,416 - app.services.product_service - INFO - Pipeline concluído. Usando dados da inferência inicial.
+2025-09-21 18:40:46,119 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 18:40:46,177 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 18:40:49,940 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-21 18:40:49,940 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-21 18:40:49,941 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-21 18:40:49,941 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 18:40:49,941 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN da imagem: 7891340365576.
+2025-09-21 20:04:43,155 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 20:04:46,371 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 20:04:46,374 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 20:04:46,374 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 20:04:59,677 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 20:05:02,479 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 20:05:02,481 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 20:05:02,482 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 20:05:44,036 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 20:10:54,459 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 20:10:54,462 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 20:10:54,462 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 20:11:32,326 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 20:11:32,370 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 20:11:35,758 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-21 20:11:35,759 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-21 20:11:35,760 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-21 20:11:35,760 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 20:11:35,761 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 20:11:38,081 - app.services.product_service - INFO - Produto identificado pela IA: Arroz Tio João Tipo 1 Classe Longo Fino 1kg
+2025-09-21 20:11:38,081 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento com Busca na Web).
+2025-09-21 20:11:38,081 - app.services.search_service - INFO - Buscando na web com a query: 'ean Tio João Arroz Tio João Tipo 1 Classe Longo Fino 1kg'
+2025-09-21 20:11:39,047 - app.services.search_service - ERROR - Erro na chamada da API de busca: 404 Client Error: Not Found for url: https://www.googleapis.com/customsearch/v1?key=AIzaSyCGZtzAI47IfNYAo3j8hpx0a0DMxreqyT8&cx=f3d209a7af04e43b2&q=ean+Tio+Jo%C3%A3o+Arroz+Tio+Jo%C3%A3o+Tipo+1+Classe+Longo+Fino+1kg&num=3
+2025-09-21 20:11:39,049 - app.services.product_service - WARNING - Não foi possível encontrar/validar um GTIN. Retornando dados da inferência inicial.
+2025-09-21 20:15:05,373 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 20:16:22,690 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 20:16:22,694 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 20:16:22,694 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 20:18:32,050 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 20:18:44,888 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 20:18:44,891 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 20:18:44,891 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 20:22:23,065 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 20:22:36,062 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 20:22:36,065 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 20:22:36,065 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 20:27:32,875 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 20:33:36,831 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 20:33:36,833 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 20:33:36,834 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 20:34:00,243 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 20:34:00,301 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 20:34:05,067 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-21 20:34:05,067 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-21 20:34:05,068 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-21 20:34:05,068 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 20:34:05,068 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 20:34:06,864 - app.services.product_service - INFO - Produto identificado pela IA: Arroz Tio João Tipo 1 Classe Longo Fino 1kg
+2025-09-21 20:34:06,865 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento com Busca na Web).
+2025-09-21 20:34:06,865 - app.services.search_service - INFO - Buscando na web com a query: 'ean Tio João Arroz Tio João Tipo 1 Classe Longo Fino 1kg'
+2025-09-21 20:34:08,395 - app.services.advanced_inference_service - INFO - Extraindo GTIN do contexto de busca para 'Arroz Tio João Tipo 1 Classe Longo Fino 1kg'
+2025-09-21 20:34:09,347 - app.services.product_service - INFO - GTIN '7893500018476' extraído da busca. Validando...
+2025-09-21 20:34:10,754 - app.services.product_service - INFO - Sucesso! Dados validados e enriquecidos pelo Cosmos.
+2025-09-21 20:37:24,173 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 20:37:24,224 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 20:37:27,921 - app.services.vision_service - INFO - Vision API: Texto extraído (217 chars), Logos: 1, Labels: 5
+2025-09-21 20:37:27,921 - app.services.vision_service - INFO - Texto bruto: 'Nestle
+PALTOLI
+KitKat
+NOVA FÓRMULA**
+PESO LÍQ.41,5 g
+WAR RECHEADO COBERTO COM CHOCOLATE AO LEITE
+@kitkathrasil
+M AÇÚCAR
+ADICIONADO
+GORDURA
+SATURADA
+ECO
+PRE
+ESPECIAL
+QUANDO CO
+NÃO PROMOCI SEM ILUSTRATIVA
+A VERSÃO
+OUTO.' -> Texto limpo para análise: '415'
+2025-09-21 20:37:27,922 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '415'
+2025-09-21 20:37:27,923 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 20:37:27,923 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 20:37:29,605 - app.services.product_service - INFO - Produto identificado pela IA: Chocolate KitKat Wafer Recheado Coberto com Chocolate ao Leite 41,5g
+2025-09-21 20:37:29,605 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento com Busca na Web).
+2025-09-21 20:37:29,605 - app.services.search_service - INFO - Buscando na web com a query: 'ean Nestlé Chocolate KitKat Wafer Recheado Coberto com Chocolate ao Leite 41,5g'
+2025-09-21 20:37:31,040 - app.services.advanced_inference_service - INFO - Extraindo GTIN do contexto de busca para 'Chocolate KitKat Wafer Recheado Coberto com Chocolate ao Leite 41,5g'
+2025-09-21 20:37:31,956 - app.services.product_service - INFO - GTIN '7891000248768' extraído da busca. Validando...
+2025-09-21 20:37:33,419 - app.services.product_service - INFO - Sucesso! Dados validados e enriquecidos pelo Cosmos.
+2025-09-21 20:44:03,522 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 20:44:03,535 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 20:44:06,240 - app.services.vision_service - INFO - Vision API: Texto extraído (21 chars), Logos: 0, Labels: 8
+2025-09-21 20:44:06,240 - app.services.vision_service - INFO - Texto bruto: 'Fini
+Gelatinas
+Beijos' -> Texto limpo para análise: ''
+2025-09-21 20:44:06,241 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 20:44:06,241 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 20:44:06,241 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 20:44:07,792 - app.services.product_service - INFO - Produto identificado pela IA: Gelatinas Fini Beijos
+2025-09-21 20:44:07,792 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento com Busca na Web).
+2025-09-21 20:44:07,792 - app.services.search_service - INFO - Buscando na web com a query: 'ean Fini Gelatinas Fini Beijos'
+2025-09-21 20:44:09,229 - app.services.advanced_inference_service - INFO - Extraindo GTIN do contexto de busca para 'Gelatinas Fini Beijos'
+2025-09-21 20:44:10,207 - app.services.product_service - INFO - GTIN '7898279790875' extraído da busca. Validando...
+2025-09-21 20:44:11,638 - app.services.product_service - INFO - Sucesso! Dados validados e enriquecidos pelo Cosmos.
+2025-09-21 20:45:19,274 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 20:45:19,322 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 20:45:21,938 - app.services.vision_service - INFO - Vision API: Texto extraído (42 chars), Logos: 3, Labels: 10
+2025-09-21 20:45:21,939 - app.services.vision_service - INFO - Texto bruto: 'ca-Cola
+SEM AÇÚCAR
+Deliciosa & Refrescante' -> Texto limpo para análise: ''
+2025-09-21 20:45:21,939 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-21 20:45:21,939 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 20:45:21,940 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 20:45:23,361 - app.services.product_service - INFO - Produto identificado pela IA: Refrigerante Coca-Cola Sem Açúcar
+2025-09-21 20:45:23,361 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento com Busca na Web).
+2025-09-21 20:45:23,361 - app.services.search_service - INFO - Buscando na web com a query: 'ean Coca-Cola Refrigerante Coca-Cola Sem Açúcar'
+2025-09-21 20:45:24,784 - app.services.advanced_inference_service - INFO - Extraindo GTIN do contexto de busca para 'Refrigerante Coca-Cola Sem Açúcar'
+2025-09-21 20:45:25,595 - app.services.product_service - WARNING - Não foi possível encontrar/validar um GTIN. Retornando dados da inferência inicial.
+2025-09-21 20:45:39,170 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 20:45:39,218 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 20:45:42,464 - app.services.vision_service - INFO - Vision API: Texto extraído (123 chars), Logos: 1, Labels: 5
+2025-09-21 20:45:42,464 - app.services.vision_service - INFO - Texto bruto: '0
+D
+7
+0
+0000
+0
+00
+0
+0
+1
+28
+Proteinas, Gorduras
+Fibras alimentares.
+pela porção.
+Coca-Cola
+Brasil
+7 894900 701517
+PP PRINT12' -> Texto limpo para análise: '070000000000128789490070151712'
+2025-09-21 20:45:42,465 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '070000000000128789490070151712'
+2025-09-21 20:45:42,465 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 20:45:42,466 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 20:45:44,531 - app.services.product_service - INFO - Produto identificado pela IA: Coca-Cola
+2025-09-21 20:45:44,532 - app.services.product_service - WARNING - Não foi possível encontrar/validar um GTIN. Retornando dados da inferência inicial.
+2025-09-21 20:53:21,271 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 20:53:24,154 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 20:53:24,156 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 20:53:24,156 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 21:00:24,796 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 21:00:27,749 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 21:00:27,752 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 21:00:27,752 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 21:04:12,108 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 21:04:15,122 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 21:04:15,125 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 21:04:15,125 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 21:05:42,007 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 21:05:45,089 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 21:05:45,092 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 21:05:45,092 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 21:10:14,908 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 21:10:17,860 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 21:10:17,862 - app.database - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 21:10:17,863 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 21:17:54,368 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 21:17:54,422 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 21:17:57,599 - app.services.vision_service - INFO - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-21 21:17:57,620 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-21 21:17:57,621 - main - INFO - Pistas extraídas. Acionando o serviço de análise inteligente de produto.
+2025-09-21 21:17:57,621 - app.services.product_service - INFO - Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).
+2025-09-21 21:18:00,282 - app.services.advanced_inference_service - WARNING - GTIN inválido retornado pela IA: '000000113667090314'. Descartando.
+2025-09-21 21:18:00,283 - app.services.product_service - INFO - Produto identificado pela IA: Camiseta Algodão com Elastano Verde Claro Tamanho P
+2025-09-21 21:18:00,283 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento com Busca na Web).
+2025-09-21 21:18:00,283 - app.services.search_service - INFO - Buscando na web com a query: 'ean None Camiseta Algodão com Elastano Verde Claro Tamanho P'
+2025-09-21 21:18:01,770 - app.services.advanced_inference_service - INFO - Extraindo GTIN do contexto de busca para 'Camiseta Algodão com Elastano Verde Claro Tamanho P'
+2025-09-21 21:18:02,578 - app.services.product_service - WARNING - Não foi possível encontrar/validar um GTIN. Retornando dados da inferência inicial.
+2025-09-21 21:33:31,424 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 21:33:34,326 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 21:33:34,382 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-21 21:33:34,382 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 21:33:55,516 - main - INFO - Encerrando aplicação CadVision API.
