@@ -29,6 +29,8 @@ class ProcessingStatus(str, Enum):
 
 class ProductBase(BaseModel):
     """Modelo base para produtos."""
+    sku: Optional[str] = Field(
+        None, description="SKU (Stock Keeping Unit) do produto")  # NOVO CAMPO
     title: str = Field(
         ...,
         description="Título ou nome do produto",
@@ -50,10 +52,14 @@ class ProductBase(BaseModel):
         max_length=100,
         example="Tio João"
     )
+    department: Optional[str] = Field(
+        None, description="Departamento do produto")  # NOVO CAMPO
     category: Optional[str] = Field(
         None,
         description="Categoria do produto"
     )
+    subcategory: Optional[str] = Field(
+        None, description="Subcategoria do produto")  # NOVO CAMPO
     price: Optional[float] = Field(
         None,
         description="Preço do produto em Reais",
@@ -129,12 +135,15 @@ class ProductCreate(ProductBase):
 
 # ... (cole este código depois da classe ProductCreate)
 
+
 class ClothingAttributes(BaseModel):
     """Modelo para os atributos específicos de vestuário."""
-    size: Optional[str] = Field(None, description="Tamanho da peça (P, M, G, 42, etc.)")
+    size: Optional[str] = Field(
+        None, description="Tamanho da peça (P, M, G, 42, etc.)")
     color: Optional[str] = Field(None, description="Cor principal da peça")
     fabric: Optional[str] = Field(None, description="Material/tecido da peça")
-    gender: Optional[str] = Field(None, description="Gênero (Masculino, Feminino, Unissex)")
+    gender: Optional[str] = Field(
+        None, description="Gênero (Masculino, Feminino, Unissex)")
 
 
 class ProductCreateClothing(ProductCreate):
@@ -144,7 +153,9 @@ class ProductCreateClothing(ProductCreate):
 
 class ProductCreateSupermarket(ProductCreate):
     """Modelo para criar um produto de supermercado (sem atributos extras)."""
-    pass # Herda todos os campos de ProductCreate
+    pass  # Herda todos os campos de ProductCreate
+
+
 class ProductUpdate(ProductBase):
     """Modelo para atualização de produto."""
     pass
@@ -177,6 +188,8 @@ class ProductOut(ProductInDB):
 
 class IdentifiedProduct(BaseModel):
     """Modelo para produto identificado (sem campos de banco de dados)."""
+    sku: Optional[str] = Field(
+        None, description="SKU (Stock Keeping Unit) do produto")  # NOVO CAMPO
     gtin: Optional[str] = Field(
         None,
         description="Código GTIN/EAN do produto (8, 12, 13 ou 14 dígitos)",
@@ -194,10 +207,14 @@ class IdentifiedProduct(BaseModel):
         max_length=100,
         example="Tio João"
     )
-    category: Optional[str] = Field(  # Alterado de ProductCategory para str
+    department: Optional[str] = Field(
+        None, description="Departamento do produto")  # NOVO CAMPO
+    category: Optional[str] = Field(
         None,
         description="Categoria do produto"
     )
+    subcategory: Optional[str] = Field(
+        None, description="Subcategoria do produto")  # NOVO CAMPO
     price: Optional[float] = Field(
         None,
         description="Preço do produto em Reais",
@@ -389,6 +406,7 @@ class APIResponse(BaseModel):
 
 # Em backend/app/models.py
 
+
 class ProductCreateSupermarket(ProductCreate):
     """Modelo para criar um produto de supermercado (sem atributos extras)."""
-    pass # Herda todos os campos de ProductCreate
+    pass  # Herda todos os campos de ProductCreate

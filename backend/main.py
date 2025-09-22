@@ -5,6 +5,7 @@ import logging
 import sqlite3
 import time
 import io
+import json
 from pathlib import Path
 from contextlib import asynccontextmanager
 from typing import Optional, Union
@@ -25,7 +26,10 @@ from fastapi.encoders import jsonable_encoder
 from app import models
 from app import database
 from app.services import vision_service, product_service
+from app.services.vision_service import add_product_to_catalog, add_reference_image_to_product
 from app.core.logging_config import setup_logging, log_structured_event
+
+from app.services.vector_search_service import get_image_embedding, add_image_to_index
 
 # --- Configuração de Logging ---
 LOG_FILE = setup_logging()
@@ -246,6 +250,7 @@ async def get_products(
 
 # backend/main.py
 
+# SUBSTITUA A FUNÇÃO save_product INTEIRA POR ESTA
 @app.post(
     f"{API_PREFIX}/products",
     response_model=models.APIResponse,
@@ -254,32 +259,43 @@ async def get_products(
     tags=["Produtos"]
 )
 async def save_product(
-    product: Union[models.ProductCreateClothing, models.ProductCreateSupermarket],
-    db: sqlite3.Connection = Depends(database.get_db)
+    background_tasks: BackgroundTasks,
+    db: sqlite3.Connection = Depends(database.get_db),
+    product_data: str = Form(...),
+    product_image: Optional[UploadFile] = File(None)
 ):
-    """Recebe os dados de um produto (de qualquer vertical) e os persiste no banco."""
+    """
+    Recebe os dados de um produto e, opcionalmente, uma imagem de produto.
+    Salva no banco de dados e agenda a catalogação visual se aplicável.
+    """
     try:
-        product_dict = product.dict()
+        # Converte a string de dados de volta para um dicionário
+        product_dict = json.loads(product_data)
 
-        # VALIDAÇÃO MELHORADA DO TÍTULO
-        title = product_dict.get('title', '').strip()
-        if not title:
-            # Tenta criar um título a partir de outros campos
-            brand = product_dict.get('brand', '')
-            category = product_dict.get('category', '')
-            gtin = product_dict.get('gtin', '')
+        # Se a imagem do produto (para o retratista) foi enviada
+        if product_image:
+            image_bytes = await product_image.read()
+            image_hash = vision_service.get_cache_key(image_bytes)
 
-            if brand and category:
-                product_dict['title'] = f"{brand} - {category}"
-            elif gtin:
-                product_dict['title'] = f"Produto GTIN {gtin}"
-            else:
-                product_dict['title'] = f"Produto {product_dict.get('vertical', 'Gerado')} - {int(time.time())}"
+            # O hash da imagem do PRODUTO é o que fica associado ao registro
+            product_dict['image_hash'] = image_hash
 
-            logger.warning(
-                f"Título estava vazio. Definido como: {product_dict['title']}")
+            sku = product_dict.get('sku')
+            title = product_dict.get('title')
+            vertical = product_dict.get('vertical')
 
+            # Agenda a catalogação em segundo plano
+            if vertical == 'vestuario' and sku:
+                logger.info(
+                    f"Agendando tarefa de catalogação visual para o SKU {sku}.")
+                # Usa o novo serviço da Vertex AI
+                background_tasks.add_task(
+                    catalog_product_visual, sku, title, vertical, image_bytes, image_hash
+                )
+
+        # O resto da função continua normalmente...
         product_id = database.insert_product(product_dict, db)
+
         if product_id:
             return models.APIResponse.success_response(
                 data={"id": product_id},
@@ -288,15 +304,34 @@ async def save_product(
         raise HTTPException(
             status_code=500, detail="Erro ao salvar o produto no banco de dados.")
 
+    except json.JSONDecodeError:
+        raise HTTPException(
+            status_code=400, detail="Formato de product_data inválido.")
     except sqlite3.IntegrityError:
         raise HTTPException(
-            status_code=409, detail=f"Produto com GTIN {product.gtin} já existe.")
-    except ValueError as e:
-        raise HTTPException(status_code=422, detail=str(e))
+            status_code=409, detail="Produto com SKU ou GTIN já existe.")
+    except Exception as e:
+        logger.error(f"Erro inesperado ao salvar produto: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500, detail="Erro interno no servidor.")
 
-# Em backend/main.py
 
-# Em backend/main.py
+# Adicione esta nova função HELPER dentro do main.py para organizar o código
+async def catalog_product_visual(sku: str, title: str, vertical: str, image_bytes: bytes, image_hash: str):
+    """
+    Função auxiliar que executa a lógica de catalogação visual.
+    """
+
+    logger.info(f"Iniciando processo de embedding para SKU {sku}")
+    embedding = get_image_embedding(image_bytes)
+
+    if embedding:
+        logger.info(
+            f"Embedding gerado. Adicionando ao índice da Vector Search.")
+        add_image_to_index(sku, embedding)
+    else:
+        logger.error(
+            f"Falha ao gerar embedding para o SKU {sku}. Catalogação visual cancelada.")
 
 
 @app.get(

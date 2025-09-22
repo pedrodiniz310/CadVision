@@ -52,8 +52,34 @@ if not GOOGLE_SEARCH_ENGINE_ID:
 else:
     logger.info("GOOGLE_SEARCH_ENGINE_ID configurado corretamente")
 
-# --- FIM DA ATUALIZAÇÃO ---
+# ID do Product Set para a busca visual
+GOOGLE_PRODUCT_SET_ID = os.environ.get("GOOGLE_PRODUCT_SET_ID")
 
+if not GOOGLE_PRODUCT_SET_ID:
+    logger.warning("GOOGLE_PRODUCT_SET_ID não encontrada no ambiente. A busca visual não funcionará.")
+else:
+    logger.info("GOOGLE_PRODUCT_SET_ID configurada corretamente.")
+
+
+# --- Configurações da Vertex AI Vector Search ---
+GOOGLE_PROJECT_ID = os.environ.get("GOOGLE_PROJECT_ID")
+GOOGLE_INDEX_ID = os.environ.get("GOOGLE_INDEX_ID")
+GOOGLE_INDEX_ENDPOINT_ID = os.environ.get("GOOGLE_INDEX_ENDPOINT_ID")
+
+if not GOOGLE_PROJECT_ID:
+    logger.warning("GOOGLE_PROJECT_ID não encontrado no ambiente.")
+else:
+    logger.info("GOOGLE_PROJECT_ID configurado.")
+
+if not GOOGLE_INDEX_ID:
+    logger.warning("GOOGLE_INDEX_ID não encontrado no ambiente.")
+else:
+    logger.info("GOOGLE_INDEX_ID configurado.")
+
+if not GOOGLE_INDEX_ENDPOINT_ID:
+    logger.warning("GOOGLE_INDEX_ENDPOINT_ID não encontrado no ambiente.")
+else:
+    logger.info("GOOGLE_INDEX_ENDPOINT_ID configurado.")
 
 # Caminhos para arquivos
 GOOGLE_KEY_PATH = BACKEND_DIR / "keys" / "vision.json"

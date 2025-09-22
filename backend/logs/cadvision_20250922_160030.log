@@ -1,0 +1,6 @@
+2025-09-22 16:00:31 - root - INFO - [logging_config.py:51] - Logging configurado. Arquivo: C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\logs\cadvision_20250922_160030.log
+2025-09-22 16:00:31 - app - INFO - [logging_config.py:68] - EVENT: startup - DATA: {'timestamp': '2025-09-22T16:00:31.564909', 'service': 'app', 'event': 'startup', 'data': {'version': '1.1.0'}}
+2025-09-22 16:00:31 - app.database - INFO - [database.py:175] - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 16:00:31 - app - INFO - [logging_config.py:68] - EVENT: database_initialized - DATA: {'timestamp': '2025-09-22T16:00:31.567909', 'service': 'app', 'event': 'database_initialized', 'data': {}}
+2025-09-22 16:01:10 - app - INFO - [logging_config.py:68] - EVENT: shutdown - DATA: {'timestamp': '2025-09-22T16:01:10.709316', 'service': 'app', 'event': 'shutdown', 'data': {}}
+2025-09-22 16:01:10 - main - INFO - [main.py:45] - Encerrando aplicação CadVision API.

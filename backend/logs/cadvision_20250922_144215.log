@@ -1,0 +1,181 @@
+2025-09-22 14:42:16 - root - INFO - [logging_config.py:51] - Logging configurado. Arquivo: C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\logs\cadvision_20250922_144215.log
+2025-09-22 14:42:16 - app - INFO - [logging_config.py:68] - EVENT: startup - DATA: {'timestamp': '2025-09-22T14:42:16.786293', 'service': 'app', 'event': 'startup', 'data': {'version': '1.1.0'}}
+2025-09-22 14:42:16 - app.database - INFO - [database.py:172] - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 14:42:16 - app - INFO - [logging_config.py:68] - EVENT: database_initialized - DATA: {'timestamp': '2025-09-22T14:42:16.789312', 'service': 'app', 'event': 'database_initialized', 'data': {}}
+2025-09-22 14:42:52 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-22T14:42:52.708113', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'vestuario', 'filename': 'Imagem do WhatsApp de 2025-09-21 à(s) 16.46.16_17ae13c9.jpg', 'content_type': 'image/jpeg'}}
+2025-09-22 14:42:52 - vision/identify - INFO - [logging_config.py:68] - EVENT: image_loaded - DATA: {'timestamp': '2025-09-22T14:42:52.709112', 'service': 'vision/identify', 'event': 'image_loaded', 'data': {'size_bytes': 102525, 'hash': 'b2fc004d6c9b4e068ae9234462176855'}}
+2025-09-22 14:42:52 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_start - DATA: {'timestamp': '2025-09-22T14:42:52.709112', 'service': 'vision/identify', 'event': 'vision_extraction_start', 'data': {}}
+2025-09-22 14:42:52 - app.services.vision_service - INFO - [vision_service.py:108] - Imagem aprimorada para OCR.
+2025-09-22 14:42:55 - app.services.vision_service - INFO - [vision_service.py:181] - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-22 14:42:55 - app.services.vision_service - INFO - [vision_service.py:276] - Texto bruto: '100% ALGODÃO
+DECOTE: 98% ALGODÃO
+2% ELASTANO
+FORNECEDOR: 84891
+Modelo: 1059827 - T. 20
+40
+P W
+P
+日
+Cor VERDE CLARO
+000000113667090314
+SKU: 11366709
+PO:288843' -> Texto limpo para análise: '100982848911059827204000000011366709031411366709288843'
+2025-09-22 14:42:55 - app.services.vision_service - WARNING - [vision_service.py:297] - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-22 14:42:55 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_complete - DATA: {'timestamp': '2025-09-22T14:42:55.202556', 'service': 'vision/identify', 'event': 'vision_extraction_complete', 'data': {'success': True, 'text_length': 156, 'gtin_found': False}}
+2025-09-22 14:42:55 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-22T14:42:55.202556', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'vestuario'}}
+2025-09-22 14:42:55 - app.services.product_service - INFO - [product_service.py:59] - Vertical 'vestuario' detectada. Iniciando diretamente com a Inferência da IA.
+2025-09-22 14:42:58 - ai_service - INFO - [logging_config.py:68] - EVENT: json_parsed_successfully - DATA: {'timestamp': '2025-09-22T14:42:58.208527', 'service': 'ai_service', 'event': 'json_parsed_successfully', 'data': {'title_extracted': None, 'brand_extracted': None, 'category_extracted': 'Vestuário'}}
+2025-09-22 14:42:58 - ai_service - WARNING - [logging_config.py:72] - EVENT: empty_title_from_ai - DATA: {'timestamp': '2025-09-22T14:42:58.209527', 'service': 'ai_service', 'event': 'empty_title_from_ai', 'data': {'raw_response': '```json\n{\n  "title": null,\n  "brand": null,\n  "category": "Vestuário",\n  "size": "P",\n  "color": "VERDE CLARO",\n  "fabric": "Algodão",\n  "gender": null,\n  "gtin": null,\n  "price": null\n}\n```'}}
+2025-09-22 14:42:58 - ai_service - INFO - [logging_config.py:68] - EVENT: title_fallback_applied - DATA: {'timestamp': '2025-09-22T14:42:58.209527', 'service': 'ai_service', 'event': 'title_fallback_applied', 'data': {'new_title': 'Produto 100% ALGODÃO DECOTE: 98% ALGODÃO'}}
+2025-09-22 14:42:58 - app.services.product_service - INFO - [product_service.py:84] - Produto identificado: Produto 100% ALGODÃO DECOTE: 98% ALGODÃO
+2025-09-22 14:42:58 - app.services.product_service - INFO - [product_service.py:88] - Iniciando Etapa 3 (Enriquecimento com Busca na Web).
+2025-09-22 14:42:58 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_complete - DATA: {'timestamp': '2025-09-22T14:42:58.210546', 'service': 'vision/identify', 'event': 'intelligent_analysis_complete', 'data': {'title': 'Produto 100% ALGODÃO DECOTE: 98% ALGODÃO', 'brand': None}}
+2025-09-22 14:42:58 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_completed - DATA: {'timestamp': '2025-09-22T14:42:58.210546', 'service': 'vision/identify', 'event': 'process_completed', 'data': {'processing_time': 5.5, 'product_title': 'Produto 100% ALGODÃO DECOTE: 98% ALGODÃO'}}
+2025-09-22 14:43:13 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-22T14:43:13.629943', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'supermercado', 'filename': 'Imagem do WhatsApp de 2025-09-17 à(s) 18.48.26_20d1bdb5.jpg', 'content_type': 'image/jpeg'}}
+2025-09-22 14:43:13 - vision/identify - INFO - [logging_config.py:68] - EVENT: image_loaded - DATA: {'timestamp': '2025-09-22T14:43:13.630925', 'service': 'vision/identify', 'event': 'image_loaded', 'data': {'size_bytes': 122489, 'hash': 'e909fe0f6cb4c1043e03c0e2d2763f0d'}}
+2025-09-22 14:43:13 - vision/identify - INFO - [logging_config.py:68] - EVENT: cache_hit - DATA: {'timestamp': '2025-09-22T14:43:13.631925', 'service': 'vision/identify', 'event': 'cache_hit', 'data': {'image_hash': 'e909fe0f6cb4c1043e03c0e2d2763f0d', 'product_id': 2}}
+2025-09-22 14:43:30 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-22T14:43:30.586846', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'supermercado', 'filename': 'Imagem do WhatsApp de 2025-09-18 à(s) 17.35.31_43df112f.jpg', 'content_type': 'image/jpeg'}}
+2025-09-22 14:43:30 - vision/identify - INFO - [logging_config.py:68] - EVENT: image_loaded - DATA: {'timestamp': '2025-09-22T14:43:30.587846', 'service': 'vision/identify', 'event': 'image_loaded', 'data': {'size_bytes': 113544, 'hash': '9bb1516d4f8c2209c62d366630cfc6bb'}}
+2025-09-22 14:43:30 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_start - DATA: {'timestamp': '2025-09-22T14:43:30.588864', 'service': 'vision/identify', 'event': 'vision_extraction_start', 'data': {}}
+2025-09-22 14:43:30 - app.services.vision_service - INFO - [vision_service.py:108] - Imagem aprimorada para OCR.
+2025-09-22 14:43:33 - app.services.vision_service - INFO - [vision_service.py:181] - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-22 14:43:33 - app.services.vision_service - INFO - [vision_service.py:276] - Texto bruto: '7 896022 200534
+ИN
+МИ
+1
+LOTE/VALIDADE/LOTE/VALIDEZ/BATCH/EXPIRY DATE:
+145 $16
+860202 V2' -> Texto limpo para análise: '78960222005341145168602022'
+2025-09-22 14:43:33 - app.services.vision_service - INFO - [vision_service.py:294] - GTIN validado com sucesso: 7896022200534
+2025-09-22 14:43:33 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_complete - DATA: {'timestamp': '2025-09-22T14:43:33.480927', 'service': 'vision/identify', 'event': 'vision_extraction_complete', 'data': {'success': True, 'text_length': 87, 'gtin_found': True}}
+2025-09-22 14:43:33 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-22T14:43:33.480927', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'supermercado'}}
+2025-09-22 14:43:33 - app.services.product_service - INFO - [product_service.py:65] - Iniciando Etapa 1 (Via Rápida) com GTIN: 7896022200534.
+2025-09-22 14:43:34 - app.services.cosmos_service - INFO - [cosmos_service.py:72] - 📦 Dados formatados do Cosmos: {'gtin': '7896022200534', 'title': 'MACARRÃO DE SÊMOLA PARAFUSO GALO PACOTE 500G', 'brand': 'SELMI', 'category': '', 'ncm': '19021900', 'cest': '', 'confidence': 0.99, 'vertical': 'supermercado'}
+2025-09-22 14:43:34 - app.services.product_service - INFO - [product_service.py:84] - Produto identificado: MACARRÃO DE SÊMOLA PARAFUSO GALO PACOTE 500G
+2025-09-22 14:43:34 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_complete - DATA: {'timestamp': '2025-09-22T14:43:34.916925', 'service': 'vision/identify', 'event': 'intelligent_analysis_complete', 'data': {'title': 'MACARRÃO DE SÊMOLA PARAFUSO GALO PACOTE 500G', 'brand': 'SELMI'}}
+2025-09-22 14:43:34 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_completed - DATA: {'timestamp': '2025-09-22T14:43:34.916925', 'service': 'vision/identify', 'event': 'process_completed', 'data': {'processing_time': 4.33, 'product_title': 'MACARRÃO DE SÊMOLA PARAFUSO GALO PACOTE 500G'}}
+2025-09-22 14:44:36 - app.database - INFO - [database.py:193] - Tentativa de inserir produto com dados: {'title': 'MACARRÃO DE SÊMOLA PARAFUSO GALO PACOTE 500G', 'vertical': 'supermercado', 'gtin': '7896022200534', 'brand': 'SELMI', 'category': 'Alimentos', 'price': None, 'ncm': '19021900', 'cest': None, 'confidence': 0.99, 'image_hash': '9bb1516d4f8c2209c62d366630cfc6bb'}
+2025-09-22 14:44:36 - app.database - INFO - [database.py:231] - Produto ID 4 (Vertical: supermercado) salvo com sucesso.
+2025-09-22 14:44:45 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-22T14:44:45.697784', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'supermercado', 'filename': 'arroz2.png', 'content_type': 'image/png'}}
+2025-09-22 14:44:45 - vision/identify - INFO - [logging_config.py:68] - EVENT: image_loaded - DATA: {'timestamp': '2025-09-22T14:44:45.698765', 'service': 'vision/identify', 'event': 'image_loaded', 'data': {'size_bytes': 111706, 'hash': '44a30420041f34c214d9152407d5491a'}}
+2025-09-22 14:44:45 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_start - DATA: {'timestamp': '2025-09-22T14:44:45.698765', 'service': 'vision/identify', 'event': 'vision_extraction_start', 'data': {}}
+2025-09-22 14:44:45 - app.services.vision_service - INFO - [vision_service.py:108] - Imagem aprimorada para OCR.
+2025-09-22 14:44:47 - app.services.vision_service - INFO - [vision_service.py:181] - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-22 14:44:47 - app.services.vision_service - INFO - [vision_service.py:276] - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-22 14:44:47 - app.services.vision_service - WARNING - [vision_service.py:297] - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-22 14:44:47 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_complete - DATA: {'timestamp': '2025-09-22T14:44:47.965521', 'service': 'vision/identify', 'event': 'vision_extraction_complete', 'data': {'success': True, 'text_length': 238, 'gtin_found': False}}
+2025-09-22 14:44:47 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-22T14:44:47.965521', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'supermercado'}}
+2025-09-22 14:44:47 - app.services.product_service - INFO - [product_service.py:70] - Etapa 1 falhou ou não aplicável. Iniciando Etapa 2 (Inferência da IA).
+2025-09-22 14:44:49 - ai_service - INFO - [logging_config.py:68] - EVENT: json_parsed_successfully - DATA: {'timestamp': '2025-09-22T14:44:49.582495', 'service': 'ai_service', 'event': 'json_parsed_successfully', 'data': {'title_extracted': 'Arroz Tipo 1 1kg', 'brand_extracted': 'Tio João', 'category_extracted': 'Alimentos'}}
+2025-09-22 14:44:49 - app.services.product_service - INFO - [product_service.py:84] - Produto identificado: Arroz Tipo 1 1kg
+2025-09-22 14:44:49 - app.services.product_service - INFO - [product_service.py:88] - Iniciando Etapa 3 (Enriquecimento com Busca na Web).
+2025-09-22 14:44:49 - app.services.search_service - INFO - [search_service.py:30] - Buscando na web com a query: 'ean Tio João Arroz Tipo 1 1kg'
+2025-09-22 14:44:51 - app.services.advanced_inference_service - INFO - [advanced_inference_service.py:90] - Extraindo GTIN do contexto de busca para 'Arroz Tipo 1 1kg'
+2025-09-22 14:44:52 - app.services.product_service - INFO - [product_service.py:101] - GTIN '7893500023425' extraído da busca. Validando...
+2025-09-22 14:44:53 - app.services.cosmos_service - INFO - [cosmos_service.py:72] - 📦 Dados formatados do Cosmos: {'gtin': '7893500023425', 'title': 'ARROZ TIO JOAO 1KG', 'brand': '', 'category': '', 'ncm': '10063021', 'cest': '', 'confidence': 0.99, 'vertical': 'supermercado'}
+2025-09-22 14:44:53 - app.services.product_service - INFO - [product_service.py:107] - Sucesso! Dados validados e enriquecidos pelo Cosmos via RAG.
+2025-09-22 14:44:53 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_complete - DATA: {'timestamp': '2025-09-22T14:44:53.595118', 'service': 'vision/identify', 'event': 'intelligent_analysis_complete', 'data': {'title': 'ARROZ TIO JOAO 1KG', 'brand': ''}}
+2025-09-22 14:44:53 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_completed - DATA: {'timestamp': '2025-09-22T14:44:53.596118', 'service': 'vision/identify', 'event': 'process_completed', 'data': {'processing_time': 7.9, 'product_title': 'ARROZ TIO JOAO 1KG'}}
+2025-09-22 14:45:03 - app.database - INFO - [database.py:193] - Tentativa de inserir produto com dados: {'title': 'ARROZ TIO JOAO 1KG', 'vertical': 'supermercado', 'gtin': '7893500023425', 'brand': 'TIO JOAO', 'category': 'Outros', 'price': None, 'ncm': '10063021', 'cest': None, 'confidence': 0.99, 'image_hash': '44a30420041f34c214d9152407d5491a'}
+2025-09-22 14:45:03 - app.database - INFO - [database.py:231] - Produto ID 5 (Vertical: supermercado) salvo com sucesso.
+2025-09-22 14:45:11 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-22T14:45:11.227216', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'supermercado', 'filename': 'Imagem do WhatsApp de 2025-09-17 à(s) 14.26.41_79b62ff1.jpg', 'content_type': 'image/jpeg'}}
+2025-09-22 14:45:11 - vision/identify - INFO - [logging_config.py:68] - EVENT: image_loaded - DATA: {'timestamp': '2025-09-22T14:45:11.228215', 'service': 'vision/identify', 'event': 'image_loaded', 'data': {'size_bytes': 198191, 'hash': '0d476032a3bd68f72f75b829fc0bc96b'}}
+2025-09-22 14:45:11 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_start - DATA: {'timestamp': '2025-09-22T14:45:11.229218', 'service': 'vision/identify', 'event': 'vision_extraction_start', 'data': {}}
+2025-09-22 14:45:11 - app.services.vision_service - INFO - [vision_service.py:108] - Imagem aprimorada para OCR.
+2025-09-22 14:45:14 - app.services.vision_service - INFO - [vision_service.py:181] - Vision API: Texto extraído (1372 chars), Logos: 0, Labels: 8
+2025-09-22 14:45:14 - app.services.vision_service - INFO - [vision_service.py:276] - Texto bruto: 'e essas
+ícias!
+Sos Sabores
+Ombinam
+upaladar:
+icional
+INFORMAÇÃO NUTRICIONAL
+Porção por embalagem: 6 porções
+Porcão: 25 g (1/4 xicara
+o (kcal)
+Valor energético (
+Carboidratos (g)
+Açúcares totais (g)
+Açúcares adicionados (e)
+Proteinas (8)
+Gorduras totals (g)
+100 25 XVD
+538 135
+35
+A
+3,5
+21
+Gorduras saturadas (g)
+5
+Gorduras trans (8)
+0
+0
+Fibras alimentares (g)
+1,8
+463
+116
+ae Salsa
+com Limão
+rrasco
+er momento
+quer lugar...
+or curtição.
+ses momentos.
+bem com
+vida!
+endupa
+dupa.com.br
+NOV 2025
+Sódio (mg)
+Percentual de valores diários fornecidos pela porção
+Ingredientes: amendoim, amido de milho
+(Bacillus thuringiensis, Streptomyces
+viridochromogenes, Agrobacterium
+tumefaciens, Zea mays, Sphingobium
+herbicidovorans e Diabrotica firgifera),
+açúcar, farinha de trigo enriquecida com
+ferro e ácido fólico, sal, gordura vegetal,
+maltodextrina, fermento químico
+bicarbonato de sódio, realçador de sabor
+glutamato monossódico e corantes
+artificiais: Tartrazina e amarelo crepúsculo FCF
+ALÉRGICOS: CONTÉM AMENDOIM E
+DERIVADOS DE TRIGO E SOJA. PODE
+CONTER CENTEIO, CEVADA E AVEIA.
+CONTÉM GLÚTEN.
+MANTER EM LOCAL SECO, FRESCO E AREJADO.
+PRODUZIDO POR:
+AMENDUPA PRODUTOS ALIMENTÍCIOS LTDA.
+R. Demétrio Hristafor Seirec Basan n°1.900
+CEP17604-725-J. Guanabara - Tupä/SP
+CNPJ 48.349.526/0001-08-IND. BRASILEIRA
+Atendimento
+14 3404-4545
+amendupa@amendupa.com.br
+7897115
+11055611
+EPEMA' -> Texto limpo para análise: '625148100255381353535215800184631162025190017604725483495260001081434044545789711511055611'
+2025-09-22 14:45:14 - app.services.vision_service - INFO - [vision_service.py:294] - GTIN validado com sucesso: 52600010814340
+2025-09-22 14:45:14 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_complete - DATA: {'timestamp': '2025-09-22T14:45:14.659684', 'service': 'vision/identify', 'event': 'vision_extraction_complete', 'data': {'success': True, 'text_length': 1372, 'gtin_found': True}}
+2025-09-22 14:45:14 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-22T14:45:14.660683', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'supermercado'}}
+2025-09-22 14:45:14 - app.services.product_service - INFO - [product_service.py:65] - Iniciando Etapa 1 (Via Rápida) com GTIN: 52600010814340.
+2025-09-22 14:45:15 - app.services.product_service - INFO - [product_service.py:70] - Etapa 1 falhou ou não aplicável. Iniciando Etapa 2 (Inferência da IA).
+2025-09-22 14:45:17 - ai_service - INFO - [logging_config.py:68] - EVENT: json_parsed_successfully - DATA: {'timestamp': '2025-09-22T14:45:17.820968', 'service': 'ai_service', 'event': 'json_parsed_successfully', 'data': {'title_extracted': 'Amendupa Salgadinho de Amendoim com Limão', 'brand_extracted': 'Amendupa', 'category_extracted': 'Alimentos'}}
+2025-09-22 14:45:17 - app.services.product_service - INFO - [product_service.py:84] - Produto identificado: Amendupa Salgadinho de Amendoim com Limão
+2025-09-22 14:45:17 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_complete - DATA: {'timestamp': '2025-09-22T14:45:17.820968', 'service': 'vision/identify', 'event': 'intelligent_analysis_complete', 'data': {'title': 'Amendupa Salgadinho de Amendoim com Limão', 'brand': 'Amendupa'}}
+2025-09-22 14:45:17 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_completed - DATA: {'timestamp': '2025-09-22T14:45:17.821987', 'service': 'vision/identify', 'event': 'process_completed', 'data': {'processing_time': 6.59, 'product_title': 'Amendupa Salgadinho de Amendoim com Limão'}}
+2025-09-22 15:57:51 - app - INFO - [logging_config.py:68] - EVENT: shutdown - DATA: {'timestamp': '2025-09-22T15:57:51.235253', 'service': 'app', 'event': 'shutdown', 'data': {}}
+2025-09-22 15:57:51 - main - INFO - [main.py:45] - Encerrando aplicação CadVision API.

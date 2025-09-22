@@ -13,8 +13,10 @@ import numpy as np
 from google.cloud import vision
 from google.oauth2 import service_account
 from google.api_core.exceptions import GoogleAPICallError, RetryError
-
+# Usamos uma versão específica para admin
+from google.cloud import vision_v1p4beta1 as vision
 from app.core.config import GOOGLE_KEY_PATH
+from app.core.config import GOOGLE_PRODUCT_SET_ID
 
 # Defina CACHE_DIR localmente se não estiver disponível no config
 try:
@@ -426,3 +428,139 @@ def detect_category(text: str, labels: List) -> str:
             return category
 
     return None  # Retorna None em vez de string vazia
+
+
+def add_product_to_catalog(sku: str, title: str, vertical: str) -> Optional[str]:
+    """
+    Cria um novo produto no Google Vision Product Set.
+    Retorna o nome completo do caminho do produto se for bem-sucedido.
+    """
+    if not vision_client or not GOOGLE_PRODUCT_SET_ID:
+        return None
+
+    try:
+        # Reconfigura o cliente para a versão de admin se necessário
+        # (O cliente principal pode não ter os métodos de admin)
+        product_search_client = vision.ProductSearchClient(
+            credentials=credentials)
+
+        project_id = credentials.project_id
+        location = 'southamerica-east1'  # Mantenha a mesma da busca
+        product_set_path = f'projects/{project_id}/locations/{location}/productSets/{GOOGLE_PRODUCT_SET_ID}'
+        location_path = f'projects/{project_id}/locations/{location}'
+
+        product = {
+            "display_name": title,
+            "product_category": "apparel" if vertical == 'vestuario' else 'packaged_goods_v1',
+            "product_labels": [
+                {"key": "vertical", "value": vertical}
+            ]
+        }
+
+        logger.info(f"Adicionando produto SKU '{sku}' ao catálogo visual...")
+        response = product_search_client.create_product(
+            parent=location_path,
+            product=product,
+            product_id=sku  # Usamos nosso SKU como o ID no Google!
+        )
+        logger.info(f"Produto '{response.name}' criado no catálogo.")
+        return response.name
+    except Exception as e:
+        # Trata o erro caso o produto já exista (muito comum e esperado)
+        if 'already exists' in str(e):
+            logger.warning(
+                f"Produto SKU '{sku}' já existe no catálogo visual. Pulando criação.")
+            # Se já existe, construímos o path para a próxima etapa
+            project_id = credentials.project_id
+            location = 'southamerica-east1'
+            return f'projects/{project_id}/locations/{location}/products/{sku}'
+        else:
+            logger.error(
+                f"Erro ao adicionar produto SKU '{sku}' ao catálogo: {e}")
+            return None
+
+
+def add_reference_image_to_product(sku: str, image_hash: str, image_bytes: bytes) -> bool:
+    """
+    Adiciona uma imagem de referência a um produto existente no catálogo.
+    """
+    try:
+        product_search_client = vision.ProductSearchClient(
+            credentials=credentials)
+        project_id = credentials.project_id
+        location = 'southamerica-east1'
+        product_path = f'projects/{project_id}/locations/{location}/products/{sku}'
+
+        # O GCS URI é o método preferido, mas para simplificar, usaremos bytes
+        # Em produção, o ideal seria primeiro fazer upload da imagem para o Google Cloud Storage
+        # e usar o URI gcs_uri="gs://seu-bucket/imagem.jpg"
+
+        image = vision.Image(content=image_bytes)
+
+        # O ID da imagem de referência pode ser o hash da imagem
+        reference_image = vision.ReferenceImage(image=image)
+
+        logger.info(
+            f"Adicionando imagem de referência hash '{image_hash}' ao produto SKU '{sku}'...")
+        product_search_client.create_reference_image(
+            parent=product_path,
+            reference_image=reference_image,
+            reference_image_id=image_hash
+        )
+        logger.info(f"Imagem de referência adicionada com sucesso.")
+        return True
+    except Exception as e:
+        if 'already exists' in str(e):
+            logger.warning(
+                f"Imagem de referência hash '{image_hash}' já existe para o SKU '{sku}'. Pulando.")
+            return True
+        logger.error(
+            f"Erro ao adicionar imagem de referência ao SKU '{sku}': {e}")
+        return False
+
+# Adicione esta função inteira no final do arquivo
+def find_product_by_visual_search(image_bytes: bytes) -> Optional[Dict]:
+    """
+    Usa a Vision API Product Search para encontrar uma correspondência visual.
+    Retorna um dicionário com o 'product_id' (SKU) e 'confidence' se encontrar.
+    """
+    if not vision_client or not GOOGLE_PRODUCT_SET_ID:
+        logger.warning("Busca visual pulada: serviço não configurado.")
+        return None
+
+    try:
+        image = vision.Image(content=image_bytes)
+        
+        # O ID do projeto e a localização são necessários para o Product Search
+        project_id = credentials.project_id
+        location = 'southamerica-east1' # Ou a localização mais próxima de você
+        product_set_path = f'projects/{project_id}/locations/{location}/productSets/{GOOGLE_PRODUCT_SET_ID}'
+
+        logger.info(f"Iniciando busca visual no Product Set: {product_set_path}")
+        
+        response = vision_client.product_search(
+            image=image,
+            image_context={"product_search_params": {"product_set": product_set_path}}
+        )
+        
+        results = response.product_search_results.results
+        if not results:
+            logger.info("Nenhuma correspondência visual encontrada.")
+            return None
+            
+        best_match = results[0] # O primeiro resultado é o de maior confiança
+        product_id = best_match.product.name.split('/')[-1] # Extrai o ID do produto (nosso SKU)
+        confidence = best_match.score
+
+        logger.info(f"Correspondência visual encontrada! Produto ID: {product_id}, Confiança: {confidence:.2f}")
+
+        # Retornamos apenas se a confiança for alta para evitar falsos positivos
+        if confidence > 0.70:
+            return {"product_id": product_id, "confidence": confidence}
+        else:
+            logger.warning(f"Correspondência com baixa confiança ({confidence:.2f}) foi descartada.")
+            return None
+
+    except Exception as e:
+        logger.error(f"Erro durante a busca visual: {e}")
+        return None

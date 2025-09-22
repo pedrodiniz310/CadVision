@@ -3,18 +3,51 @@ import logging
 import sqlite3
 from typing import Dict, Optional
 # Módulo de configuração para verificar a existência de chaves de API
-from app.core.config import COSMOS_API_KEY
 # Serviços especializados que são orquestrados por este módulo
 from app.services.cosmos_service import fetch_product_by_gtin
 from app.services.search_service import search_web_for_product
 from app.services.advanced_inference_service import run_advanced_inference, extract_gtin_from_context
-
+from app.services.vision_service import find_product_by_visual_search
+from app.database import get_product_by_id
+from datetime import datetime
 # Em uma implementação de produção, você usaria uma biblioteca cliente de busca.
 # Ex: from some_search_engine_api import SearchClient
 
 logger = logging.getLogger(__name__)
 
-# search_client = SearchClient(api_key="SUA_CHAVE_DE_API_DE_BUSCA") # Exemplo
+
+def _post_process_and_validate_data(data: Dict, vision_data: Dict) -> Dict:
+    """
+    Aplica regras de negócio para limpar, padronizar e validar os dados
+    retornados pela IA ou outras fontes.
+    """
+    # 1. Capitalização e remoção de espaços
+    for key in ['title', 'brand', 'department', 'category', 'subcategory']:
+        if key in data and isinstance(data[key], str):
+            data[key] = data[key].strip().title()
+
+    # 2. Lógica de fallback de Título (regra de negócio crítica)
+    if not data.get('title'):
+        brand = data.get('brand')
+        category = data.get('category')
+        if brand and category:
+            data['title'] = f"{brand} - {category}"
+        elif vision_data.get('raw_text'):
+            first_words = ' '.join(vision_data['raw_text'].split()[:4])
+            data['title'] = f"Produto {first_words}"
+        else:
+            data['title'] = f"Produto Não Identificado - {datetime.now().strftime('%H:%M:%S')}"
+        logger.warning(
+            f"Título ausente, definido por fallback: {data['title']}")
+
+    # 3. Garante que o preço da imagem original tenha prioridade
+    data['price'] = data.get('price') or vision_data.get('price')
+
+    # 4. Garante um valor mínimo de confiança
+    # Confiança padrão pós-processamento
+    data['confidence'] = data.get('confidence', 0.8)
+
+    return data
 
 
 def _normalize_category(category_name: Optional[str]) -> str:
@@ -47,38 +80,57 @@ def _normalize_category(category_name: Optional[str]) -> str:
 
 def intelligent_text_analysis(vision_data: Dict, db: sqlite3.Connection, vertical: str) -> Dict:
     """
-    Executa o pipeline de análise. Garante que o formato de dados seja consistente
-    independentemente do caminho (rápido ou IA).
+    Executa o pipeline de análise completo, com busca visual como primeira etapa para vestuário.
     """
+    # --- ETAPA 1: TENTATIVA DE BUSCA VISUAL (LÓGICA DA AULA 3) ---
+    if vertical == 'vestuario':
+        logger.info("Iniciando Etapa 1 (Busca Visual).")
+        image_bytes = vision_data.get('original_image_bytes')
+
+        if image_bytes:
+            visual_match = find_product_by_visual_search(image_bytes)
+            if visual_match:
+                product_sku = visual_match.get("product_id")
+                # Busca o produto completo no NOSSO banco de dados usando o SKU
+                product_data = get_product_by_id(
+                    product_sku, db, find_by_sku=True)
+
+                if product_data:
+                    logger.info(
+                        f"Sucesso! Produto SKU {product_sku} encontrado via busca visual.")
+                    product_data['confidence'] = visual_match.get('confidence')
+                    # Retorna os dados do produto encontrado visualmente e encerra a função
+                    return product_data
+
+    # --- ETAPAS DE FALLBACK (SE A BUSCA VISUAL FALHAR OU NÃO FOR VESTUÁRIO) ---
+    logger.info(
+        "Busca visual falhou ou não aplicável. Prosseguindo com a análise de texto/GTIN.")
+
     detected_gtin = vision_data.get('gtin')
     processed_data = None
 
-    # Etapa 1: Tenta o Caminho Rápido se houver GTIN
-    if detected_gtin:
+    if vertical != 'vestuario' and detected_gtin:
         logger.info(
-            f"Iniciando Etapa 1 (Via Rápida) com GTIN: {detected_gtin}.")
+            f"Iniciando Etapa 2 (Via Rápida - GTIN) com GTIN: {detected_gtin}.")
         processed_data = fetch_product_by_gtin(detected_gtin)
 
-    # Etapa 2: Se o Caminho Rápido falhar ou não for aplicável, usa a IA
     if not processed_data:
         logger.info(
-            "Etapa 1 falhou ou não aplicável. Iniciando Etapa 2 (Inferência da IA).")
+            "Via Rápida falhou ou não aplicável. Iniciando Etapa 3 (Inferência da IA).")
         processed_data = run_advanced_inference(vision_data, [], vertical)
 
-    # A partir daqui, 'processed_data' sempre terá a estrutura {'base_data': ..., 'attributes': ...}
     base_data = processed_data.get("base_data", {})
     attributes = processed_data.get("attributes", {})
 
-    if not base_data or not base_data.get('title'):
-        logger.error(
-            "A análise não conseguiu identificar um título para o produto.")
-        return {'title': 'Falha ao analisar o produto', 'confidence': 0.1}
+    if not base_data:
+        logger.error("A análise inicial falhou em gerar dados base.")
+        return _post_process_and_validate_data({}, vision_data)
 
-    logger.info(f"Produto identificado: {base_data.get('title')}")
+    logger.info(f"Produto pré-identificado: {base_data.get('title')}")
 
-    # Etapa 3: Enriquece com GTIN via busca na web, se necessário (lógica de RAG)
+    # ETAPA DE ENRIQUECIMENTO (RAG)
     if not base_data.get('gtin'):
-        logger.info("Iniciando Etapa 3 (Enriquecimento com Busca na Web).")
+        logger.info("Iniciando Etapa de Enriquecimento com Busca na Web (RAG).")
         title = base_data.get('title')
         brand = base_data.get('brand')
 
@@ -93,65 +145,24 @@ def intelligent_text_analysis(vision_data: Dict, db: sqlite3.Connection, vertica
                 if found_gtin:
                     logger.info(
                         f"GTIN '{found_gtin}' extraído da busca. Validando...")
-                    # Valida o GTIN encontrado no Cosmos para obter dados canônicos
                     cosmos_response = fetch_product_by_gtin(found_gtin)
 
                     if cosmos_response and cosmos_response.get("base_data"):
                         logger.info(
                             "Sucesso! Dados validados e enriquecidos pelo Cosmos via RAG.")
-
-                        # Usa os dados do Cosmos como a fonte principal de verdade
+                        # Atualiza os dados base com as informações mais confiáveis do Cosmos
                         enriched_data = cosmos_response["base_data"]
+                        base_data.update(enriched_data)
 
-                        # Mantém o preço da imagem original, que é mais confiável
-                        enriched_data['price'] = base_data.get(
-                            'price') or vision_data.get('price')
-
-                        # Se for vestuário, anexa os atributos que a IA encontrou na Etapa 2
-                        if vertical == 'vestuario' and attributes:
-                            enriched_data['attributes'] = attributes
-
-                        # Normaliza a categoria como passo final
-                        enriched_data['category'] = _normalize_category(
-                            enriched_data.get('category'))
-
-                        return enriched_data  # Retorna os dados enriquecidos e encerra a função
-
-   # --- CORREÇÃO DEFINITIVA ---
-    # Etapa 4: Finalização e retorno. Prepara um dicionário 'plano' para o frontend.
-    # Cria uma cópia para não modificar o original
+    # ETAPA FINAL: PÓS-PROCESSAMENTO E RETORNO
     final_product_data = base_data.copy()
 
-    # Adiciona os atributos (se existirem) ao dicionário final
     if attributes:
         final_product_data['attributes'] = attributes
 
-    # Garante que o preço da imagem original seja considerado
-    final_product_data['price'] = base_data.get(
-        'price') or vision_data.get('price')
-    # Normaliza a categoria como passo final
-    final_product_data['category'] = _normalize_category(
-        final_product_data.get('category'))
-    # VALIDAÇÃO FINAL CRÍTICA
-    if not base_data.get('title') or base_data['title'].strip() == '':
-        # Fallback múltiplo para garantir um título
-        fallback_title = None
-        
-        # Tenta usar a marca + categoria
-        if base_data.get('brand') and base_data.get('category'):
-            fallback_title = f"{base_data['brand']} - {base_data['category']}"
-        # Tenta usar texto do OCR
-        elif vision_data.get('raw_text'):
-            first_words = ' '.join(vision_data['raw_text'].split()[:4])
-            fallback_title = f"Produto {first_words}"
-        # Último fallback
-        else:
-            fallback_title = f"Produto {vertical.title()} - {datetime.now().strftime('%H:%M:%S')}"
-        
-        base_data['title'] = fallback_title
-        logger.warning(f"Título definido por fallback: {fallback_title}")
-    
-    # Garantir que a confidence tenha um valor mínimo
-    base_data['confidence'] = base_data.get('confidence', 0.1)
-    
+    # Aplica a função de validação e limpeza antes de retornar.
+    # Esta função centraliza toda a lógica de fallback de título, priorização de preço, etc.
+    final_product_data = _post_process_and_validate_data(
+        final_product_data, vision_data)
+
     return final_product_data

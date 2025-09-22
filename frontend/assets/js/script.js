@@ -9,7 +9,9 @@ const CONFIG = {
 // ===== Estado global =====
 const STATE = {
   products: [],
-  lastImageFile: null,
+  lastTagFile: null,      // Para a foto da etiqueta
+  lastProductFile: null,  // Para a foto do produto
+  lastImageFile: null,    // Para a foto única do supermercado
   lastAIResult: null,
   lastImageHash: null,
   currentPage: "identify",
@@ -214,11 +216,13 @@ function cacheDOMElements() {
 
     // Formulário Supermercado
     "productFormSupermarket", "productNameSupermarket", "productBrandSupermarket",
+    "productSkuSupermarket", "productDepartmentSupermarket", "productSubcategorySupermarket", // <-- ADICIONADOS
     "productGTINSupermarket", "productCategorySupermarket", "productNCMSupermarket",
     "productCESTSupermarket", "productPriceSupermarket",
 
     // Formulário Vestuário
     "productFormClothing", "productNameClothing", "productBrandClothing",
+    "productSkuClothing", "productDepartmentClothing", "productSubcategoryClothing", // <-- ADICIONADOS
     "productCategoryClothing", "productPriceClothing", "productSizeClothing",
     "productColorClothing", "productFabricClothing", "productGenderClothing",
 
@@ -233,7 +237,11 @@ function cacheDOMElements() {
 
     // Dashboard
     "totalProducts", "totalAI", "successRate", "avgTime",
-    "btnRefreshDashboard"
+    "btnRefreshDashboard",
+    // interfacen de upload
+    "clothingUploadContainer", "supermarketUploadContainer",
+    "dropAreaTag", "fileInputTag", "uploadStatusTag",
+    "dropAreaProduct", "fileInputProduct", "uploadStatusProduct",
   ];
 
   ids.forEach(id => {
@@ -436,35 +444,52 @@ function setupEventListeners() {
   DOM.btnMenu?.addEventListener("click", () => toggleSidebar(true));
   DOM.sidebarOverlay?.addEventListener("click", () => toggleSidebar(false));
 
-  // --- NOVOS EVENTOS PARA SELEÇÃO DE VERTICAL ---
+  // Seleção de Vertical
   DOM.selectSupermercado?.addEventListener("click", () => selectVertical("supermercado"));
   DOM.selectVestuario?.addEventListener("click", () => selectVertical("vestuario"));
   DOM.btnBackToVertical?.addEventListener("click", resetToVerticalSelection);
 
-  // Upload de imagem
-  if (DOM.dropArea) {
+  // --- SEÇÃO DE UPLOAD DE IMAGEM ATUALIZADA ---
+  // Função auxiliar para configurar cada área de upload e evitar repetição de código
+  const setupUploadEvents = (dropArea, fileInput, type) => {
+    if (!dropArea || !fileInput) return;
+
+    // Prevenir comportamentos padrão do navegador para arrastar e soltar
     ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
-      DOM.dropArea.addEventListener(eventName, preventDefaults);
+      dropArea.addEventListener(eventName, preventDefaults);
     });
 
-    DOM.dropArea.addEventListener("dragenter", () => DOM.dropArea.classList.add("drag"));
-    DOM.dropArea.addEventListener("dragleave", () => DOM.dropArea.classList.remove("drag"));
-    DOM.dropArea.addEventListener("drop", handleDrop);
-    DOM.dropArea.addEventListener("click", () => DOM.fileInput.click());
-  }
+    // Adicionar/remover classe para feedback visual ao arrastar
+    dropArea.addEventListener("dragenter", () => dropArea.classList.add("drag"));
+    dropArea.addEventListener("dragleave", () => dropArea.classList.remove("drag"));
 
-  DOM.fileInput?.addEventListener("change", (e) => handleFiles(e.target.files));
+    // Lidar com o arquivo que foi solto na área
+    dropArea.addEventListener("drop", (e) => {
+      handleFiles(e.dataTransfer.files, type);
+      dropArea.classList.remove("drag");
+    });
+
+    // Lidar com o clique na área para abrir o seletor de arquivos
+    dropArea.addEventListener("click", () => fileInput.click());
+    // Lidar com a seleção de arquivo através do seletor
+    fileInput.addEventListener("change", (e) => handleFiles(e.target.files, type));
+  };
+
+  // Configura cada uma das nossas três áreas de upload distintas
+  setupUploadEvents(DOM.dropArea, DOM.fileInput, 'single');          // Para Supermercado
+  setupUploadEvents(DOM.dropAreaTag, DOM.fileInputTag, 'tag');        // Para Etiqueta de Vestuário
+  setupUploadEvents(DOM.dropAreaProduct, DOM.fileInputProduct, 'product');  // Para Produto de Vestuário
+  // --- FIM DA SEÇÃO ATUALIZADA ---
+
   DOM.btnIdentify?.addEventListener("click", processImageWithAI);
   DOM.btnRemoveImage?.addEventListener("click", resetIdentifyUI);
 
-  // --- AQUI ESTÁ A ADIÇÃO PARA A CÂMERA ---
+  // Câmera
   DOM.btnOpenCamera?.addEventListener('click', openCamera);
   DOM.cameraSnap?.addEventListener('click', snapPhoto);
   DOM.cameraCancel?.addEventListener('click', closeCamera);
-  // -----------------------------------------
 
-  // --- ALTERAÇÃO NOS FORMULÁRIOS ---
-  // Agora temos dois formulários para escutar
+  // Formulários de Produto
   DOM.productFormSupermarket?.addEventListener("submit", saveProduct);
   DOM.productFormClothing?.addEventListener("submit", saveProduct);
 
@@ -510,39 +535,110 @@ function setupEventListeners() {
         exportMenu.classList.remove('visible');
       }
     });
-    // Listener para o botão de refresh do dashboard
-    $("#btnRefreshDashboard")?.addEventListener("click", async (e) => {
-      const button = e.currentTarget;
-      const icon = button.querySelector('i');
-
-      icon.classList.add('refreshing'); // Adiciona classe para animação
-      button.disabled = true;
-
-      await loadDashboardData();
-
-      // Pequeno delay para o usuário perceber a atualização
-      setTimeout(() => {
-        icon.classList.remove('refreshing');
-        button.disabled = false;
-      }, 500);
-    });
   }
+
+  // Listener para o botão de refresh do dashboard
+  $("#btnRefreshDashboard")?.addEventListener("click", async (e) => {
+    const button = e.currentTarget;
+    const icon = button.querySelector('i');
+
+    icon.classList.add('refreshing');
+    button.disabled = true;
+
+    await loadDashboardData();
+
+    setTimeout(() => {
+      icon.classList.remove('refreshing');
+      button.disabled = false;
+    }, 500);
+  });
 }
+
+// SUBSTITUA a sua função handleFiles por esta:
+function handleFiles(files, type) {
+  if (!files || files.length === 0) return;
+  const file = files[0];
+
+  // 1. Validações (mantidas)
+  if (!CONFIG.SUPPORTED_FORMATS.includes(file.type)) {
+    return showNotification("Formato de arquivo não suportado.", "error");
+  }
+  if (file.size > CONFIG.MAX_FILE_SIZE) {
+    return showNotification("Arquivo muito grande (máx. 10MB).", "error");
+  }
+
+  // 2. Lógica inteligente para saber ONDE salvar o arquivo e ONDE mostrar o status
+  let fileStateProperty;
+  let statusElement;
+  let statusPrefix;
+
+  if (type === 'tag') {
+    fileStateProperty = 'lastTagFile';
+    statusElement = DOM.uploadStatusTag;
+    statusPrefix = 'Etiqueta:';
+  } else if (type === 'product') {
+    fileStateProperty = 'lastProductFile';
+    statusElement = DOM.uploadStatusProduct;
+    statusPrefix = 'Produto:';
+  } else { // 'single' para Supermercado
+    fileStateProperty = 'lastImageFile';
+    statusElement = DOM.uploadStatus;
+    statusPrefix = 'Imagem:';
+  }
+
+  // 3. Atualiza o estado da aplicação com o arquivo correto
+  STATE[fileStateProperty] = file;
+
+  // 4. Atualiza a interface com o nome do arquivo no local correto
+  if (statusElement) {
+    statusElement.textContent = `${statusPrefix} ${file.name}`;
+  }
+
+  // 5. Habilita os botões
+  // O botão de identificar só é habilitado se tivermos a imagem da etiqueta (ou a única do supermercado)
+  DOM.btnIdentify.disabled = !(STATE.lastTagFile || STATE.lastImageFile);
+  DOM.btnRemoveImage.style.display = "inline-flex";
+
+  Logger.log(`Arquivo '${file.name}' carregado para a área '${type}'.`, 'info');
+}
+
 
 // Em script.js
 
 function selectVertical(vertical) {
   STATE.selectedVertical = vertical;
   DOM.verticalSelector.style.display = 'none';
-  DOM.identificationWorkflow.style.display = 'grid'; // Usa 'grid' para manter o layout
+  DOM.identificationWorkflow.style.display = 'grid';
+
+  if (vertical === 'vestuario') {
+    DOM.clothingUploadContainer.style.display = 'block';
+    DOM.supermarketUploadContainer.style.display = 'none';
+    DOM.productFormClothing.style.display = 'block';
+    DOM.productFormSupermarket.style.display = 'none';
+  } else {
+    DOM.clothingUploadContainer.style.display = 'none';
+    DOM.supermarketUploadContainer.style.display = 'block';
+    DOM.productFormSupermarket.style.display = 'block';
+    DOM.productFormClothing.style.display = 'none';
+  }
+  DOM.formPlaceholder.style.display = 'none';
   Logger.log(`Vertical selecionada: ${vertical}`, "info");
 }
 
+// SUBSTITUA a função resetToVerticalSelection por esta:
 function resetToVerticalSelection() {
-  resetIdentifyUI(); // Limpa tudo
+  resetIdentifyUI();
   STATE.selectedVertical = null;
-  DOM.verticalSelector.style.display = 'grid'; // Usa 'grid'
+  DOM.verticalSelector.style.display = 'grid';
   DOM.identificationWorkflow.style.display = 'none';
+
+  // --- LÓGICA NOVA ADICIONADA ---
+  // Garante que os formulários sejam escondidos e o placeholder reapareça
+  DOM.productFormSupermarket.style.display = 'none';
+  DOM.productFormClothing.style.display = 'none';
+  DOM.formPlaceholder.style.display = 'block';
+  // --- FIM DA LÓGICA NOVA ---
+
   Logger.log("Seleção de vertical reiniciada.", "info");
 }
 // ===== Navegação =====
@@ -589,45 +685,66 @@ function handleDrop(e) {
   handleFiles(files);
 }
 
-function handleFiles(files) {
+function handleFiles(files, type) {
   if (!files || files.length === 0) return;
-
   const file = files[0];
 
-  // Validar tipo de arquivo
   if (!CONFIG.SUPPORTED_FORMATS.includes(file.type)) {
-    Logger.log("Formato de arquivo não suportado. Use JPEG, PNG, WebP, BMP ou GIF.", "error");
-    showNotification("Formato de arquivo não suportado", "error");
-    return;
+    return showNotification("Formato de arquivo não suportado.", "error");
   }
-
-  // Validar tamanho do arquivo
   if (file.size > CONFIG.MAX_FILE_SIZE) {
-    Logger.log("Arquivo muito grande. O tamanho máximo é 10MB.", "error");
-    showNotification("Arquivo muito grande (máx. 10MB)", "error");
-    return;
+    return showNotification("Arquivo muito grande (máx. 10MB).", "error");
   }
 
-  STATE.lastImageFile = file;
-  DOM.btnIdentify.disabled = false;
+  let fileStateProperty;
+  let statusElement;
+  let statusPrefix;
+
+  // Define qual variável de estado e qual elemento de status usar
+  if (type === 'tag') {
+    fileStateProperty = 'lastTagFile';
+    statusElement = DOM.uploadStatusTag;
+    statusPrefix = 'Etiqueta:';
+  } else if (type === 'product') {
+    fileStateProperty = 'lastProductFile';
+    statusElement = DOM.uploadStatusProduct;
+    statusPrefix = 'Produto:';
+  } else { // 'single' para Supermercado
+    fileStateProperty = 'lastImageFile';
+    statusElement = DOM.uploadStatus;
+    statusPrefix = 'Imagem:';
+  }
+
+  STATE[fileStateProperty] = file;
+
+  // ATUALIZAÇÃO IMPORTANTE: Verifica se o elemento de status existe antes de usá-lo
+  if (statusElement) {
+    statusElement.textContent = `${statusPrefix} ${file.name}`;
+  } else {
+    // Para supermercado, ainda usamos o preview geral
+    DOM.uploadStatus.textContent = `${statusPrefix} ${file.name}`;
+  }
+
+  // Mostra a pré-visualização APENAS para o fluxo de supermercado
+  if (type === 'single' && DOM.imagePreview) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      DOM.imagePreview.src = e.target.result;
+      DOM.imagePreview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+
+  DOM.btnIdentify.disabled = !(STATE.lastTagFile || STATE.lastImageFile);
   DOM.btnRemoveImage.style.display = "inline-flex";
-  DOM.uploadStatus.textContent = `Imagem carregada: ${file.name} (${formatFileSize(file.size)})`;
 
-  // Pré-visualização da imagem
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    DOM.imagePreview.src = e.target.result;
-    DOM.imagePreview.style.display = "block";
-  };
-  reader.readAsDataURL(file);
-
-  updateAIStatus("Pronto para análise", "info");
-  Logger.log(`Imagem carregada: ${file.name}`, "success");
+  Logger.log(`Arquivo '${file.name}' carregado para a área '${type}'.`, 'info');
 }
 
 async function processImageWithAI() {
-  if (!STATE.lastImageFile || !STATE.selectedVertical) {
-    Logger.log("Nenhuma imagem ou vertical selecionada para análise.", "warning");
+  const fileToProcess = STATE.selectedVertical === 'vestuario' ? STATE.lastTagFile : STATE.lastImageFile;
+  if (!fileToProcess) {
+    showNotification("Por favor, envie a imagem da etiqueta para análise.", "error");
     return;
   }
 
@@ -732,21 +849,28 @@ function fillFormWithAIResults(result) {
   // Lógica para mostrar e preencher o formulário correto
   if (vertical === 'vestuario') {
     DOM.productFormClothing.style.display = 'block';
+    // --- Campos de Vestuário ---
+    $('#productSkuClothing').value = product.sku || ''; // <-- ADICIONADO
     $('#productNameClothing').value = product.title || '';
     $('#productBrandClothing').value = product.brand || '';
+    $('#productDepartmentClothing').value = product.department || ''; // <-- ADICIONADO
     $('#productCategoryClothing').value = product.category || 'Vestuário';
+    $('#productSubcategoryClothing').value = product.subcategory || ''; // <-- ADICIONADO
     $('#productPriceClothing').value = product.price ? product.price.toFixed(2) : '';
-    // Preenche os campos específicos de vestuário
     $('#productSizeClothing').value = attributes.size || '';
     $('#productColorClothing').value = attributes.color || '';
     $('#productFabricClothing').value = attributes.fabric || '';
     $('#productGenderClothing').value = attributes.gender || '';
   } else { // Padrão para supermercado
     DOM.productFormSupermarket.style.display = 'block';
+    // --- Campos de Supermercado ---
+    $('#productSkuSupermarket').value = product.sku || ''; // <-- ADICIONADO
     $('#productNameSupermarket').value = product.title || '';
     $('#productBrandSupermarket').value = product.brand || '';
     $('#productGTINSupermarket').value = product.gtin || '';
+    $('#productDepartmentSupermarket').value = product.department || ''; // <-- ADICIONADO
     $('#productCategorySupermarket').value = product.category || 'Alimentos';
+    $('#productSubcategorySupermarket').value = product.subcategory || ''; // <-- ADICIONADO
     $('#productNCMSupermarket').value = product.ncm || '';
     $('#productCESTSupermarket').value = product.cest || '';
     $('#productPriceSupermarket').value = product.price ? product.price.toFixed(2) : '';
@@ -754,24 +878,34 @@ function fillFormWithAIResults(result) {
 }
 
 // Em script.js
+// SUBSTITUA a sua função resetIdentifyUI por esta:
 function resetIdentifyUI() {
   STATE.lastImageFile = null;
+  STATE.lastTagFile = null;
+  STATE.lastProductFile = null;
   STATE.lastAIResult = null;
-  STATE.lastImageHash = null; // Limpa o hash também
+  STATE.lastImageHash = null;
 
-  DOM.imagePreview.style.display = "none";
-  DOM.imagePreview.src = "";
+  if (DOM.fileInput) DOM.fileInput.value = '';
+  if (DOM.fileInputTag) DOM.fileInputTag.value = '';
+  if (DOM.fileInputProduct) DOM.fileInputProduct.value = '';
+
+  // Limpa a pré-visualização e todos os textos de status
+  if (DOM.imagePreview) {
+    DOM.imagePreview.style.display = "none";
+    DOM.imagePreview.src = "";
+  }
+  if (DOM.uploadStatus) DOM.uploadStatus.textContent = "Aguardando imagem...";
+  if (DOM.uploadStatusTag) DOM.uploadStatusTag.textContent = "";
+  if (DOM.uploadStatusProduct) DOM.uploadStatusProduct.textContent = "";
+
   DOM.btnIdentify.disabled = true;
   DOM.btnRemoveImage.style.display = "none";
-  DOM.uploadStatus.textContent = "Aguardando imagem...";
 
-  // Limpa ambos os formulários e os esconde
   DOM.productFormSupermarket.reset();
   DOM.productFormClothing.reset();
   DOM.productFormSupermarket.style.display = 'none';
   DOM.productFormClothing.style.display = 'none';
-
-  // Mostra o placeholder novamente
   DOM.formPlaceholder.style.display = 'block';
 
   updateAIStatus("Aguardando análise", "info");
@@ -924,17 +1058,20 @@ async function saveProduct(e) {
     return;
   }
 
+  // 1. Coleta todos os dados do formulário em um objeto JavaScript, como antes.
   let productData = {
-    vertical: activeFormId, // Define a vertical com base no formulário ativo
+    vertical: activeFormId,
     confidence: STATE.lastAIResult?.confidence || null,
-    image_hash: STATE.lastImageHash || null
+    image_hash: STATE.lastAIResult?.image_hash || null // Hash da etiqueta, para referência
   };
 
-  // Coleta dados do formulário correto com base no que está visível
   if (activeFormId === 'vestuario') {
+    productData.sku = DOM.productSkuClothing.value.trim() || null;
     productData.title = DOM.productNameClothing.value.trim();
     productData.brand = DOM.productBrandClothing.value.trim() || null;
+    productData.department = DOM.productDepartmentClothing.value.trim() || null;
     productData.category = DOM.productCategoryClothing.value || null;
+    productData.subcategory = DOM.productSubcategoryClothing.value.trim() || null;
     productData.price = DOM.productPriceClothing.value ? parseFloat(DOM.productPriceClothing.value) : null;
     productData.attributes = {
       size: DOM.productSizeClothing.value.trim() || null,
@@ -943,29 +1080,39 @@ async function saveProduct(e) {
       gender: DOM.productGenderClothing.value || null
     };
   } else { // 'supermercado'
+    productData.sku = DOM.productSkuSupermarket.value.trim() || null;
     productData.title = DOM.productNameSupermarket.value.trim();
     productData.brand = DOM.productBrandSupermarket.value.trim() || null;
     productData.gtin = DOM.productGTINSupermarket.value.trim() || null;
+    productData.department = DOM.productDepartmentSupermarket.value.trim() || null;
     productData.category = DOM.productCategorySupermarket.value || null;
+    productData.subcategory = DOM.productSubcategorySupermarket.value.trim() || null;
     productData.ncm = DOM.productNCMSupermarket.value.trim() || null;
     productData.cest = DOM.productCESTSupermarket.value.trim() || null;
     productData.price = DOM.productPriceSupermarket.value ? parseFloat(DOM.productPriceSupermarket.value) : null;
-  }
-
-  // Validação do título no frontend para feedback imediato
-  if (!productData.title) {
-    showNotification("O título do produto não pode ser vazio.", "error");
-    return;
   }
 
   const submitButton = e.target.querySelector('button[type="submit"]');
   setButtonLoadingState(submitButton, true, "Salvando...");
 
   try {
+    // 2. Cria um objeto FormData. É como um formulário virtual.
+    const formData = new FormData();
+
+    // 3. Adiciona os dados do produto. Como não podemos enviar um objeto diretamente,
+    // nós o convertemos para uma string JSON.
+    formData.append('product_data', JSON.stringify(productData));
+
+    // 4. Se for vestuário e o usuário enviou a foto do produto, anexa o arquivo.
+    if (activeFormId === 'vestuario' && STATE.lastProductFile) {
+      formData.append('product_image', STATE.lastProductFile);
+    }
+
+    // 5. Envia o FormData. O navegador definirá o 'Content-Type' como 'multipart/form-data'
+    // automaticamente. Não precisamos mais do header manual.
     const response = await fetch(`${CONFIG.BASE_URL}/products`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(productData)
+      body: formData
     });
 
     const result = await response.json();
@@ -1179,41 +1326,42 @@ function renderProducts() {
         <thead>
           <tr>
             <th>Produto</th>
+            <th>SKU</th> 
             <th>Marca</th>
-            <th>Categoria</th>
+            <th>Categorização</th> 
             <th>GTIN/EAN</th>
             <th>Cadastrado em</th>
             <th class="text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
-          ${STATE.products.map(product => `
-            <tr id="product-row-${product.id}">
-              <td data-label="Produto" class="product-title">
-                ${escapeHtml(product.title)}
-                ${product.confidence ? `<span class="badge badge-primary">${Math.round(product.confidence * 100)}%</span>` : ''}
-              </td>
-              <td data-label="Marca">${escapeHtml(product.brand || 'N/A')}</td>
-              <td data-label="Categoria">${escapeHtml(product.category || 'N/A')}</td>
-              <td data-label="GTIN/EAN" class="mono">${escapeHtml(product.gtin || 'N/A')}</td>
-              <td data-label="Cadastrado em">${new Date(product.created_at).toLocaleDateString('pt-BR')}</td>
-              <td class="actions">
-                <button class="btn btn-secondary btn-sm btn-edit" data-id="${product.id}" title="Editar">
-                  <i class="fas fa-pencil-alt"></i>
-                </button>
-                <button class="btn btn-danger btn-sm btn-delete" data-id="${product.id}" data-title="${escapeHtml(product.title)}" title="Excluir">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-          `).join('')}
+          ${STATE.products.map(product => {
+    // Cria a string de categorização completa
+    const fullCategory = [product.department, product.category, product.subcategory]
+      .filter(Boolean) // Remove itens nulos ou vazios
+      .join(' > ');
+
+    return `
+              <tr id="product-row-${product.id}">
+                <td data-label="Produto" class="product-title">
+                  ${escapeHtml(product.title)}
+                  ${product.confidence ? `<span class="badge badge-primary">${Math.round(product.confidence * 100)}%</span>` : ''}
+                </td>
+                <td data-label="SKU" class="mono">${escapeHtml(product.sku || 'N/A')}</td>
+                <td data-label="Marca">${escapeHtml(product.brand || 'N/A')}</td>
+                <td data-label="Categorização">${escapeHtml(fullCategory || 'N/A')}</td>
+                <td data-label="GTIN/EAN" class="mono">${escapeHtml(product.gtin || 'N/A')}</td>
+                <td data-label="Cadastrado em">${new Date(product.created_at).toLocaleDateString('pt-BR')}</td>
+                <td class="actions">
+                  </td>
+              </tr>
+            `;
+  }).join('')}
         </tbody>
       </table>
     </div>`;
 
   DOM.productsContainer.innerHTML = tableHTML;
-
-  // Chama a nova função para ativar os botões
   setupProductEventListeners();
 }
 

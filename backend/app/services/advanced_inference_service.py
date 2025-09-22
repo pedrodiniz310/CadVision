@@ -35,10 +35,13 @@ def run_advanced_inference(vision_data: Dict, search_results: List[Dict], vertic
 
     # Retorna uma estrutura padronizada com dados base e atributos específicos
     base_data = {
+        'sku': extracted_data.get("sku"),  # NOVO CAMPO
         'gtin': extracted_data.get("gtin"),
         'title': extracted_data.get("title"),
         'brand': extracted_data.get("brand"),
+        'department': extracted_data.get("department"),  # NOVO CAMPO
         'category': _normalize_category(extracted_data.get("category")),
+        'subcategory': extracted_data.get("subcategory"),  # NOVO CAMPO
         'price': extracted_data.get("price") or vision_data.get('price'),
         'confidence': 0.95,  # Confiança base da IA
         'vertical': vertical
@@ -210,8 +213,6 @@ def _build_llm_prompt(ocr_text: str, detected_logos: List[str], search_results: 
     """
     Cria o prompt estruturado para ser enviado ao LLM, adaptado para a vertical do produto.
     """
-    # --- INÍCIO DA CORREÇÃO ---
-    # Formata os resultados de busca para adicionar contexto ao prompt
     search_context = ""
     if search_results:
         search_context = "\nCONTEXTO ADICIONAL DE BUSCA NA WEB:\n"
@@ -219,7 +220,6 @@ def _build_llm_prompt(ocr_text: str, detected_logos: List[str], search_results: 
             title = res.get('title', 'N/A')
             snippet = res.get('snippet', 'N/A')
             search_context += f"{i}. {title}: {snippet}\n"
-    # --- FIM DA CORREÇÃO ---
 
     logos_context = ""
     if detected_logos:
@@ -231,28 +231,34 @@ def _build_llm_prompt(ocr_text: str, detected_logos: List[str], search_results: 
 
     if vertical == 'vestuario':
         json_structure = """
-    - "title": nome completo do produto (ex: "Camisa Polo Masculina", "Tênis de Corrida Nike Revolution 6").
-    - "brand": marca do produto (ex: "Lacoste", "Nike").
-    - "category": "Vestuário".
-    - "size": tamanho da peça (ex: "P", "M", "G", "42").
-    - "color": cor principal da peça (ex: "Azul Marinho", "Branco").
-    - "fabric": tecido ou material principal (ex: "Algodão Piquet", "Poliéster").
-    - "gender": gênero (ex: "Masculino", "Feminino", "Unissex").
+    - "sku": código de referência único do produto (SKU), se visível. Ex: "8806091480130".
+    - "title": nome completo do produto. Ex: "Camisa Polo Masculina Piquet".
+    - "brand": marca do produto. Ex: "Lacoste".
+    - "department": departamento principal. Ex: "Masculino", "Feminino", "Infantil".
+    - "category": tipo de peça. Ex: "Camisas", "Calças", "Calçados".
+    - "subcategory": especificação da peça. Ex: "Camisa Polo", "Calça Jeans Skinny", "Tênis Casual".
+    - "size": tamanho da peça. Ex: "M", "G", "42".
+    - "color": cor principal da peça. Ex: "Azul Marinho".
+    - "fabric": tecido ou material principal. Ex: "100% Algodão".
+    - "gender": gênero. Ex: "Masculino", "Feminino", "Unissex".
     - "gtin": código GTIN/EAN de 13 dígitos, se visível.
     - "price": preço do produto, se visível.
     """
-        instructions = "Foque em extrair atributos de vestuário como tamanho, cor, tecido e gênero."
+        instructions = "Seja extremamente detalhista na categorização. Se um campo não for encontrado, retorne null. Infira o departamento e a categoria a partir do título, se necessário."
     else:  # Default para 'supermercado'
         json_structure = """
-    - "title": nome completo do produto, incluindo peso/volume (ex: "Arroz Integral Tipo 1 1kg").
-    - "brand": marca do produto (ex: "Tio João").
-    - "category": categoria principal (ex: "Alimentos", "Bebidas").
+    - "sku": código de referência único (SKU), se visível.
+    - "title": nome completo do produto, incluindo peso/volume. Ex: "Arroz Integral Tipo 1 Tio João 1kg".
+    - "brand": marca do produto. Ex: "Tio João".
+    - "department": departamento principal. Ex: "Mercearia", "Bebidas", "Limpeza".
+    - "category": categoria principal. Ex: "Grãos e Cereais", "Refrigerantes", "Lava Roupas".
+    - "subcategory": subcategoria do produto. Ex: "Arroz Agulhinha", "Refrigerante Cola", "Sabão em Pó".
     - "gtin": código GTIN/EAN de 13 dígitos, se visível.
     - "ncm": código NCM no formato 9999.99.99, se visível.
     - "cest": código CEST no formato 99.999.99, se visível.
     - "price": preço do produto, se visível.
     """
-        instructions = "Foque em extrair atributos de supermercado como peso/volume, NCM e CEST."
+        instructions = "Seja preciso com as unidades (kg, g, L, ml). Se um campo não for encontrado, retorne null. Infira o departamento e a categoria a partir do título."
 
     # Montagem do prompt final
     prompt = f"""

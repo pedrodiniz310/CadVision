@@ -77,20 +77,23 @@ def init_db():
         with get_db_connection() as conn:
             cur = conn.cursor()
 
-            # 1. Tabela principal de PRODUTOS - AGORA COM A COLUNA 'vertical'
+            # 1. Tabela principal de PRODUTOS - AGORA COM SKU E CATEGORIZAÇÃO EXPANDIDA
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS products (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    sku TEXT UNIQUE,                          -- NOVO CAMPO: Identificador único de estoque
                     gtin TEXT UNIQUE,
                     title TEXT NOT NULL,
                     brand TEXT,
-                    category TEXT,
+                    department TEXT,                          -- NOVO CAMPO: Ex: Mercearia, Vestuário Masculino
+                    category TEXT,                            -- CAMPO EXISTENTE: Ex: Grãos, Camisas
+                    subcategory TEXT,                         -- NOVO CAMPO: Ex: Arroz Branco, Camisa Polo
                     price REAL,
                     ncm TEXT,
                     cest TEXT,
                     confidence REAL,
                     image_hash TEXT,
-                    vertical TEXT NOT NULL DEFAULT 'supermercado', -- <- NOVA COLUNA
+                    vertical TEXT NOT NULL DEFAULT 'supermercado',
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
                 )
