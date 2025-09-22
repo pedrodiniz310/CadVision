@@ -4,6 +4,7 @@ import json
 import re
 from typing import Dict, Any, List
 import logging
+from app.core.logging_config import log_structured_event
 
 # Configurar logging
 logger = logging.getLogger(__name__)
@@ -108,34 +109,102 @@ def extract_gtin_from_context(title: str, search_results: List[Dict]) -> Dict:
 # === FUNÇÕES DE LÓGICA INTERNA ===============================================
 # =============================================================================
 
+# backend/app/services/advanced_inference_service.py
+
 def extract_product_info(ocr_text: str, detected_logos: List[str], search_results: List[Dict], vertical: str) -> Dict[str, Any]:
     """
-    Extrai informações estruturadas de produto do texto usando Gemini API.
+    Extrai informações com logs detalhados da IA.
     """
+    log_structured_event("ai_service", "extraction_started", {
+        "vertical": vertical,
+        "ocr_text_length": len(ocr_text),
+        "logos_count": len(detected_logos),
+        "search_results_count": len(search_results)
+    }, "DEBUG")
+
     try:
         prompt = _build_llm_prompt(
             ocr_text, detected_logos, search_results, vertical)
 
+        # Log do prompt (apenas primeiros 500 caracteres para não poluir)
+        log_structured_event("ai_service", "prompt_generated", {
+            "prompt_preview": prompt[:500] + "..." if len(prompt) > 500 else prompt
+        }, "DEBUG")
+
         model = genai.GenerativeModel('gemini-1.5-pro-latest')
         response = model.generate_content(prompt)
         response_text = response.text.strip()
+
+        log_structured_event("ai_service", "ai_response_received", {
+            "response_length": len(response_text),
+            "response_preview": response_text[:200] + "..." if len(response_text) > 200 else response_text
+        }, "DEBUG")
+
         json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
 
         if json_match:
             json_str = json_match.group()
-            return json.loads(json_str)
+            extracted_data = json.loads(json_str)
+
+            log_structured_event("ai_service", "json_parsed_successfully", {
+                "title_extracted": extracted_data.get("title"),
+                "brand_extracted": extracted_data.get("brand"),
+                "category_extracted": extracted_data.get("category")
+            })
+
+            # Validação do título
+            if not extracted_data.get("title") or extracted_data["title"].strip() == "":
+                log_structured_event("ai_service", "empty_title_from_ai", {
+                    # Log parcial para debug
+                    "raw_response": response_text[:300]
+                }, "WARNING")
+
+                # Fallback
+                first_words = ' '.join(ocr_text.split()[:5])
+                extracted_data["title"] = f"Produto {first_words}" if first_words else "Produto Não Identificado"
+
+                log_structured_event("ai_service", "title_fallback_applied", {
+                    "new_title": extracted_data["title"]
+                })
+
+            return extracted_data
+
         else:
-            # Fallback para caso a resposta seja um JSON limpo
-            return json.loads(response_text)
+            log_structured_event("ai_service", "json_parse_failed", {
+                "response_text": response_text[:300]  # Log parcial
+            }, "ERROR")
+
+            # Fallback robusto
+            return _create_fallback_response(ocr_text)
 
     except Exception as e:
-        logger.error(f"Erro ao extrair informações do produto: {e}")
-        return {"title": "Produto não identificado"}
+        log_structured_event("ai_service", "extraction_failed", {
+            "error": str(e),
+            "error_type": type(e).__name__
+        }, "ERROR")
+
+        return _create_fallback_response(ocr_text)
 
 
+def _create_fallback_response(ocr_text: str) -> Dict:
+    """Cria resposta fallback com log"""
+    fallback_data = {
+        "title": "Produto Não Identificado",
+        "brand": "",
+        "category": "Outros",
+        "gtin": "",
+        "price": None
+    }
+
+    log_structured_event("ai_service", "using_fallback_response", {
+        "fallback_data": fallback_data
+    }, "WARNING")
+
+    return fallback_data
 # =============================================================================
 # === FUNÇÕES AUXILIARES (HELPERS) ============================================
 # =============================================================================
+
 
 def _build_llm_prompt(ocr_text: str, detected_logos: List[str], search_results: List[Dict], vertical: str) -> str:
     """

@@ -887,19 +887,42 @@ async function exportProducts(format = 'csv') {
   }
 }
 
-// Em script.js
-// Em frontend/assets/js/script.js
 
-// Em frontend/assets/js/script.js
-// SUBSTITUA A SUA FUNÇÃO 'saveProduct' POR ESTA:
+function validateProductForm(vertical) {
+  let isValid = true;
+  let titleField, titleValue;
+
+  if (vertical === 'vestuario') {
+    titleField = DOM.productNameClothing;
+    titleValue = titleField.value.trim();
+  } else {
+    titleField = DOM.productNameSupermarket;
+    titleValue = titleField.value.trim();
+  }
+
+  if (!titleValue) {
+    showNotification("Por favor, insira um título para o produto", "error");
+    titleField.style.borderColor = "var(--error)";
+    titleField.focus();
+    isValid = false;
+  } else {
+    titleField.style.borderColor = "";
+  }
+
+  return isValid;
+}
 
 async function saveProduct(e) {
   e.preventDefault();
 
-  // Determina qual formulário está ativo (visível) no momento do clique
   const activeFormId = DOM.productFormSupermarket.style.display === 'block'
     ? 'supermercado'
     : 'vestuario';
+
+  // VALIDAÇÃO ANTES DO ENVIO
+  if (!validateProductForm(activeFormId)) {
+    return;
+  }
 
   let productData = {
     vertical: activeFormId, // Define a vertical com base no formulário ativo

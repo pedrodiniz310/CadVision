@@ -1,16 +1,17 @@
 # backend/app/database.py
 import sqlite3
-import logging
 import threading
 from pathlib import Path
 from contextlib import contextmanager
 from typing import Generator, Optional, Any, Dict, List
 from app.core.config import DB_PATH
+import logging
+from app.core.logging_config import log_structured_event
 
+logger = logging.getLogger(__name__)
 # Garantir que o diretório existe
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
-logger = logging.getLogger(__name__)
 
 # Lock para operações thread-safe
 db_lock = threading.Lock()
@@ -180,17 +181,27 @@ def init_db():
 
 # Em backend/app/database.py
 
+# backend/app/database.py
+
 def insert_product(product_data: Dict[str, Any], db: sqlite3.Connection) -> Optional[int]:
     """
     Insere um novo produto e seus atributos de forma transacional e segura.
     """
     cur = db.cursor()
 
-    # Validação defensiva para garantir que o título está presente
-    if not product_data.get('title'):
+    # LOG DETALHADO PARA DEBUG
+    logger.info(
+        f"Tentativa de inserir produto com dados: { {k: v for k, v in product_data.items() if k != 'attributes'} }")
+
+    # Validação defensiva melhorada
+    title = product_data.get('title', '').strip()
+    if not title:
         logger.error(
-            "Tentativa de inserir produto sem título. Dados recebidos: %s", product_data)
-        raise ValueError("O título do produto não pode ser vazio.")
+            f"Título vazio após todas as validações. Dados: {product_data}")
+        raise ValueError(
+            "O título do produto não pode ser vazio após validações.")
+
+    # ... resto do código existente ...
 
     # Separa os atributos específicos (ex: size, color) do dicionário principal
     attributes = product_data.pop('attributes', None)

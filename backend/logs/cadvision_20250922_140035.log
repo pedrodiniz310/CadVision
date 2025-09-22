@@ -1,0 +1,188 @@
+2025-09-22 14:00:36 - root - INFO - [logging_config.py:51] - Logging configurado. Arquivo: C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\logs\cadvision_20250922_140035.log
+2025-09-22 14:00:36 - app - INFO - [logging_config.py:68] - EVENT: startup - DATA: {'timestamp': '2025-09-22T14:00:36.536060', 'service': 'app', 'event': 'startup', 'data': {'version': '1.1.0'}}
+2025-09-22 14:00:36 - app.database - INFO - [database.py:172] - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 14:00:36 - app - INFO - [logging_config.py:68] - EVENT: database_initialized - DATA: {'timestamp': '2025-09-22T14:00:36.539044', 'service': 'app', 'event': 'database_initialized', 'data': {}}
+2025-09-22 14:00:45 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-22T14:00:45.614373', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'supermercado', 'filename': 'Imagem do WhatsApp de 2025-09-17 à(s) 18.48.26_20d1bdb5.jpg', 'content_type': 'image/jpeg'}}
+2025-09-22 14:00:45 - vision/identify - INFO - [logging_config.py:68] - EVENT: image_loaded - DATA: {'timestamp': '2025-09-22T14:00:45.615372', 'service': 'vision/identify', 'event': 'image_loaded', 'data': {'size_bytes': 122489, 'hash': 'e909fe0f6cb4c1043e03c0e2d2763f0d'}}
+2025-09-22 14:00:45 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_start - DATA: {'timestamp': '2025-09-22T14:00:45.616392', 'service': 'vision/identify', 'event': 'vision_extraction_start', 'data': {}}
+2025-09-22 14:00:45 - app.services.vision_service - INFO - [vision_service.py:108] - Imagem aprimorada para OCR.
+2025-09-22 14:00:49 - app.services.vision_service - INFO - [vision_service.py:181] - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-22 14:00:49 - app.services.vision_service - INFO - [vision_service.py:276] - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-22 14:00:49 - app.services.vision_service - INFO - [vision_service.py:294] - GTIN validado com sucesso: 7891340365576
+2025-09-22 14:00:49 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_complete - DATA: {'timestamp': '2025-09-22T14:00:49.543566', 'service': 'vision/identify', 'event': 'vision_extraction_complete', 'data': {'success': True, 'text_length': 15, 'gtin_found': True}}
+2025-09-22 14:00:49 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-22T14:00:49.543566', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'supermercado'}}
+2025-09-22 14:00:49 - app.services.product_service - INFO - [product_service.py:58] - Iniciando Etapa 1 (Via Rápida) com GTIN: 7891340365576.
+2025-09-22 14:00:50 - app.services.cosmos_service - INFO - [cosmos_service.py:72] - 📦 Dados formatados do Cosmos: {'gtin': '7891340365576', 'title': 'BISC LOOK WAFER 55G BRIGADEIRO', 'brand': '', 'category': 'Biscoito Wafer', 'ncm': '19053200', 'cest': '', 'confidence': 0.99, 'vertical': 'supermercado'}
+2025-09-22 14:00:50 - app.services.product_service - INFO - [product_service.py:77] - Produto identificado: BISC LOOK WAFER 55G BRIGADEIRO
+2025-09-22 14:00:50 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_complete - DATA: {'timestamp': '2025-09-22T14:00:50.968566', 'service': 'vision/identify', 'event': 'intelligent_analysis_complete', 'data': {'title': 'BISC LOOK WAFER 55G BRIGADEIRO', 'brand': ''}}
+2025-09-22 14:00:50 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_completed - DATA: {'timestamp': '2025-09-22T14:00:50.968566', 'service': 'vision/identify', 'event': 'process_completed', 'data': {'processing_time': 5.35, 'product_title': 'BISC LOOK WAFER 55G BRIGADEIRO'}}
+2025-09-22 14:01:08 - app.database - INFO - [database.py:193] - Tentativa de inserir produto com dados: {'title': 'BISC LOOK WAFER 55G BRIGADEIRO', 'vertical': 'supermercado', 'gtin': '7891340365576', 'brand': 'Itamaraty', 'category': 'Alimentos', 'price': 5.5, 'ncm': '19053200', 'cest': None, 'confidence': 0.99, 'image_hash': 'e909fe0f6cb4c1043e03c0e2d2763f0d'}
+2025-09-22 14:01:08 - app.database - INFO - [database.py:231] - Produto ID 2 (Vertical: supermercado) salvo com sucesso.
+2025-09-22 14:04:06 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-22T14:04:06.872466', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'supermercado', 'filename': 'fini.jpeg', 'content_type': 'image/jpeg'}}
+2025-09-22 14:04:06 - vision/identify - INFO - [logging_config.py:68] - EVENT: image_loaded - DATA: {'timestamp': '2025-09-22T14:04:06.872466', 'service': 'vision/identify', 'event': 'image_loaded', 'data': {'size_bytes': 10923, 'hash': '0006153a382d1c187381397c2c10e0f7'}}
+2025-09-22 14:04:06 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_start - DATA: {'timestamp': '2025-09-22T14:04:06.873483', 'service': 'vision/identify', 'event': 'vision_extraction_start', 'data': {}}
+2025-09-22 14:04:06 - app.services.vision_service - INFO - [vision_service.py:108] - Imagem aprimorada para OCR.
+2025-09-22 14:04:08 - app.services.vision_service - INFO - [vision_service.py:181] - Vision API: Texto extraído (21 chars), Logos: 0, Labels: 8
+2025-09-22 14:04:08 - app.services.vision_service - INFO - [vision_service.py:276] - Texto bruto: 'Fini
+Gelatinas
+Beijos' -> Texto limpo para análise: ''
+2025-09-22 14:04:08 - app.services.vision_service - WARNING - [vision_service.py:297] - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-22 14:04:08 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_complete - DATA: {'timestamp': '2025-09-22T14:04:08.807524', 'service': 'vision/identify', 'event': 'vision_extraction_complete', 'data': {'success': True, 'text_length': 21, 'gtin_found': False}}
+2025-09-22 14:04:08 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-22T14:04:08.807524', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'supermercado'}}
+2025-09-22 14:04:08 - app.services.product_service - INFO - [product_service.py:64] - Etapa 1 falhou ou não aplicável. Iniciando Etapa 2 (Inferência da IA).
+2025-09-22 14:04:10 - ai_service - INFO - [logging_config.py:68] - EVENT: json_parsed_successfully - DATA: {'timestamp': '2025-09-22T14:04:10.438810', 'service': 'ai_service', 'event': 'json_parsed_successfully', 'data': {'title_extracted': 'Fini Gelatinas Beijos', 'brand_extracted': 'Fini', 'category_extracted': 'Alimentos'}}
+2025-09-22 14:04:10 - app.services.product_service - INFO - [product_service.py:77] - Produto identificado: Fini Gelatinas Beijos
+2025-09-22 14:04:10 - app.services.product_service - INFO - [product_service.py:81] - Iniciando Etapa 3 (Enriquecimento com Busca na Web).
+2025-09-22 14:04:10 - app.services.search_service - INFO - [search_service.py:30] - Buscando na web com a query: 'ean Fini Fini Gelatinas Beijos'
+2025-09-22 14:04:11 - app.services.advanced_inference_service - INFO - [advanced_inference_service.py:90] - Extraindo GTIN do contexto de busca para 'Fini Gelatinas Beijos'
+2025-09-22 14:04:12 - app.services.product_service - INFO - [product_service.py:94] - GTIN '7898279790875' extraído da busca. Validando...
+2025-09-22 14:04:14 - app.services.cosmos_service - INFO - [cosmos_service.py:72] - 📦 Dados formatados do Cosmos: {'gtin': '7898279790875', 'title': 'BALA DE GELATINA FINI BEIJOS MORANGO', 'brand': 'FINI', 'category': '', 'ncm': '17049020', 'cest': '', 'confidence': 0.99, 'vertical': 'supermercado'}
+2025-09-22 14:04:14 - app.services.product_service - INFO - [product_service.py:100] - Sucesso! Dados validados e enriquecidos pelo Cosmos via RAG.
+2025-09-22 14:04:14 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_complete - DATA: {'timestamp': '2025-09-22T14:04:14.214625', 'service': 'vision/identify', 'event': 'intelligent_analysis_complete', 'data': {'title': 'BALA DE GELATINA FINI BEIJOS MORANGO', 'brand': 'FINI'}}
+2025-09-22 14:04:14 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_completed - DATA: {'timestamp': '2025-09-22T14:04:14.215643', 'service': 'vision/identify', 'event': 'process_completed', 'data': {'processing_time': 7.34, 'product_title': 'BALA DE GELATINA FINI BEIJOS MORANGO'}}
+2025-09-22 14:04:31 - app.database - INFO - [database.py:193] - Tentativa de inserir produto com dados: {'title': 'BALA DE GELATINA FINI BEIJOS MORANGO', 'vertical': 'supermercado', 'gtin': '7898279790875', 'brand': 'FINI', 'category': 'Alimentos', 'price': 12.49, 'ncm': '17049020', 'cest': None, 'confidence': 0.99, 'image_hash': '0006153a382d1c187381397c2c10e0f7'}
+2025-09-22 14:04:31 - app.database - INFO - [database.py:231] - Produto ID 3 (Vertical: supermercado) salvo com sucesso.
+2025-09-22 14:09:17 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-22T14:09:17.808910', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'supermercado', 'filename': 'sabãoomo.jpeg', 'content_type': 'image/jpeg'}}
+2025-09-22 14:09:17 - vision/identify - INFO - [logging_config.py:68] - EVENT: image_loaded - DATA: {'timestamp': '2025-09-22T14:09:17.809910', 'service': 'vision/identify', 'event': 'image_loaded', 'data': {'size_bytes': 4851, 'hash': '6b40f7ee29ca2a989cf741cdfacd8260'}}
+2025-09-22 14:09:17 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_start - DATA: {'timestamp': '2025-09-22T14:09:17.810911', 'service': 'vision/identify', 'event': 'vision_extraction_start', 'data': {}}
+2025-09-22 14:09:17 - app.services.vision_service - INFO - [vision_service.py:108] - Imagem aprimorada para OCR.
+2025-09-22 14:09:19 - app.services.vision_service - INFO - [vision_service.py:181] - Vision API: Texto extraído (4 chars), Logos: 1, Labels: 0
+2025-09-22 14:09:19 - app.services.vision_service - INFO - [vision_service.py:276] - Texto bruto: 'ΧΌΜΟ' -> Texto limpo para análise: ''
+2025-09-22 14:09:19 - app.services.vision_service - WARNING - [vision_service.py:297] - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-22 14:09:19 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_complete - DATA: {'timestamp': '2025-09-22T14:09:19.088928', 'service': 'vision/identify', 'event': 'vision_extraction_complete', 'data': {'success': True, 'text_length': 4, 'gtin_found': False}}
+2025-09-22 14:09:19 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-22T14:09:19.088928', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'supermercado'}}
+2025-09-22 14:09:19 - app.services.product_service - INFO - [product_service.py:64] - Etapa 1 falhou ou não aplicável. Iniciando Etapa 2 (Inferência da IA).
+2025-09-22 14:09:20 - ai_service - INFO - [logging_config.py:68] - EVENT: json_parsed_successfully - DATA: {'timestamp': '2025-09-22T14:09:20.479284', 'service': 'ai_service', 'event': 'json_parsed_successfully', 'data': {'title_extracted': None, 'brand_extracted': 'Unilever', 'category_extracted': None}}
+2025-09-22 14:09:20 - ai_service - WARNING - [logging_config.py:72] - EVENT: empty_title_from_ai - DATA: {'timestamp': '2025-09-22T14:09:20.479284', 'service': 'ai_service', 'event': 'empty_title_from_ai', 'data': {'raw_response': '```json\n{\n  "title": null,\n  "brand": "Unilever",\n  "category": null,\n  "gtin": null,\n  "ncm": null,\n  "cest": null,\n  "price": null\n}\n```'}}
+2025-09-22 14:09:20 - ai_service - INFO - [logging_config.py:68] - EVENT: title_fallback_applied - DATA: {'timestamp': '2025-09-22T14:09:20.479284', 'service': 'ai_service', 'event': 'title_fallback_applied', 'data': {'new_title': 'Produto ΧΌΜΟ'}}
+2025-09-22 14:09:20 - app.services.product_service - INFO - [product_service.py:77] - Produto identificado: Produto ΧΌΜΟ
+2025-09-22 14:09:20 - app.services.product_service - INFO - [product_service.py:81] - Iniciando Etapa 3 (Enriquecimento com Busca na Web).
+2025-09-22 14:09:20 - app.services.search_service - INFO - [search_service.py:30] - Buscando na web com a query: 'ean Unilever Produto ΧΌΜΟ'
+2025-09-22 14:09:21 - app.services.advanced_inference_service - INFO - [advanced_inference_service.py:90] - Extraindo GTIN do contexto de busca para 'Produto ΧΌΜΟ'
+2025-09-22 14:09:22 - app.services.product_service - INFO - [product_service.py:94] - GTIN '7891150063570' extraído da busca. Validando...
+2025-09-22 14:09:23 - app.services.cosmos_service - INFO - [cosmos_service.py:72] - 📦 Dados formatados do Cosmos: {'gtin': '7891150063570', 'title': 'TIRA-MANCHAS GEL PRÉ-LAVAGEM OMO EXTRA PODER FRASCO 500ML', 'brand': 'OMO', 'category': 'Alvejantes e Águas Sanitárias', 'ncm': '34022000', 'cest': '', 'confidence': 0.99, 'vertical': 'supermercado'}
+2025-09-22 14:09:23 - app.services.product_service - INFO - [product_service.py:100] - Sucesso! Dados validados e enriquecidos pelo Cosmos via RAG.
+2025-09-22 14:09:23 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_complete - DATA: {'timestamp': '2025-09-22T14:09:23.973234', 'service': 'vision/identify', 'event': 'intelligent_analysis_complete', 'data': {'title': 'TIRA-MANCHAS GEL PRÉ-LAVAGEM OMO EXTRA PODER FRASCO 500ML', 'brand': 'OMO'}}
+2025-09-22 14:09:23 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_completed - DATA: {'timestamp': '2025-09-22T14:09:23.974252', 'service': 'vision/identify', 'event': 'process_completed', 'data': {'processing_time': 6.16, 'product_title': 'TIRA-MANCHAS GEL PRÉ-LAVAGEM OMO EXTRA PODER FRASCO 500ML'}}
+2025-09-22 14:13:52 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-22T14:13:52.623321', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'supermercado', 'filename': 'remédio.jpg', 'content_type': 'image/jpeg'}}
+2025-09-22 14:13:52 - vision/identify - INFO - [logging_config.py:68] - EVENT: image_loaded - DATA: {'timestamp': '2025-09-22T14:13:52.624339', 'service': 'vision/identify', 'event': 'image_loaded', 'data': {'size_bytes': 107484, 'hash': '8e2688c1a4a9e855454e608864ce76ec'}}
+2025-09-22 14:13:52 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_start - DATA: {'timestamp': '2025-09-22T14:13:52.624339', 'service': 'vision/identify', 'event': 'vision_extraction_start', 'data': {}}
+2025-09-22 14:13:52 - app.services.vision_service - INFO - [vision_service.py:108] - Imagem aprimorada para OCR.
+2025-09-22 14:13:55 - app.services.vision_service - INFO - [vision_service.py:181] - Vision API: Texto extraído (327 chars), Logos: 0, Labels: 0
+2025-09-22 14:13:55 - app.services.vision_service - INFO - [vision_service.py:276] - Texto bruto: 'sophie co
+SONY TO BE MADE TO DEA
+WHO CAR
+отбори 44
+στις
+6661 op '202'6 mpy
+Du
+desloratadina
+"Medicamento Genérico, Lei n°. 9.787, de 1999"
+5 mg
+24h) Antialérgico
+G
+USO ORAL
+USO ADULTO
+E PEDIATRICO
+ACIMA DE 12 ANOS
+Alívio rápido da coriza,
+espirros e coceira
+урове
+Conteúdo:10
+comprimidos revestidos
+Medicamento
+Genérico
+Legrand' -> Texto limpo para análise: '4466612026978719995241210'
+2025-09-22 14:13:55 - app.services.vision_service - WARNING - [vision_service.py:297] - Nenhum GTIN válido encontrado no texto limpo: '4466612026978719995241210'
+2025-09-22 14:13:55 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_complete - DATA: {'timestamp': '2025-09-22T14:13:55.707355', 'service': 'vision/identify', 'event': 'vision_extraction_complete', 'data': {'success': True, 'text_length': 327, 'gtin_found': False}}
+2025-09-22 14:13:55 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-22T14:13:55.707355', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'supermercado'}}
+2025-09-22 14:13:55 - app.services.product_service - INFO - [product_service.py:64] - Etapa 1 falhou ou não aplicável. Iniciando Etapa 2 (Inferência da IA).
+2025-09-22 14:13:57 - ai_service - INFO - [logging_config.py:68] - EVENT: json_parsed_successfully - DATA: {'timestamp': '2025-09-22T14:13:57.598804', 'service': 'ai_service', 'event': 'json_parsed_successfully', 'data': {'title_extracted': 'Desloratadina 5mg 10 Comprimidos Revestidos', 'brand_extracted': 'Legrand', 'category_extracted': 'Medicamentos'}}
+2025-09-22 14:13:57 - app.services.product_service - INFO - [product_service.py:77] - Produto identificado: Desloratadina 5mg 10 Comprimidos Revestidos
+2025-09-22 14:13:57 - app.services.product_service - INFO - [product_service.py:81] - Iniciando Etapa 3 (Enriquecimento com Busca na Web).
+2025-09-22 14:13:57 - app.services.search_service - INFO - [search_service.py:30] - Buscando na web com a query: 'ean Legrand Desloratadina 5mg 10 Comprimidos Revestidos'
+2025-09-22 14:13:58 - app.services.advanced_inference_service - INFO - [advanced_inference_service.py:90] - Extraindo GTIN do contexto de busca para 'Desloratadina 5mg 10 Comprimidos Revestidos'
+2025-09-22 14:13:59 - app.services.product_service - INFO - [product_service.py:94] - GTIN '7896004725703' extraído da busca. Validando...
+2025-09-22 14:14:01 - app.services.cosmos_service - INFO - [cosmos_service.py:72] - 📦 Dados formatados do Cosmos: {'gtin': '7896004725703', 'title': 'CLORIDRATO DE DORZOLAMIDA 2% + MALEATO DE TIMOLOL 0,5% GERMED CAIXA 5ML SOLUÇÃO OFTÁLMICA ESTÉRIL', 'brand': '', 'category': '', 'ncm': '30049099', 'cest': '', 'confidence': 0.99, 'vertical': 'supermercado'}
+2025-09-22 14:14:01 - app.services.product_service - INFO - [product_service.py:100] - Sucesso! Dados validados e enriquecidos pelo Cosmos via RAG.
+2025-09-22 14:14:01 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_complete - DATA: {'timestamp': '2025-09-22T14:14:01.118439', 'service': 'vision/identify', 'event': 'intelligent_analysis_complete', 'data': {'title': 'CLORIDRATO DE DORZOLAMIDA 2% + MALEATO DE TIMOLOL 0,5% GERMED CAIXA 5ML SOLUÇÃO OFTÁLMICA ESTÉRIL', 'brand': ''}}
+2025-09-22 14:14:01 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_completed - DATA: {'timestamp': '2025-09-22T14:14:01.119457', 'service': 'vision/identify', 'event': 'process_completed', 'data': {'processing_time': 8.5, 'product_title': 'CLORIDRATO DE DORZOLAMIDA 2% + MALEATO DE TIMOLOL 0,5% GERMED CAIXA 5ML SOLUÇÃO OFTÁLMICA ESTÉRIL'}}
+2025-09-22 14:29:26 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-22T14:29:26.408888', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'vestuario', 'filename': 'Imagem do WhatsApp de 2025-09-21 à(s) 16.46.16_17ae13c9.jpg', 'content_type': 'image/jpeg'}}
+2025-09-22 14:29:26 - vision/identify - INFO - [logging_config.py:68] - EVENT: image_loaded - DATA: {'timestamp': '2025-09-22T14:29:26.408888', 'service': 'vision/identify', 'event': 'image_loaded', 'data': {'size_bytes': 102525, 'hash': 'b2fc004d6c9b4e068ae9234462176855'}}
+2025-09-22 14:29:26 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_start - DATA: {'timestamp': '2025-09-22T14:29:26.409870', 'service': 'vision/identify', 'event': 'vision_extraction_start', 'data': {}}
+2025-09-22 14:29:26 - app.services.vision_service - INFO - [vision_service.py:108] - Imagem aprimorada para OCR.
+2025-09-22 14:29:30 - app.services.vision_service - INFO - [vision_service.py:181] - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-22 14:29:30 - app.services.vision_service - INFO - [vision_service.py:276] - Texto bruto: '100% ALGODÃO
+DECOTE: 98% ALGODÃO
+2% ELASTANO
+FORNECEDOR: 84891
+Modelo: 1059827 - T. 20
+40
+P W
+P
+日
+Cor VERDE CLARO
+000000113667090314
+SKU: 11366709
+PO:288843' -> Texto limpo para análise: '100982848911059827204000000011366709031411366709288843'
+2025-09-22 14:29:30 - app.services.vision_service - WARNING - [vision_service.py:297] - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-22 14:29:30 - vision/identify - INFO - [logging_config.py:68] - EVENT: vision_extraction_complete - DATA: {'timestamp': '2025-09-22T14:29:30.072590', 'service': 'vision/identify', 'event': 'vision_extraction_complete', 'data': {'success': True, 'text_length': 156, 'gtin_found': False}}
+2025-09-22 14:29:30 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-22T14:29:30.072590', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'vestuario'}}
+2025-09-22 14:29:30 - app.services.product_service - INFO - [product_service.py:64] - Etapa 1 falhou ou não aplicável. Iniciando Etapa 2 (Inferência da IA).
+2025-09-22 14:29:32 - ai_service - INFO - [logging_config.py:68] - EVENT: json_parsed_successfully - DATA: {'timestamp': '2025-09-22T14:29:32.700341', 'service': 'ai_service', 'event': 'json_parsed_successfully', 'data': {'title_extracted': 'Camiseta', 'brand_extracted': None, 'category_extracted': 'Vestuário'}}
+2025-09-22 14:29:32 - app.services.product_service - INFO - [product_service.py:77] - Produto identificado: Camiseta
+2025-09-22 14:29:32 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_complete - DATA: {'timestamp': '2025-09-22T14:29:32.701355', 'service': 'vision/identify', 'event': 'intelligent_analysis_complete', 'data': {'title': 'Camiseta', 'brand': None}}
+2025-09-22 14:29:32 - main - ERROR - [main.py:481] - Erro não tratado na rota http://127.0.0.1:8000/api/v1/vision/identify: 1 validation error for IdentifiedProduct
+gtin
+  Value error, GTIN deve ter 8, 12, 13 ou 14 dígitos [type=value_error, input_value='000000113667090314', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 24, in __call__
+    await responder(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 44, in __call__
+    await self.app(scope, receive, self.send_with_gzip)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 163, in identify_image
+    identified_product = models.IdentifiedProduct(**product_info)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentifiedProduct
+gtin
+  Value error, GTIN deve ter 8, 12, 13 ou 14 dígitos [type=value_error, input_value='000000113667090314', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error
+2025-09-22 14:31:51 - app - INFO - [logging_config.py:68] - EVENT: shutdown - DATA: {'timestamp': '2025-09-22T14:31:51.301783', 'service': 'app', 'event': 'shutdown', 'data': {}}
+2025-09-22 14:31:51 - main - INFO - [main.py:45] - Encerrando aplicação CadVision API.

@@ -29,6 +29,12 @@ class ProcessingStatus(str, Enum):
 
 class ProductBase(BaseModel):
     """Modelo base para produtos."""
+    title: str = Field(
+        ...,
+        description="Título ou nome do produto",
+        max_length=200,
+        example="Arroz Integral Tipo 1"
+    )
     vertical: str = Field(
         "supermercado",
         description="A vertical do produto, ex: supermercado, vestuario"

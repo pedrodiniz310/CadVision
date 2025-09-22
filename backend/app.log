@@ -3544,3 +3544,115 @@ NOBRES' -> Texto limpo para análise: '10011100'
 2025-09-22 00:52:39,073 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 7891340365576.
 2025-09-22 00:52:40,474 - app.services.product_service - INFO - Produto identificado: BISC LOOK WAFER 55G BRIGADEIRO
 2025-09-22 01:06:25,773 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 10:20:09,642 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 10:20:09,655 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 10:20:09,655 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 10:20:31,444 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-22 10:20:31,510 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-22 10:20:32,823 - app.services.vision_service - INFO - Vision API: Texto extraído (21 chars), Logos: 0, Labels: 8
+2025-09-22 10:20:32,823 - app.services.vision_service - INFO - Texto bruto: 'Fini
+Gelatinas
+Beijos' -> Texto limpo para análise: ''
+2025-09-22 10:20:32,824 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: ''
+2025-09-22 10:20:32,825 - main - INFO - Pistas extraídas. Acionando serviço de análise para a vertical: 'supermercado'.
+2025-09-22 10:20:32,825 - app.services.product_service - INFO - Etapa 1 falhou ou não aplicável. Iniciando Etapa 2 (Inferência da IA).
+2025-09-22 10:20:35,245 - app.services.product_service - INFO - Produto identificado: Fini Gelatinas Beijos
+2025-09-22 10:20:35,246 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento com Busca na Web).
+2025-09-22 10:20:35,246 - app.services.search_service - INFO - Buscando na web com a query: 'ean Fini Fini Gelatinas Beijos'
+2025-09-22 10:20:36,740 - app.services.advanced_inference_service - INFO - Extraindo GTIN do contexto de busca para 'Fini Gelatinas Beijos'
+2025-09-22 10:20:37,711 - app.services.product_service - INFO - GTIN '7898279790875' extraído da busca. Validando...
+2025-09-22 10:20:39,394 - app.services.product_service - INFO - Sucesso! Dados validados e enriquecidos pelo Cosmos via RAG.
+2025-09-22 10:20:54,486 - app.database - ERROR - Tentativa de inserir produto sem título. Dados recebidos: {'vertical': 'supermercado', 'gtin': '7898279790875', 'brand': 'FINI', 'category': 'Outros', 'price': None, 'ncm': '17049020', 'cest': None, 'confidence': 0.99, 'image_hash': '0006153a382d1c187381397c2c10e0f7'}
+2025-09-22 10:35:41,270 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 10:35:46,648 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 10:35:46,652 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 10:35:46,653 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 10:39:29,435 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 10:39:32,274 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 10:39:32,277 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 10:39:32,277 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 10:49:52,103 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 10:49:54,941 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 10:49:54,943 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 10:49:54,944 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 10:49:55,420 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 10:49:58,185 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 10:49:58,188 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 10:49:58,188 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 10:50:27,933 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-22 10:50:27,988 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-22 10:50:30,743 - app.services.vision_service - INFO - Vision API: Texto extraído (217 chars), Logos: 1, Labels: 5
+2025-09-22 10:50:30,743 - app.services.vision_service - INFO - Texto bruto: 'Nestle
+PALTOLI
+KitKat
+NOVA FÓRMULA**
+PESO LÍQ.41,5 g
+WAR RECHEADO COBERTO COM CHOCOLATE AO LEITE
+@kitkathrasil
+M AÇÚCAR
+ADICIONADO
+GORDURA
+SATURADA
+ECO
+PRE
+ESPECIAL
+QUANDO CO
+NÃO PROMOCI SEM ILUSTRATIVA
+A VERSÃO
+OUTO.' -> Texto limpo para análise: '415'
+2025-09-22 10:50:30,744 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '415'
+2025-09-22 10:50:30,745 - main - INFO - Pistas extraídas. Acionando serviço de análise para a vertical: 'supermercado'.
+2025-09-22 10:50:30,746 - app.services.product_service - INFO - Etapa 1 falhou ou não aplicável. Iniciando Etapa 2 (Inferência da IA).
+2025-09-22 10:50:33,236 - app.services.product_service - INFO - Produto identificado: KitKat Chocolate ao Leite 41,5g
+2025-09-22 10:50:33,236 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento com Busca na Web).
+2025-09-22 10:50:33,237 - app.services.search_service - INFO - Buscando na web com a query: 'ean Nestle KitKat Chocolate ao Leite 41,5g'
+2025-09-22 10:50:34,686 - app.services.advanced_inference_service - INFO - Extraindo GTIN do contexto de busca para 'KitKat Chocolate ao Leite 41,5g'
+2025-09-22 10:50:35,830 - app.services.product_service - INFO - GTIN '7891000248768' extraído da busca. Validando...
+2025-09-22 10:50:37,474 - app.services.product_service - INFO - Sucesso! Dados validados e enriquecidos pelo Cosmos via RAG.
+2025-09-22 10:50:45,460 - main - WARNING - Título estava vazio. Definido como: Produto GTIN 7891000248768
+2025-09-22 10:50:45,460 - app.database - INFO - Tentativa de inserir produto com dados: {'vertical': 'supermercado', 'gtin': '7891000248768', 'brand': 'NESTLE', 'category': None, 'price': None, 'ncm': '19053200', 'cest': None, 'confidence': 0.99, 'image_hash': '38ceac3abdacce8a3823a368661fbcb4', 'title': 'Produto GTIN 7891000248768'}
+2025-09-22 10:50:45,467 - app.database - INFO - Produto ID 1 (Vertical: supermercado) salvo com sucesso.
+2025-09-22 10:54:05,602 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-22 10:54:05,660 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-22 10:54:07,801 - app.services.vision_service - INFO - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-22 10:54:07,811 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-22 10:54:07,811 - main - INFO - Pistas extraídas. Acionando serviço de análise para a vertical: 'vestuario'.
+2025-09-22 10:54:07,812 - app.services.product_service - INFO - Etapa 1 falhou ou não aplicável. Iniciando Etapa 2 (Inferência da IA).
+2025-09-22 10:54:09,799 - app.services.product_service - INFO - Produto identificado: Modelo 1059827
+2025-09-22 11:08:33,211 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 11:08:36,136 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 11:08:36,139 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 11:08:36,139 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 11:08:39,182 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 11:08:41,961 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 11:08:41,964 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 11:08:41,964 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 11:12:30,574 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 11:12:33,355 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 11:12:33,358 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 11:12:33,358 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 11:15:30,108 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 11:15:32,861 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 11:15:32,864 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 11:15:32,864 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 11:28:31,807 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 11:28:34,737 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 11:28:34,739 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 11:28:34,740 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 11:28:43,127 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 11:28:45,830 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 11:28:45,832 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 11:28:45,833 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 11:30:20,378 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 11:30:23,332 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 11:30:23,335 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 11:30:23,335 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 11:30:37,728 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 11:30:40,597 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 11:30:40,600 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 11:30:40,600 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 11:30:44,969 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 11:30:47,742 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 11:30:47,745 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 11:30:47,745 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 11:32:00,602 - main - INFO - Encerrando aplicação CadVision API.

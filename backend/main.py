@@ -7,13 +7,13 @@ import time
 import io
 from pathlib import Path
 from contextlib import asynccontextmanager
-from typing import Optional, Union  # <-- ADICIONE ESTA LINHA
+from typing import Optional, Union
 
 # --- Imports de Terceiros ---
 import pandas as pd
 from fastapi import (
     Depends, FastAPI, File, HTTPException, UploadFile,
-    Query, BackgroundTasks, Form  # <-- ADICIONE 'Form' AQUI
+    Query, BackgroundTasks, Form
 )
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
@@ -25,27 +25,23 @@ from fastapi.encoders import jsonable_encoder
 from app import models
 from app import database
 from app.services import vision_service, product_service
+from app.core.logging_config import setup_logging, log_structured_event
 
 # --- Configuração de Logging ---
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler("app.log"),
-        logging.StreamHandler()
-    ]
-)
+LOG_FILE = setup_logging()
 logger = logging.getLogger(__name__)
 
+# --- Ciclo de Vida da Aplicação (Versão única e correta) ---
 
-# --- Ciclo de Vida da Aplicação ---
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Gerencia eventos de inicialização e encerramento da API."""
-    logger.info("Iniciando aplicação CadVision API...")
+    log_structured_event("app", "startup", {"version": "1.1.0"})
     database.init_db()
-    logger.info("Banco de dados inicializado com sucesso.")
+    log_structured_event("app", "database_initialized", {})
     yield
+    log_structured_event("app", "shutdown", {})
     logger.info("Encerrando aplicação CadVision API.")
 
 
@@ -62,7 +58,6 @@ app = FastAPI(
 # --- Middlewares ---
 app.add_middleware(
     CORSMiddleware,
-    # Em produção, restrinja para o seu domínio do frontend
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
@@ -74,7 +69,7 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)
 API_PREFIX = "/api/v1"
 
 # =============================================================================
-# === ENDPOINT PRINCIPAL DE VISÃO COMPUTACIONAL ===============================
+# === ENDPOINTS DA APLICAÇÃO ==================================================
 # =============================================================================
 
 
@@ -88,9 +83,6 @@ async def identify_image(
     background_tasks: BackgroundTasks,
     image: UploadFile = File(...,
                              description="Imagem do produto para identificação (até 10MB)"),
-    # --- MUDANÇA PRINCIPAL AQUI ---
-    # Adicionamos 'vertical' como um campo de formulário.
-    # Se o frontend não enviar nada, o padrão será "supermercado".
     vertical: str = Form(
         "supermercado", description="A vertical do produto (ex: supermercado, vestuario)"),
     db: sqlite3.Connection = Depends(database.get_db)
@@ -101,26 +93,31 @@ async def identify_image(
     """
     start_time = time.time()
 
-    # 1. Validação do arquivo de imagem
+    log_structured_event("vision/identify", "process_started", {
+        "vertical": vertical, "filename": image.filename, "content_type": image.content_type
+    })
+
+    # 1. Validação do arquivo
     if not image.content_type or not image.content_type.startswith('image/'):
+        log_structured_event("vision/identify", "validation_failed", {
+                             "reason": "invalid_file_type", "content_type": image.content_type}, "ERROR")
         raise HTTPException(
-            status_code=400, detail="Tipo de arquivo inválido. Envie uma imagem.")
+            status_code=400, detail="Tipo de arquivo inválido.")
 
     image_bytes = await image.read()
     if len(image_bytes) > 10 * 1024 * 1024:  # 10MB
         raise HTTPException(
             status_code=400, detail="Imagem excede o tamanho máximo de 10MB.")
-    if not image_bytes:
-        raise HTTPException(
-            status_code=400, detail="Arquivo de imagem vazio ou corrompido.")
 
     image_hash = vision_service.get_cache_key(image_bytes)
+    log_structured_event("vision/identify", "image_loaded",
+                         {"size_bytes": len(image_bytes), "hash": image_hash})
 
-    # 2. Verificação de imagem duplicada para evitar reprocessamento
+    # 2. Verificação de imagem duplicada
     product_from_hash = database.find_product_by_image_hash(image_hash, db)
     if product_from_hash:
-        logger.info(
-            f"Imagem duplicada encontrada para o hash: {image_hash}. Retornando do cache.")
+        log_structured_event("vision/identify", "cache_hit",
+                             {"image_hash": image_hash, "product_id": product_from_hash.get('id')})
         identified_product = models.IdentifiedProduct(**product_from_hash)
         return models.IdentificationResult(
             success=True,
@@ -131,27 +128,37 @@ async def identify_image(
             processing_time=round(time.time() - start_time, 2)
         )
 
-    # 3. Extração de pistas da imagem com o Google Vision
-    logger.info(
-        "Nenhum cache encontrado. Iniciando extração de dados com o Vision API.")
+    # 3. Extração com Vision API
+    log_structured_event("vision/identify", "vision_extraction_start", {})
     vision_data = vision_service.extract_vision_data(image_bytes)
+    log_structured_event("vision/identify", "vision_extraction_complete", {
+        "success": vision_data.get("success"),
+        "text_length": len(vision_data.get('raw_text', '')),
+        "gtin_found": bool(vision_data.get('gtin'))
+    })
 
     if not vision_data.get("success"):
-        logger.warning(
-            "Falha na extração de pistas da imagem pelo Vision Service.")
+        log_structured_event("vision/identify", "vision_extraction_failed",
+                             {"reason": "no_readable_data"}, "ERROR")
         raise HTTPException(
             status_code=422, detail="Não foi possível extrair dados legíveis da imagem.")
 
-     # 4. Orquestração da análise inteligente
-    logger.info(
-        f"Pistas extraídas. Acionando serviço de análise para a vertical: '{vertical}'.")
-    # --- MUDANÇA IMPORTANTE AQUI ---
-    # Passamos a 'vertical' recebida para a próxima camada da nossa lógica.
-    product_info = product_service.intelligent_text_analysis(
-        vision_data=vision_data, db=db, vertical=vertical
-    )
+    # 4. Análise inteligente
+    log_structured_event(
+        "vision/identify", "intelligent_analysis_start", {"vertical": vertical})
+    try:
+        product_info = product_service.intelligent_text_analysis(
+            vision_data=vision_data, db=db, vertical=vertical)
+        log_structured_event("vision/identify", "intelligent_analysis_complete", {
+            "title": product_info.get('title'), "brand": product_info.get('brand')
+        })
+    except Exception as e:
+        log_structured_event(
+            "vision/identify", "intelligent_analysis_failed", {"error": str(e)}, "ERROR")
+        raise HTTPException(
+            status_code=500, detail="Erro na análise do produto.")
 
-    # 5. Montagem e retorno da resposta
+    # 5. Preparar resposta
     processing_time = round(time.time() - start_time, 2)
     identified_product = models.IdentifiedProduct(**product_info)
 
@@ -164,6 +171,10 @@ async def identify_image(
         error_message=None
     )
 
+    log_structured_event("vision/identify", "process_completed", {
+        "processing_time": processing_time, "product_title": product_info.get('title')
+    })
+
     return models.IdentificationResult(
         success=True,
         status="newly_identified",
@@ -175,7 +186,6 @@ async def identify_image(
         confidence=identified_product.confidence,
         processing_time=processing_time
     )
-
 # =============================================================================
 # === ENDPOINTS DE GERENCIAMENTO DE PRODUTOS (CRUD) ===========================
 # =============================================================================
@@ -234,6 +244,8 @@ async def get_products(
 
 # Em backend/main.py
 
+# backend/main.py
+
 @app.post(
     f"{API_PREFIX}/products",
     response_model=models.APIResponse,
@@ -247,19 +259,39 @@ async def save_product(
 ):
     """Recebe os dados de um produto (de qualquer vertical) e os persiste no banco."""
     try:
-        product_id = database.insert_product(product.dict(), db)
+        product_dict = product.dict()
+
+        # VALIDAÇÃO MELHORADA DO TÍTULO
+        title = product_dict.get('title', '').strip()
+        if not title:
+            # Tenta criar um título a partir de outros campos
+            brand = product_dict.get('brand', '')
+            category = product_dict.get('category', '')
+            gtin = product_dict.get('gtin', '')
+
+            if brand and category:
+                product_dict['title'] = f"{brand} - {category}"
+            elif gtin:
+                product_dict['title'] = f"Produto GTIN {gtin}"
+            else:
+                product_dict['title'] = f"Produto {product_dict.get('vertical', 'Gerado')} - {int(time.time())}"
+
+            logger.warning(
+                f"Título estava vazio. Definido como: {product_dict['title']}")
+
+        product_id = database.insert_product(product_dict, db)
         if product_id:
             return models.APIResponse.success_response(
                 data={"id": product_id},
                 message="Produto salvo com sucesso"
             )
-        # A nova função de database pode retornar um erro mais específico
         raise HTTPException(
             status_code=500, detail="Erro ao salvar o produto no banco de dados.")
+
     except sqlite3.IntegrityError:
         raise HTTPException(
             status_code=409, detail=f"Produto com GTIN {product.gtin} já existe.")
-    except ValueError as e:  # Captura o erro de título vazio que adicionamos
+    except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
 
 # Em backend/main.py

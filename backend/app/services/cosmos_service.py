@@ -45,6 +45,14 @@ def fetch_product_by_gtin(gtin: str) -> Optional[Dict]:
         response = requests.get(url, headers=headers, timeout=15)
         if response.status_code == 200:
             product_data = response.json()
+            # --- LÓGICA DE FALLBACK DO TÍTULO ADICIONADA ---
+            title = product_data.get("description", "").strip()
+            brand_name = product_data.get("brand", {}).get("name", "").strip()
+            if not title and brand_name:
+                title = f"{brand_name} - Produto GTIN {gtin}"
+            elif not title:
+                title = f"Produto GTIN {gtin}"
+            # --- FIM DA LÓGICA DE FALLBACK ---
 
             category_obj = product_data.get("category", {})
             category_name = category_obj.get(
@@ -52,9 +60,8 @@ def fetch_product_by_gtin(gtin: str) -> Optional[Dict]:
 
             base_data = {
                 "gtin": gtin,
-                # CORREÇÃO: Usar a 'description' do produto como 'title'
-                "title": product_data.get("description", ""),
-                "brand": product_data.get("brand", {}).get("name", ""),
+                "title": title,  # <-- Usar a variável 'title' com fallback
+                "brand": brand_name,
                 "category": category_name,
                 "ncm": product_data.get("ncm", {}).get("code", ""),
                 "cest": product_data.get("cest", {}).get("code", ""),

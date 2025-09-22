@@ -1,0 +1,5 @@
+2025-09-22 13:57:04 - root - INFO - [logging_config.py:51] - Logging configurado. Arquivo: C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\logs\cadvision_20250922_135703.log
+2025-09-22 13:57:04 - main - INFO - [main.py:55] - Iniciando aplicação CadVision API...
+2025-09-22 13:57:04 - app.database - INFO - [database.py:172] - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 13:57:04 - main - INFO - [main.py:57] - Banco de dados inicializado com sucesso.
+2025-09-22 13:57:23 - main - INFO - [main.py:59] - Encerrando aplicação CadVision API.

@@ -45,8 +45,6 @@ def _normalize_category(category_name: Optional[str]) -> str:
 
 # Em backend/app/services/product_service.py
 
-# Em backend/app/services/product_service.py
-
 def intelligent_text_analysis(vision_data: Dict, db: sqlite3.Connection, vertical: str) -> Dict:
     """
     Executa o pipeline de análise. Garante que o formato de dados seja consistente
@@ -134,5 +132,26 @@ def intelligent_text_analysis(vision_data: Dict, db: sqlite3.Connection, vertica
     # Normaliza a categoria como passo final
     final_product_data['category'] = _normalize_category(
         final_product_data.get('category'))
-
+    # VALIDAÇÃO FINAL CRÍTICA
+    if not base_data.get('title') or base_data['title'].strip() == '':
+        # Fallback múltiplo para garantir um título
+        fallback_title = None
+        
+        # Tenta usar a marca + categoria
+        if base_data.get('brand') and base_data.get('category'):
+            fallback_title = f"{base_data['brand']} - {base_data['category']}"
+        # Tenta usar texto do OCR
+        elif vision_data.get('raw_text'):
+            first_words = ' '.join(vision_data['raw_text'].split()[:4])
+            fallback_title = f"Produto {first_words}"
+        # Último fallback
+        else:
+            fallback_title = f"Produto {vertical.title()} - {datetime.now().strftime('%H:%M:%S')}"
+        
+        base_data['title'] = fallback_title
+        logger.warning(f"Título definido por fallback: {fallback_title}")
+    
+    # Garantir que a confidence tenha um valor mínimo
+    base_data['confidence'] = base_data.get('confidence', 0.1)
+    
     return final_product_data
