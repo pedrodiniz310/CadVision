@@ -65,7 +65,7 @@
           <div class="dashboard-header">
             <div>
               <h1 class="h1">Dashboard</h1>
-              
+
             </div>
             <div class="header-actions">
               <div class="search">
@@ -156,40 +156,52 @@
 
         <section id="identify" class="page-content" style="display: none;">
           <h1 class="h1">Identificar Produto</h1>
-          <p class="muted">Faça upload de uma imagem para identificar automaticamente o produto.</p>
+          <p class="muted">Selecione o tipo de produto e envie uma imagem para identificação automática.</p>
 
-          <div class="grid identify-grid">
+          <div id="vertical-selector" class="vertical-selector-grid">
+            <div class="card vertical-card" id="select-supermercado" data-vertical="supermercado" role="button"
+              tabindex="0">
+              <i class="fas fa-shopping-cart"></i>
+              <h3 class="h3">Supermercado</h3>
+              <p class="muted">Alimentos, bebidas, limpeza, etc.</p>
+            </div>
+            <div class="card vertical-card" id="select-vestuario" data-vertical="vestuario" role="button" tabindex="0">
+              <i class="fas fa-tshirt"></i>
+              <h3 class="h3">Vestuário & Acessórios</h3>
+              <p class="muted">Roupas, calçados, bolsas, etc.</p>
+            </div>
+          </div>
+
+          <div id="identification-workflow" class="grid identify-grid" style="display: none;">
             <div class="card">
-              <h2 class="h2">1. Enviar Imagem</h2>
+              <div class="workflow-header">
+                <h2 class="h2">1. Enviar Imagem</h2>
+                <button id="btnBackToVertical" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Trocar
+                  Vertical</button>
+              </div>
+
               <div class="upload-area" id="dropArea" role="button" tabindex="0">
                 <i class="fas fa-cloud-upload-alt"></i>
                 <p>Arraste uma imagem aqui ou clique para selecionar</p>
                 <small class="muted">Formatos suportados: JPG, PNG, WebP (até 10MB)</small>
               </div>
-
               <div style="text-align: center; margin: 15px 0; font-weight: 600; color: var(--muted);">OU</div>
-
-              <button id="btnOpenCamera" class="btn btn-secondary" style="width: 100%;">
-                <i class="fas fa-camera"></i> Tirar Foto com a Câmera
-              </button>
+              <button id="btnOpenCamera" class="btn btn-secondary" style="width: 100%;"><i class="fas fa-camera"></i>
+                Tirar Foto com a Câmera</button>
 
               <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
               <img id="imagePreview" class="thumb" alt="Preview da imagem para upload">
 
               <div class="upload-info">
                 <div class="muted" id="uploadStatus">Aguardando imagem...</div>
-                <div class="chip info" id="aiStatus">
-                  <i class="fas fa-info-circle"></i> Aguardando análise
-                </div>
+                <div class="chip info" id="aiStatus"><i class="fas fa-info-circle"></i> Aguardando análise</div>
               </div>
 
               <div class="btn-row">
-                <button id="btnIdentify" class="btn btn-primary" disabled>
-                  <i class="fas fa-robot"></i> Identificar
-                </button>
-                <button id="btnRemoveImage" class="btn btn-secondary" style="display: none;">
-                  <i class="fas fa-trash"></i> Remover Imagem
-                </button>
+                <button id="btnIdentify" class="btn btn-primary" disabled><i class="fas fa-robot"></i>
+                  Identificar</button>
+                <button id="btnRemoveImage" class="btn btn-secondary" style="display: none;"><i
+                    class="fas fa-trash"></i> Remover Imagem</button>
               </div>
             </div>
 
@@ -197,60 +209,80 @@
               <h2 class="h2">2. Detalhes do Produto</h2>
               <p class="muted">Revise e complete as informações do produto identificado.</p>
 
-              <form id="productForm" class="product-form">
-                <div class="form-group">
-                  <label for="productName">Nome do Produto *</label>
-                  <input type="text" id="productName" placeholder="Ex: Arroz Integral Tipo 1" required>
-                </div>
-                <div class="form-group">
-                  <label for="productBrand">Marca</label>
-                  <input type="text" id="productBrand" placeholder="Ex: Tio João">
-                </div>
-                <div class="form-group">
-                  <label for="productGTIN">GTIN/EAN</label>
-                  <input type="text" id="productGTIN" placeholder="Ex: 7891000315507" pattern="[0-9]*">
-                </div>
-
+              <form id="productFormSupermarket" class="product-form" style="display: none;">
+                <div class="form-group"><label for="productNameSupermarket">Nome do Produto *</label><input type="text"
+                    id="productNameSupermarket" required></div>
+                <div class="form-group"><label for="productBrandSupermarket">Marca</label><input type="text"
+                    id="productBrandSupermarket"></div>
+                <div class="form-group"><label for="productGTINSupermarket">GTIN/EAN</label><input type="text"
+                    id="productGTINSupermarket" pattern="[0-9]*"></div>
                 <div class="grid grid-2">
-                  <div class="form-group">
-                    <label for="productNCM">NCM</label>
-                    <input type="text" id="productNCM" placeholder="Ex: 1006.30.90">
-                  </div>
-                  <div class="form-group">
-                    <label for="productCEST">CEST</label>
-                    <input type="text" id="productCEST" placeholder="Ex: 13.001.00">
-                  </div>
+                  <div class="form-group"><label for="productNCMSupermarket">NCM</label><input type="text"
+                      id="productNCMSupermarket"></div>
+                  <div class="form-group"><label for="productCESTSupermarket">CEST</label><input type="text"
+                      id="productCESTSupermarket"></div>
                 </div>
-
-                <div class="form-group">
-                  <label for="productCategory">Categoria</label>
-                  <select id="productCategory">
-                    <option value="">Selecione uma categoria</option>
+                <div class="form-group"><label for="productCategorySupermarket">Categoria</label><select
+                    id="productCategorySupermarket">
+                    <option value="">Selecione...</option>
                     <option value="Alimentos">Alimentos</option>
                     <option value="Bebidas">Bebidas</option>
                     <option value="Limpeza">Limpeza</option>
                     <option value="Higiene">Higiene</option>
-                    <option value="Eletrônicos">Eletrônicos</option>
                     <option value="Outros">Outros</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="productPrice">Preço (R$)</label>
-                  <input type="number" step="0.01" min="0" id="productPrice" placeholder="Ex: 12.90">
-                </div>
-
+                  </select></div>
+                <div class="form-group"><label for="productPriceSupermarket">Preço (R$)</label><input type="number"
+                    step="0.01" min="0" id="productPriceSupermarket"></div>
                 <div class="sticky-actions">
-                  <div class="btn-row">
-                    <button type="submit" class="btn btn-primary">
-                      <i class="fas fa-save"></i> Salvar Produto
-                    </button>
-                    <button type="reset" class="btn btn-secondary">
-                      <i class="fas fa-times"></i> Limpar
-                    </button>
-                  </div>
+                  <div class="btn-row"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Salvar
+                      Produto</button><button type="reset" class="btn btn-secondary"><i class="fas fa-times"></i>
+                      Limpar</button></div>
                 </div>
               </form>
+
+              <form id="productFormClothing" class="product-form" style="display: none;">
+                <div class="form-group"><label for="productNameClothing">Nome do Produto *</label><input type="text"
+                    id="productNameClothing" required></div>
+                <div class="form-group"><label for="productBrandClothing">Marca</label><input type="text"
+                    id="productBrandClothing"></div>
+                <div class="grid grid-2">
+                  <div class="form-group"><label for="productSizeClothing">Tamanho</label><input type="text"
+                      id="productSizeClothing" placeholder="Ex: M, 42"></div>
+                  <div class="form-group"><label for="productColorClothing">Cor</label><input type="text"
+                      id="productColorClothing" placeholder="Ex: Azul Marinho"></div>
+                </div>
+                <div class="grid grid-2">
+                  <div class="form-group"><label for="productFabricClothing">Material/Tecido</label><input type="text"
+                      id="productFabricClothing" placeholder="Ex: Algodão"></div>
+                  <div class="form-group"><label for="productGenderClothing">Gênero</label><select
+                      id="productGenderClothing">
+                      <option value="">Selecione...</option>
+                      <option value="Masculino">Masculino</option>
+                      <option value="Feminino">Feminino</option>
+                      <option value="Unissex">Unissex</option>
+                    </select></div>
+                </div>
+                <div class="form-group"><label for="productCategoryClothing">Categoria</label><select
+                    id="productCategoryClothing">
+                    <option value="">Selecione...</option>
+                    <option value="Vestuário">Vestuário</option>
+                    <option value="Calçados">Calçados</option>
+                    <option value="Acessórios">Acessórios</option>
+                    <option value="Outros">Outros</option>
+                  </select></div>
+                <div class="form-group"><label for="productPriceClothing">Preço (R$)</label><input type="number"
+                    step="0.01" min="0" id="productPriceClothing"></div>
+                <div class="sticky-actions">
+                  <div class="btn-row"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Salvar
+                      Produto</button><button type="reset" class="btn btn-secondary"><i class="fas fa-times"></i>
+                      Limpar</button></div>
+                </div>
+              </form>
+
+              <div id="form-placeholder" class="text-center muted" style="padding: 40px 0;">
+                <i class="fas fa-robot" style="font-size: 32px; margin-bottom: 15px;"></i>
+                <p>Os detalhes do produto aparecerão aqui após a análise.</p>
+              </div>
             </div>
           </div>
         </section>

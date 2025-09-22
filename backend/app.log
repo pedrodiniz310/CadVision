@@ -3279,3 +3279,268 @@ PP PRINT12' -> Texto limpo para análise: '070000000000128789490070151712'
 2025-09-21 21:33:34,382 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
 2025-09-21 21:33:34,382 - main - INFO - Banco de dados inicializado com sucesso.
 2025-09-21 21:33:55,516 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 23:40:50,566 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 23:40:50,630 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-21 23:40:50,631 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 23:41:36,282 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 23:41:36,340 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 23:41:40,742 - app.services.vision_service - INFO - Vision API: Texto extraído (87 chars), Logos: 0, Labels: 8
+2025-09-21 23:41:40,825 - app.services.vision_service - INFO - GTIN validado com sucesso: 7896022200534
+2025-09-21 23:41:40,826 - main - INFO - Pistas extraídas. Acionando serviço de análise para a vertical: 'supermercado'.
+2025-09-21 23:41:40,827 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN da imagem: 7896022200534.
+2025-09-21 23:41:42,257 - app.services.product_service - INFO - Sucesso! Dados encontrados via API Cosmos com GTIN da imagem.
+2025-09-21 23:52:04,359 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 23:52:04,412 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 23:52:08,176 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-21 23:52:08,176 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-21 23:52:08,176 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-21 23:52:08,177 - main - INFO - Pistas extraídas. Acionando serviço de análise para a vertical: 'supermercado'.
+2025-09-21 23:52:08,177 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN da imagem: 7891340365576.
+2025-09-21 23:52:09,587 - app.services.product_service - INFO - Sucesso! Dados encontrados via API Cosmos com GTIN da imagem.
+2025-09-21 23:52:30,383 - app.database - ERROR - Erro ao inserir produto: NOT NULL constraint failed: products.title
+2025-09-21 23:52:32,626 - app.database - ERROR - Erro ao inserir produto: NOT NULL constraint failed: products.title
+2025-09-21 23:57:14,432 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 23:57:17,193 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 23:57:17,196 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-21 23:57:17,196 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 23:57:39,752 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-21 23:57:42,532 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-21 23:57:42,535 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-21 23:57:42,535 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-21 23:58:03,097 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-21 23:58:03,157 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-21 23:58:06,942 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-21 23:58:06,942 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-21 23:58:06,942 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-21 23:58:06,943 - main - INFO - Pistas extraídas. Acionando serviço de análise para a vertical: 'supermercado'.
+2025-09-21 23:58:06,944 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN da imagem: 7891340365576.
+2025-09-21 23:58:08,552 - app.services.product_service - INFO - Sucesso! Dados encontrados via API Cosmos com GTIN da imagem.
+2025-09-21 23:58:11,664 - app.database - ERROR - Erro ao inserir produto: NOT NULL constraint failed: products.title
+2025-09-22 00:00:59,770 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 00:01:02,539 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 00:01:02,542 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 00:01:02,542 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 00:01:49,167 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 00:01:51,918 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 00:01:51,921 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 00:01:51,921 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 00:02:03,130 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-22 00:02:03,192 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-22 00:02:06,978 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-22 00:02:06,978 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-22 00:02:06,979 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-22 00:02:06,980 - main - INFO - Pistas extraídas. Acionando serviço de análise para a vertical: 'supermercado'.
+2025-09-22 00:02:06,980 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 7891340365576.
+2025-09-22 00:02:08,395 - app.services.product_service - INFO - Produto identificado: BISC LOOK WAFER 55G BRIGADEIRO
+2025-09-22 00:02:08,396 - main - ERROR - Erro não tratado na rota http://127.0.0.1:8000/api/v1/vision/identify: 'dict' object has no attribute 'lower'
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 24, in __call__
+    await responder(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 44, in __call__
+    await self.app(scope, receive, self.send_with_gzip)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 150, in identify_image
+    product_info = product_service.intelligent_text_analysis(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\app\services\product_service.py", line 98, in intelligent_text_analysis
+    final_product_data['category'] = _normalize_category(
+                                     ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\app\services\product_service.py", line 37, in _normalize_category
+    category_lower = category_name.lower()
+                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'lower'
+2025-09-22 00:05:01,900 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 00:05:04,748 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 00:05:04,751 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 00:05:04,751 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 00:05:25,230 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-22 00:05:25,290 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-22 00:05:28,925 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-22 00:05:28,926 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-22 00:05:28,926 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-22 00:05:28,927 - main - INFO - Pistas extraídas. Acionando serviço de análise para a vertical: 'supermercado'.
+2025-09-22 00:05:28,927 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 7891340365576.
+2025-09-22 00:05:30,334 - app.services.product_service - INFO - Produto identificado: BISC LOOK WAFER 55G BRIGADEIRO
+2025-09-22 00:05:32,117 - app.database - ERROR - Erro ao inserir produto: NOT NULL constraint failed: products.title
+2025-09-22 00:05:50,375 - app.database - ERROR - Erro ao inserir produto: NOT NULL constraint failed: products.title
+2025-09-22 00:08:32,035 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 00:08:34,765 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 00:08:34,768 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 00:08:34,768 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 00:10:31,307 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 00:10:34,059 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 00:10:34,062 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 00:10:34,062 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 00:11:44,817 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 00:11:47,530 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 00:11:47,533 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 00:11:47,534 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 00:12:23,923 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 00:12:26,649 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 00:12:26,651 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 00:12:26,652 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 00:13:30,475 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-22 00:13:30,535 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-22 00:13:34,020 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-22 00:13:34,020 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-22 00:13:34,021 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-22 00:13:34,022 - main - INFO - Pistas extraídas. Acionando serviço de análise para a vertical: 'supermercado'.
+2025-09-22 00:13:34,022 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 7891340365576.
+2025-09-22 00:13:35,424 - app.services.product_service - INFO - Produto identificado: BISC LOOK WAFER 55G BRIGADEIRO
+2025-09-22 00:13:35,424 - app.services.product_service - WARNING - Não foi possível encontrar/validar um GTIN via busca. Retornando dados da inferência inicial.
+2025-09-22 00:13:37,854 - app.database - ERROR - Tentativa de inserir produto sem título. Dados recebidos: {'vertical': 'supermercado', 'gtin': '7891340365576', 'brand': None, 'category': None, 'price': None, 'ncm': '19053200', 'cest': None, 'confidence': 0.99, 'image_hash': 'e909fe0f6cb4c1043e03c0e2d2763f0d'}
+2025-09-22 00:13:45,357 - app.database - ERROR - Tentativa de inserir produto sem título. Dados recebidos: {'vertical': 'supermercado', 'gtin': '7891340365576', 'brand': None, 'category': None, 'price': None, 'ncm': '19053200', 'cest': None, 'confidence': 0.99, 'image_hash': 'e909fe0f6cb4c1043e03c0e2d2763f0d'}
+2025-09-22 00:16:19,624 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-22 00:16:19,675 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-22 00:16:24,276 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-22 00:16:24,276 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-22 00:16:24,277 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-22 00:16:24,277 - main - INFO - Pistas extraídas. Acionando serviço de análise para a vertical: 'supermercado'.
+2025-09-22 00:16:24,277 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 7891340365576.
+2025-09-22 00:16:25,703 - app.services.product_service - INFO - Produto identificado: BISC LOOK WAFER 55G BRIGADEIRO
+2025-09-22 00:16:25,703 - app.services.product_service - WARNING - Não foi possível encontrar/validar um GTIN via busca. Retornando dados da inferência inicial.
+2025-09-22 00:16:27,938 - app.database - ERROR - Tentativa de inserir produto sem título. Dados recebidos: {'vertical': 'supermercado', 'gtin': '7891340365576', 'brand': None, 'category': None, 'price': None, 'ncm': '19053200', 'cest': None, 'confidence': 0.99, 'image_hash': 'e909fe0f6cb4c1043e03c0e2d2763f0d'}
+2025-09-22 00:16:42,550 - app.database - ERROR - Tentativa de inserir produto sem título. Dados recebidos: {'vertical': 'supermercado', 'gtin': '7891340365576', 'brand': None, 'category': None, 'price': None, 'ncm': '19053200', 'cest': None, 'confidence': 0.99, 'image_hash': 'e909fe0f6cb4c1043e03c0e2d2763f0d'}
+2025-09-22 00:21:36,788 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-22 00:21:36,839 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-22 00:21:41,148 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-22 00:21:41,148 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-22 00:21:41,148 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-22 00:21:41,149 - main - INFO - Pistas extraídas. Acionando serviço de análise para a vertical: 'supermercado'.
+2025-09-22 00:21:41,149 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 7891340365576.
+2025-09-22 00:21:42,550 - app.services.product_service - INFO - Produto identificado: BISC LOOK WAFER 55G BRIGADEIRO
+2025-09-22 00:21:42,550 - app.services.product_service - WARNING - Não foi possível encontrar/validar um GTIN via busca. Retornando dados da inferência inicial.
+2025-09-22 00:21:44,451 - app.database - ERROR - Tentativa de inserir produto sem título. Dados recebidos: {'vertical': 'supermercado', 'gtin': '7891340365576', 'brand': None, 'category': None, 'price': None, 'ncm': '19053200', 'cest': None, 'confidence': 0.99, 'image_hash': 'e909fe0f6cb4c1043e03c0e2d2763f0d'}
+2025-09-22 00:26:23,589 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 00:26:26,573 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 00:26:26,576 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 00:26:26,576 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 00:27:51,447 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 00:27:54,252 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 00:27:54,255 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 00:27:54,255 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 00:28:22,165 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 00:28:24,960 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 00:28:24,963 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 00:28:24,963 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 00:28:44,965 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 00:29:04,467 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 00:29:04,470 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 00:29:04,470 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 00:34:43,296 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 00:34:55,377 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 00:34:55,380 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 00:34:55,380 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 00:37:01,560 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 00:37:06,872 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 00:37:06,875 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 00:37:06,875 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 00:39:12,583 - main - INFO - Encerrando aplicação CadVision API.
+2025-09-22 00:39:17,256 - main - INFO - Iniciando aplicação CadVision API...
+2025-09-22 00:39:17,259 - app.database - INFO - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 00:39:17,259 - main - INFO - Banco de dados inicializado com sucesso.
+2025-09-22 00:42:18,715 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-22 00:42:18,781 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-22 00:42:23,582 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-22 00:42:23,583 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-22 00:42:23,583 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-22 00:42:23,584 - main - INFO - Pistas extraídas. Acionando serviço de análise para a vertical: 'supermercado'.
+2025-09-22 00:42:23,584 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 7891340365576.
+2025-09-22 00:42:25,057 - app.services.product_service - INFO - Produto identificado: BISC LOOK WAFER 55G BRIGADEIRO
+2025-09-22 00:42:26,575 - app.database - ERROR - Tentativa de inserir produto sem título. Dados recebidos: {'vertical': 'supermercado', 'gtin': '7891340365576', 'brand': None, 'category': None, 'price': None, 'ncm': '19053200', 'cest': None, 'confidence': 0.99, 'image_hash': 'e909fe0f6cb4c1043e03c0e2d2763f0d'}
+2025-09-22 00:42:37,257 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-22 00:42:37,297 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-22 00:42:41,009 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-22 00:42:41,010 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-22 00:42:41,011 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-22 00:42:41,011 - main - INFO - Pistas extraídas. Acionando serviço de análise para a vertical: 'supermercado'.
+2025-09-22 00:42:41,011 - app.services.product_service - INFO - Etapa 1 falhou ou não aplicável. Iniciando Etapa 2 (Inferência da IA).
+2025-09-22 00:42:43,374 - app.services.product_service - INFO - Produto identificado: Arroz Tipo 1 1kg
+2025-09-22 00:42:43,374 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento com Busca na Web).
+2025-09-22 00:42:43,374 - app.services.search_service - INFO - Buscando na web com a query: 'ean Tio João Arroz Tipo 1 1kg'
+2025-09-22 00:42:44,779 - app.services.advanced_inference_service - INFO - Extraindo GTIN do contexto de busca para 'Arroz Tipo 1 1kg'
+2025-09-22 00:42:45,728 - app.services.product_service - INFO - GTIN '7893500023425' extraído da busca. Validando...
+2025-09-22 00:42:47,143 - app.services.product_service - INFO - Sucesso! Dados validados e enriquecidos pelo Cosmos via RAG.
+2025-09-22 00:42:53,244 - app.database - ERROR - Tentativa de inserir produto sem título. Dados recebidos: {'vertical': 'supermercado', 'gtin': '7893500023425', 'brand': None, 'category': 'Outros', 'price': None, 'ncm': '10063021', 'cest': None, 'confidence': 0.99, 'image_hash': '44a30420041f34c214d9152407d5491a'}
+2025-09-22 00:42:54,609 - app.database - ERROR - Tentativa de inserir produto sem título. Dados recebidos: {'vertical': 'supermercado', 'gtin': '7893500023425', 'brand': None, 'category': 'Outros', 'price': None, 'ncm': '10063021', 'cest': None, 'confidence': 0.99, 'image_hash': '44a30420041f34c214d9152407d5491a'}
+2025-09-22 00:45:38,270 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-22 00:45:38,310 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-22 00:45:42,049 - app.services.vision_service - INFO - Vision API: Texto extraído (238 chars), Logos: 0, Labels: 8
+2025-09-22 00:45:42,049 - app.services.vision_service - INFO - Texto bruto: 'arroz
+Tio João
+100% GRAOS Sempre soltinho
+NOBRES
+•Branquinho e saboroso
+.Não precisa escolher
+nem lavar
+O arroz que
+acompanha
+ARROZ TIPO 1-CLASSE LONGO FINO
+SUBGRUPO POLIDO - PESO LÍQUIDO 1kg
+INDÚSTRIA BRASILEIRA
+Tio João 100% GROS
+NOBRES' -> Texto limpo para análise: '10011100'
+2025-09-22 00:45:42,050 - app.services.vision_service - WARNING - Nenhum GTIN válido encontrado no texto limpo: '10011100'
+2025-09-22 00:45:42,051 - main - INFO - Pistas extraídas. Acionando serviço de análise para a vertical: 'supermercado'.
+2025-09-22 00:45:42,051 - app.services.product_service - INFO - Etapa 1 falhou ou não aplicável. Iniciando Etapa 2 (Inferência da IA).
+2025-09-22 00:45:43,485 - app.services.product_service - INFO - Produto identificado: Arroz Tipo 1 1kg
+2025-09-22 00:45:43,485 - app.services.product_service - INFO - Iniciando Etapa 3 (Enriquecimento com Busca na Web).
+2025-09-22 00:45:43,485 - app.services.search_service - INFO - Buscando na web com a query: 'ean Tio João Arroz Tipo 1 1kg'
+2025-09-22 00:45:44,864 - app.services.advanced_inference_service - INFO - Extraindo GTIN do contexto de busca para 'Arroz Tipo 1 1kg'
+2025-09-22 00:45:45,832 - app.services.product_service - INFO - GTIN '7893500023425' extraído da busca. Validando...
+2025-09-22 00:45:47,179 - app.services.product_service - INFO - Sucesso! Dados validados e enriquecidos pelo Cosmos via RAG.
+2025-09-22 00:45:49,853 - app.database - ERROR - Tentativa de inserir produto sem título. Dados recebidos: {'vertical': 'supermercado', 'gtin': '7893500023425', 'brand': None, 'category': 'Outros', 'price': None, 'ncm': '10063021', 'cest': None, 'confidence': 0.99, 'image_hash': '44a30420041f34c214d9152407d5491a'}
+2025-09-22 00:52:35,153 - main - INFO - Nenhum cache encontrado. Iniciando extração de dados com o Vision API.
+2025-09-22 00:52:35,210 - app.services.vision_service - INFO - Imagem aprimorada para OCR.
+2025-09-22 00:52:39,072 - app.services.vision_service - INFO - Vision API: Texto extraído (15 chars), Logos: 0, Labels: 5
+2025-09-22 00:52:39,072 - app.services.vision_service - INFO - Texto bruto: '7891340" 365576' -> Texto limpo para análise: '7891340365576'
+2025-09-22 00:52:39,072 - app.services.vision_service - INFO - GTIN validado com sucesso: 7891340365576
+2025-09-22 00:52:39,073 - main - INFO - Pistas extraídas. Acionando serviço de análise para a vertical: 'supermercado'.
+2025-09-22 00:52:39,073 - app.services.product_service - INFO - Iniciando Etapa 1 (Via Rápida) com GTIN: 7891340365576.
+2025-09-22 00:52:40,474 - app.services.product_service - INFO - Produto identificado: BISC LOOK WAFER 55G BRIGADEIRO
+2025-09-22 01:06:25,773 - main - INFO - Encerrando aplicação CadVision API.

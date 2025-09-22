@@ -29,16 +29,14 @@ class ProcessingStatus(str, Enum):
 
 class ProductBase(BaseModel):
     """Modelo base para produtos."""
+    vertical: str = Field(
+        "supermercado",
+        description="A vertical do produto, ex: supermercado, vestuario"
+    )  # <-- ADICIONE ESTE CAMPO NO INÍCIO
     gtin: Optional[str] = Field(
         None,
         description="Código GTIN/EAN do produto (8, 12, 13 ou 14 dígitos)",
         example="7891234567890"
-    )
-    title: str = Field(
-        ...,
-        description="Nome do produto",
-        max_length=200,
-        example="Arroz Integral Tipo 1"
     )
     brand: Optional[str] = Field(
         None,
@@ -121,7 +119,26 @@ class ProductCreate(ProductBase):
         description="Hash da imagem usada para identificação"
     )
 
+# Em backend/app/models.py
 
+# ... (cole este código depois da classe ProductCreate)
+
+class ClothingAttributes(BaseModel):
+    """Modelo para os atributos específicos de vestuário."""
+    size: Optional[str] = Field(None, description="Tamanho da peça (P, M, G, 42, etc.)")
+    color: Optional[str] = Field(None, description="Cor principal da peça")
+    fabric: Optional[str] = Field(None, description="Material/tecido da peça")
+    gender: Optional[str] = Field(None, description="Gênero (Masculino, Feminino, Unissex)")
+
+
+class ProductCreateClothing(ProductCreate):
+    """Modelo para criar um produto de vestuário, combinando dados base e atributos específicos."""
+    attributes: ClothingAttributes
+
+
+class ProductCreateSupermarket(ProductCreate):
+    """Modelo para criar um produto de supermercado (sem atributos extras)."""
+    pass # Herda todos os campos de ProductCreate
 class ProductUpdate(ProductBase):
     """Modelo para atualização de produto."""
     pass
@@ -363,3 +380,9 @@ class APIResponse(BaseModel):
     @classmethod
     def error_response(cls, message: str, error_code: str = None):
         return cls(success=False, message=message, error_code=error_code)
+
+# Em backend/app/models.py
+
+class ProductCreateSupermarket(ProductCreate):
+    """Modelo para criar um produto de supermercado (sem atributos extras)."""
+    pass # Herda todos os campos de ProductCreate

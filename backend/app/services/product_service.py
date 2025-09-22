@@ -43,77 +43,96 @@ def _normalize_category(category_name: Optional[str]) -> str:
     return category_name.strip().title()
 
 
-def intelligent_text_analysis(vision_data: Dict, db: sqlite3.Connection) -> Dict:
+# Em backend/app/services/product_service.py
+
+# Em backend/app/services/product_service.py
+
+def intelligent_text_analysis(vision_data: Dict, db: sqlite3.Connection, vertical: str) -> Dict:
     """
-    Executa o pipeline completo de análise inteligente usando a Busca Híbrida.
+    Executa o pipeline de análise. Garante que o formato de dados seja consistente
+    independentemente do caminho (rápido ou IA).
     """
-    # ETAPA 1: VIA RÁPIDA (GTIN da imagem)
     detected_gtin = vision_data.get('gtin')
+    processed_data = None
+
+    # Etapa 1: Tenta o Caminho Rápido se houver GTIN
     if detected_gtin:
         logger.info(
-            f"Iniciando Etapa 1 (Via Rápida) com GTIN da imagem: {detected_gtin}.")
-        cosmos_data = fetch_product_by_gtin(detected_gtin)
-        if cosmos_data and cosmos_data.get("description"):
-            logger.info(
-                "✅ Sucesso! Dados encontrados via API Cosmos com GTIN da imagem.")
-            return {
-                "gtin": detected_gtin,
-                "title": cosmos_data.get("description"),
-                "brand": cosmos_data.get("brand"),
-                "category": _normalize_category(cosmos_data.get("category")),
-                "ncm": cosmos_data.get("ncm"),
-                "cest": cosmos_data.get("cest"),
-                "price": vision_data.get('price'),
-                "confidence": 0.99,
-            }
+            f"Iniciando Etapa 1 (Via Rápida) com GTIN: {detected_gtin}.")
+        processed_data = fetch_product_by_gtin(detected_gtin)
 
-    # ETAPA 2: VIA INTELIGENTE (IA para extração do título)
-    logger.info("Etapa 1 falhou. Iniciando Etapa 2 (Inferência da IA).")
-    inferred_product = run_advanced_inference(vision_data, [])
-    if not inferred_product or not inferred_product.get('title') or "não identificado" in inferred_product.get('title').lower():
+    # Etapa 2: Se o Caminho Rápido falhar ou não for aplicável, usa a IA
+    if not processed_data:
+        logger.info(
+            "Etapa 1 falhou ou não aplicável. Iniciando Etapa 2 (Inferência da IA).")
+        processed_data = run_advanced_inference(vision_data, [], vertical)
+
+    # A partir daqui, 'processed_data' sempre terá a estrutura {'base_data': ..., 'attributes': ...}
+    base_data = processed_data.get("base_data", {})
+    attributes = processed_data.get("attributes", {})
+
+    if not base_data or not base_data.get('title'):
         logger.error(
-            "A IA não conseguiu identificar o produto a partir da imagem.")
+            "A análise não conseguiu identificar um título para o produto.")
         return {'title': 'Falha ao analisar o produto', 'confidence': 0.1}
 
-    logger.info(
-        f"Produto identificado pela IA: {inferred_product.get('title')}")
+    logger.info(f"Produto identificado: {base_data.get('title')}")
 
-    # ETAPA 3: ENRIQUECIMENTO COM BUSCA REAL (RAG)
-    if not inferred_product.get('gtin'):
+    # Etapa 3: Enriquece com GTIN via busca na web, se necessário (lógica de RAG)
+    if not base_data.get('gtin'):
         logger.info("Iniciando Etapa 3 (Enriquecimento com Busca na Web).")
-        title = inferred_product.get('title')
-        brand = inferred_product.get('brand')
+        title = base_data.get('title')
+        brand = base_data.get('brand')
 
-        # 3.1: Busca na Web para encontrar informações
-        # Usar "ean" na busca costuma ser mais eficaz
-        search_query = f"ean {brand} {title}"
-        search_results = search_web_for_product(search_query)
+        if title and brand:
+            search_query = f"ean {brand} {title}"
+            search_results = search_web_for_product(search_query)
 
-        if search_results:
-            # 3.2: IA para extrair o GTIN dos resultados
-            gtin_data = extract_gtin_from_context(title, search_results)
-            found_gtin = gtin_data.get('gtin')
+            if search_results:
+                gtin_data = extract_gtin_from_context(title, search_results)
+                found_gtin = gtin_data.get('gtin')
 
-            if found_gtin:
-                logger.info(
-                    f"GTIN '{found_gtin}' extraído da busca. Validando...")
-                # 3.3: Validação no Cosmos para obter dados canônicos
-                cosmos_data = fetch_product_by_gtin(found_gtin)
-                if cosmos_data and cosmos_data.get("description"):
+                if found_gtin:
                     logger.info(
-                        "Sucesso! Dados validados e enriquecidos pelo Cosmos.")
-                    return {
-                        "gtin": found_gtin,
-                        "title": cosmos_data.get("description"),
-                        "brand": cosmos_data.get("brand") or brand,
-                        "category": _normalize_category(cosmos_data.get("category")),
-                        "ncm": cosmos_data.get("ncm"),
-                        "cest": cosmos_data.get("cest"),
-                        "price": vision_data.get('price'),
-                        "confidence": 0.99,
-                    }
+                        f"GTIN '{found_gtin}' extraído da busca. Validando...")
+                    # Valida o GTIN encontrado no Cosmos para obter dados canônicos
+                    cosmos_response = fetch_product_by_gtin(found_gtin)
 
-    # ETAPA 4: FINALIZAÇÃO (Fallback)
-    logger.warning(
-        "Não foi possível encontrar/validar um GTIN. Retornando dados da inferência inicial.")
-    return inferred_product
+                    if cosmos_response and cosmos_response.get("base_data"):
+                        logger.info(
+                            "Sucesso! Dados validados e enriquecidos pelo Cosmos via RAG.")
+
+                        # Usa os dados do Cosmos como a fonte principal de verdade
+                        enriched_data = cosmos_response["base_data"]
+
+                        # Mantém o preço da imagem original, que é mais confiável
+                        enriched_data['price'] = base_data.get(
+                            'price') or vision_data.get('price')
+
+                        # Se for vestuário, anexa os atributos que a IA encontrou na Etapa 2
+                        if vertical == 'vestuario' and attributes:
+                            enriched_data['attributes'] = attributes
+
+                        # Normaliza a categoria como passo final
+                        enriched_data['category'] = _normalize_category(
+                            enriched_data.get('category'))
+
+                        return enriched_data  # Retorna os dados enriquecidos e encerra a função
+
+   # --- CORREÇÃO DEFINITIVA ---
+    # Etapa 4: Finalização e retorno. Prepara um dicionário 'plano' para o frontend.
+    # Cria uma cópia para não modificar o original
+    final_product_data = base_data.copy()
+
+    # Adiciona os atributos (se existirem) ao dicionário final
+    if attributes:
+        final_product_data['attributes'] = attributes
+
+    # Garante que o preço da imagem original seja considerado
+    final_product_data['price'] = base_data.get(
+        'price') or vision_data.get('price')
+    # Normaliza a categoria como passo final
+    final_product_data['category'] = _normalize_category(
+        final_product_data.get('category'))
+
+    return final_product_data

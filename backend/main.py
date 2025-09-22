@@ -1,11 +1,4 @@
 # backend/main.py
-"""
-Ponto de Entrada Principal da API CadVision (FastAPI).
-
-Este arquivo define todos os endpoints da API, gerencia o ciclo de vida da
-aplicação (startup/shutdown), configura os middlewares (CORS, Gzip),
-e orquestra as chamadas para os diferentes módulos de serviço e banco de dados.
-"""
 
 # --- Imports da Biblioteca Padrão ---
 import logging
@@ -14,13 +7,13 @@ import time
 import io
 from pathlib import Path
 from contextlib import asynccontextmanager
-from typing import Optional  # <-- ADICIONE ESTA LINHA
+from typing import Optional, Union  # <-- ADICIONE ESTA LINHA
 
 # --- Imports de Terceiros ---
 import pandas as pd
 from fastapi import (
     Depends, FastAPI, File, HTTPException, UploadFile,
-    Query, BackgroundTasks
+    Query, BackgroundTasks, Form  # <-- ADICIONE 'Form' AQUI
 )
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
@@ -95,11 +88,16 @@ async def identify_image(
     background_tasks: BackgroundTasks,
     image: UploadFile = File(...,
                              description="Imagem do produto para identificação (até 10MB)"),
+    # --- MUDANÇA PRINCIPAL AQUI ---
+    # Adicionamos 'vertical' como um campo de formulário.
+    # Se o frontend não enviar nada, o padrão será "supermercado".
+    vertical: str = Form(
+        "supermercado", description="A vertical do produto (ex: supermercado, vestuario)"),
     db: sqlite3.Connection = Depends(database.get_db)
 ):
     """
-    Recebe uma imagem de produto, executa o pipeline completo de IA e retorna os
-    dados estruturados do produto identificado.
+    Recebe uma imagem de produto e a vertical, executa o pipeline de IA e retorna
+    os dados estruturados do produto identificado.
     """
     start_time = time.time()
 
@@ -144,13 +142,16 @@ async def identify_image(
         raise HTTPException(
             status_code=422, detail="Não foi possível extrair dados legíveis da imagem.")
 
-    # 4. Orquestração da análise inteligente (GTIN ou Inferência Avançada)
+     # 4. Orquestração da análise inteligente
     logger.info(
-        "Pistas extraídas. Acionando o serviço de análise inteligente de produto.")
+        f"Pistas extraídas. Acionando serviço de análise para a vertical: '{vertical}'.")
+    # --- MUDANÇA IMPORTANTE AQUI ---
+    # Passamos a 'vertical' recebida para a próxima camada da nossa lógica.
     product_info = product_service.intelligent_text_analysis(
-        vision_data=vision_data, db=db)
+        vision_data=vision_data, db=db, vertical=vertical
+    )
 
-    # 5. Montagem e retorno da resposta final
+    # 5. Montagem e retorno da resposta
     processing_time = round(time.time() - start_time, 2)
     identified_product = models.IdentifiedProduct(**product_info)
 
@@ -229,6 +230,10 @@ async def get_products(
     )
 
 
+# Em backend/main.py
+
+# Em backend/main.py
+
 @app.post(
     f"{API_PREFIX}/products",
     response_model=models.APIResponse,
@@ -237,10 +242,10 @@ async def get_products(
     tags=["Produtos"]
 )
 async def save_product(
-    product: models.ProductCreate,
+    product: Union[models.ProductCreateClothing, models.ProductCreateSupermarket],
     db: sqlite3.Connection = Depends(database.get_db)
 ):
-    """Recebe os dados de um produto (geralmente após a identificação por IA) e os persiste no banco."""
+    """Recebe os dados de um produto (de qualquer vertical) e os persiste no banco."""
     try:
         product_id = database.insert_product(product.dict(), db)
         if product_id:
@@ -248,16 +253,19 @@ async def save_product(
                 data={"id": product_id},
                 message="Produto salvo com sucesso"
             )
+        # A nova função de database pode retornar um erro mais específico
         raise HTTPException(
-            status_code=500, detail="Erro desconhecido ao salvar o produto.")
+            status_code=500, detail="Erro ao salvar o produto no banco de dados.")
     except sqlite3.IntegrityError:
         raise HTTPException(
             status_code=409, detail=f"Produto com GTIN {product.gtin} já existe.")
-
+    except ValueError as e:  # Captura o erro de título vazio que adicionamos
+        raise HTTPException(status_code=422, detail=str(e))
 
 # Em backend/main.py
 
 # Em backend/main.py
+
 
 @app.get(
     f"{API_PREFIX}/products/export",

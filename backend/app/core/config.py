@@ -28,6 +28,14 @@ if not COSMOS_API_KEY:
 else:
     logger.info("COSMOS_API_KEY configurada corretamente")
 
+# Em backend/app/core/config.py
+
+# Chave da API Gemini
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    logger.warning("GEMINI_API_KEY não encontrada no ambiente")
+else:
+    logger.info("GEMINI_API_KEY configurada corretamente")
 # --- INÍCIO DA ATUALIZAÇÃO ---
 
 # Chaves da API Google Custom Search

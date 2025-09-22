@@ -971,7 +971,8 @@ select:focus {
 .icon-wrapper.bg-teal,
 .icon-wrapper.bg-green,
 .icon-wrapper.bg-yellow {
-  background-color: #3B82F6; /* Cor azul padronizada */
+  background-color: #3B82F6;
+  /* Cor azul padronizada */
 }
 
 .kpi-card .kpi-details span {
@@ -999,11 +1000,13 @@ select:focus {
   /* 🔥 CORREÇÃO DEFINITIVA: Impede que os itens da grid se estiquem verticalmente. */
   align-items: start;
 }
+
 /* 🔥 NOVO AJUSTE: Garante que o conteúdo dentro do card se organize corretamente */
 .dashboard-charts-grid .card {
-    display: flex;
-    flex-direction: column;
-    height: 100%; /* Faz o card preencher o espaço da coluna da direita */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /* Faz o card preencher o espaço da coluna da direita */
 }
 
 .right-column-charts {
@@ -1131,3 +1134,48 @@ select:focus {
 }
 
 /* frontend/assets/css/style.css */
+/* Em frontend/assets/css/style.css, no final do arquivo */
+
+.vertical-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-xl);
+}
+
+.vertical-card {
+  text-align: center;
+  padding: var(--spacing-xl);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.vertical-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+}
+
+.vertical-card i {
+  font-size: 48px;
+  color: var(--primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.vertical-card .h3 {
+  margin: 0 0 5px;
+  font-size: 18px;
+}
+
+.workflow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.workflow-header .h2 {
+  margin: 0;
+  padding: 0;
+  border: none;
+}

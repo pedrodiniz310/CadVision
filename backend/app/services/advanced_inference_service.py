@@ -1,3 +1,4 @@
+from app.core.config import GEMINI_API_KEY
 import google.generativeai as genai
 import json
 import re
@@ -7,49 +8,57 @@ import logging
 # Configurar logging
 logger = logging.getLogger(__name__)
 
-# Configure sua API key (deve vir de variáveis de ambiente)
-genai.configure(api_key="AIzaSyBiDFX_nDBI37XxATZR9idVLO1cd1iRibE")
+# Configura a API key de forma segura a partir da variável importada
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
+else:
+    logger.error(
+        "GEMINI_API_KEY não encontrada! O serviço de IA não funcionará.")
 
 
 # =============================================================================
 # === FUNÇÕES PRINCIPAIS (PONTOS DE ENTRADA DO SERVIÇO) =======================
 # =============================================================================
 
-def run_advanced_inference(vision_data: Dict, search_results: List[Dict]) -> Dict:
+def run_advanced_inference(vision_data: Dict, search_results: List[Dict], vertical: str) -> Dict:
     """
     Orquestra o processo de inferência inicial para extrair dados da imagem.
-    É o ponto de entrada principal para a identificação via IA.
+    É o ponto de entrada principal para a identificação via IA, agora ciente da vertical.
     """
     ocr_text = vision_data.get('raw_text', '')
     logos = [logo['description']
              for logo in vision_data.get('detected_logos', [])]
 
-    # Chama a função de extração principal
-    extracted_data = extract_product_info(ocr_text, logos, search_results)
+    extracted_data = extract_product_info(
+        ocr_text, logos, search_results, vertical)
 
-    # Valida o GTIN retornado pela IA para garantir que tenha um comprimento válido.
-    validated_gtin = extracted_data.get("gtin", "")
-    if validated_gtin and isinstance(validated_gtin, str):
-        numeric_gtin = re.sub(r'\D', '', validated_gtin)
-        if len(numeric_gtin) not in [8, 12, 13, 14]:
-            logger.warning(
-                f"GTIN inválido retornado pela IA: '{validated_gtin}'. Descartando.")
-            validated_gtin = ""  # ou None
-
-    # Formata os dados para o padrão do sistema
-    final_product_data = {
-        'gtin': validated_gtin,
-        'title': extracted_data.get("title", ""),
-        'brand': extracted_data.get("brand", ""),
-        'category': _normalize_category(extracted_data.get("category", "")),
-        'ncm': extracted_data.get("ncm", ""),
-        'cest': extracted_data.get("cest", ""),
+    # Retorna uma estrutura padronizada com dados base e atributos específicos
+    base_data = {
+        'gtin': extracted_data.get("gtin"),
+        'title': extracted_data.get("title"),
+        'brand': extracted_data.get("brand"),
+        'category': _normalize_category(extracted_data.get("category")),
         'price': extracted_data.get("price") or vision_data.get('price'),
-        'confidence': 0.95,
-        'detected_patterns': ['generative_ai_inference']
+        'confidence': 0.95,  # Confiança base da IA
+        'vertical': vertical
     }
 
-    return final_product_data
+    attributes = {}
+    if vertical == 'vestuario':
+        attributes = {
+            'size': extracted_data.get("size"),
+            'color': extracted_data.get("color"),
+            'fabric': extracted_data.get("fabric"),
+            'gender': extracted_data.get("gender")
+        }
+    else:  # Default para 'supermercado'
+        base_data['ncm'] = extracted_data.get("ncm")
+        base_data['cest'] = extracted_data.get("cest")
+
+    return {
+        "base_data": base_data,
+        "attributes": attributes
+    }
 
 
 def extract_gtin_from_context(title: str, search_results: List[Dict]) -> Dict:
@@ -86,7 +95,6 @@ def extract_gtin_from_context(title: str, search_results: List[Dict]) -> Dict:
         if json_match:
             data = json.loads(json_match.group())
             gtin = data.get("gtin")
-            # Validação final para garantir que é um GTIN válido
             if gtin and isinstance(gtin, str) and len(re.sub(r'\D', '', gtin)) == 13:
                 return {"gtin": re.sub(r'\D', '', gtin)}
 
@@ -100,151 +108,110 @@ def extract_gtin_from_context(title: str, search_results: List[Dict]) -> Dict:
 # === FUNÇÕES DE LÓGICA INTERNA ===============================================
 # =============================================================================
 
-def extract_product_info(ocr_text: str, detected_logos: List[str], search_results: List[Dict]) -> Dict[str, Any]:
+def extract_product_info(ocr_text: str, detected_logos: List[str], search_results: List[Dict], vertical: str) -> Dict[str, Any]:
     """
     Extrai informações estruturadas de produto do texto usando Gemini API.
-    (Chamada por run_advanced_inference)
     """
     try:
-        # Construir prompt
-        prompt = _build_llm_prompt(ocr_text, detected_logos, search_results)
+        prompt = _build_llm_prompt(
+            ocr_text, detected_logos, search_results, vertical)
 
-        # Configuração do modelo
         model = genai.GenerativeModel('gemini-1.5-pro-latest')
-
-        # Geração de conteúdo
         response = model.generate_content(prompt)
-
-        # Extração do JSON da resposta
         response_text = response.text.strip()
-
-        # Remove possíveis markdown ou código delimitadores
         json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
+
         if json_match:
             json_str = json_match.group()
-            product_data = json.loads(json_str)
+            return json.loads(json_str)
         else:
-            # Fallback: tenta parsear todo o texto como JSON
-            product_data = json.loads(response_text)
-
-        return product_data
+            # Fallback para caso a resposta seja um JSON limpo
+            return json.loads(response_text)
 
     except Exception as e:
         logger.error(f"Erro ao extrair informações do produto: {e}")
-        # Retorna estrutura vazia em caso de erro
-        return {
-            "gtin": None,
-            "title": "Produto não identificado",
-            "brand": None,
-            "category": None,
-            "ncm": None,
-            "cest": None,
-            "price": None
-        }
+        return {"title": "Produto não identificado"}
 
 
 # =============================================================================
 # === FUNÇÕES AUXILIARES (HELPERS) ============================================
 # =============================================================================
 
-def _build_llm_prompt(ocr_text: str, detected_logos: List[str], search_results: List[Dict]) -> str:
+def _build_llm_prompt(ocr_text: str, detected_logos: List[str], search_results: List[Dict], vertical: str) -> str:
     """
-    Cria o prompt estruturado para ser enviado ao LLM.
-    (Chamada por extract_product_info)
+    Cria o prompt estruturado para ser enviado ao LLM, adaptado para a vertical do produto.
     """
-    # Formatar resultados de busca
+    # --- INÍCIO DA CORREÇÃO ---
+    # Formata os resultados de busca para adicionar contexto ao prompt
     search_context = ""
     if search_results:
-        search_context = "\nCONTEXTO ADICIONAL DE BUSCA:\n"
+        search_context = "\nCONTEXTO ADICIONAL DE BUSCA NA WEB:\n"
         for i, res in enumerate(search_results, 1):
-            title = res.get('source_title', 'N/A')
+            title = res.get('title', 'N/A')
             snippet = res.get('snippet', 'N/A')
             search_context += f"{i}. {title}: {snippet}\n"
+    # --- FIM DA CORREÇÃO ---
 
-    # Formatar logos detectadas
     logos_context = ""
     if detected_logos:
         logos_context = f"\nLOGO DETECTADAS: {', '.join(detected_logos)}"
 
+    # Parte dinâmica do prompt
+    json_structure = ""
+    instructions = ""
+
+    if vertical == 'vestuario':
+        json_structure = """
+    - "title": nome completo do produto (ex: "Camisa Polo Masculina", "Tênis de Corrida Nike Revolution 6").
+    - "brand": marca do produto (ex: "Lacoste", "Nike").
+    - "category": "Vestuário".
+    - "size": tamanho da peça (ex: "P", "M", "G", "42").
+    - "color": cor principal da peça (ex: "Azul Marinho", "Branco").
+    - "fabric": tecido ou material principal (ex: "Algodão Piquet", "Poliéster").
+    - "gender": gênero (ex: "Masculino", "Feminino", "Unissex").
+    - "gtin": código GTIN/EAN de 13 dígitos, se visível.
+    - "price": preço do produto, se visível.
+    """
+        instructions = "Foque em extrair atributos de vestuário como tamanho, cor, tecido e gênero."
+    else:  # Default para 'supermercado'
+        json_structure = """
+    - "title": nome completo do produto, incluindo peso/volume (ex: "Arroz Integral Tipo 1 1kg").
+    - "brand": marca do produto (ex: "Tio João").
+    - "category": categoria principal (ex: "Alimentos", "Bebidas").
+    - "gtin": código GTIN/EAN de 13 dígitos, se visível.
+    - "ncm": código NCM no formato 9999.99.99, se visível.
+    - "cest": código CEST no formato 99.999.99, se visível.
+    - "price": preço do produto, se visível.
+    """
+        instructions = "Foque em extrair atributos de supermercado como peso/volume, NCM e CEST."
+
+    # Montagem do prompt final
     prompt = f"""
-    Você é um especialista em processamento de dados de produtos. Sua tarefa é analisar o texto extraído de uma imagem de produto e retornar APENAS um objeto JSON com as seguintes chaves:
+    Você é um especialista em processamento de dados de produtos para um sistema de cadastro.
+    Sua tarefa é analisar o texto de uma imagem de um produto da vertical '{vertical.upper()}' e retornar APENAS um objeto JSON.
 
-    - gtin: código GTIN/EAN encontrado (string ou null)
-    - title: nome completo e descritivo do produto (string)
-    - brand: marca do produto (string ou null)
-    - category: categoria do produto (string ou null)
-    - ncm: código NCM encontrado (string ou null)
-    - cest: código CEST encontrado (string ou null)
-    - price: preço do produto (número float ou null)
+    A estrutura do JSON deve ser a seguinte:
+    {json_structure}
 
-    INSTRUÇÕES CRÍTICAS:
-    1. Para o 'title', use o nome mais completo e descritivo possível, incluindo variações, sabor e volume/peso (ex: "Refrigerante Coca-Cola Sem Açúcar Lata 350ml" ou "Sabão em Pó Omo Lavagem Perfeita Caixa 1.6kg"). Este detalhe é fundamental.
-    2. Para a marca, identifique claramente o fabricante.
-    3. Extraia o GTIN/EAN (código de barras) se estiver visível no texto.
-    4. Para categoria, use uma das opções: "Alimentos", "Bebidas", "Limpeza", "Higiene", "Eletrônicos", "Vestuário", "Automotivo", "Construção" ou "Outros".
-    5. Extraia o NCM e o CEST se estiverem presentes.
+    INSTRUÇÕES CRÍTICAS: {instructions}
 
     TEXTO EXTRAÍDO DA IMAGEM (OCR):
     {ocr_text}
     {logos_context}
     {search_context}
 
-    Retorne APENAS o objeto JSON, sem nenhum texto adicional, comentários ou markdown.
+    Retorne APENAS o objeto JSON, sem nenhum texto adicional.
     """
-
     return prompt
 
 
 def _normalize_category(category: str) -> str:
-    """
-    Normaliza a categoria para um conjunto padrão de valores.
-    """
     if not category:
-        return None
-
+        return "Outros"
     category = category.lower().strip()
-
-    category_mapping = {
-        "alimento": "Alimentos",
-        "bebida": "Bebidas",
-        "limpeza": "Limpeza",
-        "higiene": "Higiene",
-        "eletrônico": "Eletrônicos",
-        "eletronicos": "Eletrônicos",
-        "vestuário": "Vestuário",
-        "vestuario": "Vestuário",
-        "automotivo": "Automotivo",
-        "construção": "Construção",
-        "construcao": "Construção"
-    }
-
+    category_mapping = {"alimento": "Alimentos", "bebida": "Bebidas", "limpeza": "Limpeza", "higiene": "Higiene",
+                        "eletrônico": "Eletrônicos", "vestuário": "Vestuário", "automotivo": "Automotivo", "construção": "Construção"}
     for key, value in category_mapping.items():
         if key in category:
             return value
-
     return "Outros"
-
-
-# =============================================================================
-# === FUNÇÕES DEPRECATED/LEGACY (Manter por compatibilidade se necessário) ====
-# =============================================================================
-
-def process_product_data(vision_data, cosmos_data):
-    """
-    Processa dados de visão computacional e Cosmos para criar estrutura padronizada.
-    (Esta função parece ser de uma lógica anterior e pode não ser mais usada no fluxo principal)
-    """
-    # Se temos dados do Cosmos, priorizamos eles
-    if cosmos_data:
-        return {
-            "gtin": cosmos_data.get("gtin"),
-            "title": cosmos_data.get("description"),
-            "brand": cosmos_data.get("brand"),
-            "category": _normalize_category(cosmos_data.get("category")),
-            "ncm": cosmos_data.get("ncm"),
-            "cest": cosmos_data.get("cest"),
-            "price": vision_data.get('price')
-        }
-
-    # Caso contrário, usamos a inferência do Gemini
-    return run_advanced_inference(vision_data, [])

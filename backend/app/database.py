@@ -176,60 +176,54 @@ def init_db():
 # Em backend/app/database.py
 
 
+# Em backend/app/database.py
+
+# Em backend/app/database.py
+
 def insert_product(product_data: Dict[str, Any], db: sqlite3.Connection) -> Optional[int]:
-    """Insere ou atualiza um produto no banco de dados usando a conexão fornecida."""
+    """
+    Insere um novo produto e seus atributos de forma transacional e segura.
+    """
+    cur = db.cursor()
+
+    # Validação defensiva para garantir que o título está presente
+    if not product_data.get('title'):
+        logger.error(
+            "Tentativa de inserir produto sem título. Dados recebidos: %s", product_data)
+        raise ValueError("O título do produto não pode ser vazio.")
+
+    # Separa os atributos específicos (ex: size, color) do dicionário principal
+    attributes = product_data.pop('attributes', None)
+    vertical = product_data.get('vertical', 'supermercado')
+
     try:
-        # A lógica de 'with get_db_cursor...' foi removida para usar a conexão 'db' diretamente.
-        cur = db.cursor()
+        # Prepara os campos e valores de forma segura, garantindo a ordem
+        fields = list(product_data.keys())
+        values = list(product_data.values())
 
-        # Verifica se o produto já existe pelo GTIN
-        if product_data.get('gtin'):
-            cur.execute("SELECT id FROM products WHERE gtin = ?",
-                        (product_data['gtin'],))
-            existing = cur.fetchone()
+        field_names = ', '.join(fields)
+        placeholders = ', '.join(['?'] * len(fields))
 
-            if existing:
-                # Atualiza produto existente
-                cur.execute("""
-                    UPDATE products 
-                    SET title = ?, brand = ?, category = ?, price = ?, ncm = ?, cest = ?, 
-                        confidence = ?, image_hash = ?, updated_at = CURRENT_TIMESTAMP
-                    WHERE gtin = ?
-                """, (  # A vírgula antes de WHERE foi removida
-                    product_data.get('title'),
-                    product_data.get('brand'),
-                    product_data.get('category'),
-                    product_data.get('price'),
-                    product_data.get('ncm'),
-                    product_data.get('cest'),
-                    product_data.get('confidence'),
-                    product_data.get('image_hash'),
-                    product_data.get('gtin')
-                ))
-                db.commit()  # Realiza o commit da transação
-                return existing['id']
+        cur.execute(
+            f"INSERT INTO products ({field_names}) VALUES ({placeholders})", tuple(values))
+        product_id = cur.lastrowid
 
-        # Insere novo produto
-        cur.execute("""
-            INSERT INTO products 
-            (gtin, title, brand, category, price, ncm, cest, confidence, image_hash)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            product_data.get('gtin'),
-            product_data.get('title'),
-            product_data.get('brand'),
-            product_data.get('category'),
-            product_data.get('price'),
-            product_data.get('ncm'),
-            product_data.get('cest'),
-            product_data.get('confidence'),
-            product_data.get('image_hash')
-        ))
-        db.commit()  # Realiza o commit da transação
-        return cur.lastrowid
-    except sqlite3.Error as e:
+        # Se for um produto de vestuário e tiver atributos, insere na tabela específica
+        if vertical == 'vestuario' and attributes:
+            attributes['product_id'] = product_id
+            attr_fields = ', '.join(attributes.keys())
+            attr_placeholders = ', '.join(['?'] * len(attributes))
+            cur.execute(f"INSERT INTO attributes_clothing ({attr_fields}) VALUES ({attr_placeholders})", tuple(
+                attributes.values()))
+
+        db.commit()  # Confirma a transação (salva em ambas as tabelas)
+        logger.info(
+            f"Produto ID {product_id} (Vertical: {vertical}) salvo com sucesso.")
+        return product_id
+
+    except (sqlite3.Error, ValueError) as e:
         logger.error(f"Erro ao inserir produto: {e}")
-        db.rollback()  # Desfaz a transação em caso de erro
+        db.rollback()  # Desfaz tudo se der erro
         return None
 
 
@@ -388,13 +382,32 @@ def find_product_by_image_hash(image_hash: str, db: sqlite3.Connection) -> Optio
 # Em backend/app/database.py, no final do arquivo
 
 
+# Em backend/app/database.py
+
 def get_product_by_id(product_id: int, db: sqlite3.Connection) -> Optional[Dict]:
-    """Recupera um único produto pelo seu ID."""
+    """
+    Recupera um único produto pelo seu ID, juntando os atributos específicos da vertical, se existirem.
+    """
     try:
         cursor = db.cursor()
+        # Busca os dados base do produto
         cursor.execute("SELECT * FROM products WHERE id = ?", (product_id,))
         row = cursor.fetchone()
-        return dict(row) if row else None
+
+        if not row:
+            return None
+
+        product_dict = dict(row)
+
+        # Se for um produto de vestuário, busca seus atributos
+        if product_dict.get('vertical') == 'vestuario':
+            cursor.execute(
+                "SELECT size, color, fabric, gender FROM attributes_clothing WHERE product_id = ?", (product_id,))
+            attr_row = cursor.fetchone()
+            if attr_row:
+                product_dict['attributes'] = dict(attr_row)
+
+        return product_dict
     except sqlite3.Error as e:
         logger.error(f"Erro ao buscar produto por ID {product_id}: {e}")
         return None

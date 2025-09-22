@@ -15,6 +15,7 @@ const STATE = {
   currentPage: "identify",
   isLoading: false,
   connectionStatus: "checking",
+  selectedVertical: null,
 };
 
 // ===== Cache de Elementos DOM =====
@@ -23,6 +24,14 @@ const DOM = {};
 // ===== Utilitários =====
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => document.querySelectorAll(sel);
+
+function formatFileSize(bytes) {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
 
 // Sistema de logging
 const Logger = {
@@ -180,22 +189,60 @@ async function initApp() {
 
 // Remova qualquer outra referência à função setupNavigation que possa existir
 
+// Em frontend/assets/js/script.js
+
+// Em frontend/assets/js/script.js
+
+// Em frontend/assets/js/script.js
+
 function cacheDOMElements() {
   const ids = [
-    "sidebar", "sidebarOverlay", "apiUrl", "btnMenu", "dropArea", "fileInput",
-    "imagePreview", "btnIdentify", "btnRemoveImage", "uploadStatus", "aiStatus",
-    "productForm", "productName", "productBrand", "productGTIN", "productCategory",
-    "productNCM", "productCEST", "productPrice", "productsContainer", "totalProducts",
-    "totalAI", "filterCategory", "filterBrand", "filterSort", "productsPagination",
-    "paginationInfo", "btnPrevPage", "btnNextPage", "logsContent", "btnClearLogs",
-    "connectionStatus", "notification-container",
-    // Elementos da câmera adicionados aqui
-    "btnOpenCamera", "cameraOverlay", "cameraFeed", "cameraCanvas", "cameraSnap", "cameraCancel"
+    // Layout principal
+    "sidebar", "sidebarOverlay", "btnMenu", "notification-container", "connectionStatus",
+
+    // Página de Identificação
+    "vertical-selector", "select-supermercado", "select-vestuario",
+    "identification-workflow", "btnBackToVertical", "form-placeholder",
+    "dropArea", "fileInput", "imagePreview", "btnIdentify", "btnRemoveImage",
+    "uploadStatus", "aiStatus",
+
+    // Página de Configurações
+    "apiUrl", "btnSaveSettings",
+
+    // Câmera
+    "btnOpenCamera", "cameraOverlay", "cameraFeed", "cameraCanvas", "cameraSnap", "cameraCancel",
+
+    // Formulário Supermercado
+    "productFormSupermarket", "productNameSupermarket", "productBrandSupermarket",
+    "productGTINSupermarket", "productCategorySupermarket", "productNCMSupermarket",
+    "productCESTSupermarket", "productPriceSupermarket",
+
+    // Formulário Vestuário
+    "productFormClothing", "productNameClothing", "productBrandClothing",
+    "productCategoryClothing", "productPriceClothing", "productSizeClothing",
+    "productColorClothing", "productFabricClothing", "productGenderClothing",
+
+    // Página de Produtos
+    "productsContainer", "filterCategory", "filterBrand", "filterSort",
+    "productsPagination", "paginationInfo", "btnPrevPage", "btnNextPage",
+    "exportContainer", "btnExport", "exportMenu",
+    "editOverlay", "editProductForm",
+
+    // Página de Logs
+    "logsContent", "btnClearLogs",
+
+    // Dashboard
+    "totalProducts", "totalAI", "successRate", "avgTime",
+    "btnRefreshDashboard"
   ];
+
   ids.forEach(id => {
-    const camelCaseId = id.replace(/-([a-z])/g, g => g[1].toUpperCase());
-    DOM[camelCaseId] = $(`#${id}`);
+    if (id) {
+      const camelCaseId = id.replace(/-([a-z])/g, g => g[1].toUpperCase());
+      DOM[camelCaseId] = $(`#${id}`);
+    }
   });
+
   DOM.navLinks = $$(".nav-link");
   DOM.pageContents = $$(".page-content");
 }
@@ -389,6 +436,11 @@ function setupEventListeners() {
   DOM.btnMenu?.addEventListener("click", () => toggleSidebar(true));
   DOM.sidebarOverlay?.addEventListener("click", () => toggleSidebar(false));
 
+  // --- NOVOS EVENTOS PARA SELEÇÃO DE VERTICAL ---
+  DOM.selectSupermercado?.addEventListener("click", () => selectVertical("supermercado"));
+  DOM.selectVestuario?.addEventListener("click", () => selectVertical("vestuario"));
+  DOM.btnBackToVertical?.addEventListener("click", resetToVerticalSelection);
+
   // Upload de imagem
   if (DOM.dropArea) {
     ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
@@ -411,8 +463,10 @@ function setupEventListeners() {
   DOM.cameraCancel?.addEventListener('click', closeCamera);
   // -----------------------------------------
 
-  // Formulário
-  DOM.productForm?.addEventListener("submit", saveProduct);
+  // --- ALTERAÇÃO NOS FORMULÁRIOS ---
+  // Agora temos dois formulários para escutar
+  DOM.productFormSupermarket?.addEventListener("submit", saveProduct);
+  DOM.productFormClothing?.addEventListener("submit", saveProduct);
 
   // Logs
   DOM.btnClearLogs?.addEventListener("click", Logger.clear);
@@ -473,6 +527,23 @@ function setupEventListeners() {
       }, 500);
     });
   }
+}
+
+// Em script.js
+
+function selectVertical(vertical) {
+  STATE.selectedVertical = vertical;
+  DOM.verticalSelector.style.display = 'none';
+  DOM.identificationWorkflow.style.display = 'grid'; // Usa 'grid' para manter o layout
+  Logger.log(`Vertical selecionada: ${vertical}`, "info");
+}
+
+function resetToVerticalSelection() {
+  resetIdentifyUI(); // Limpa tudo
+  STATE.selectedVertical = null;
+  DOM.verticalSelector.style.display = 'grid'; // Usa 'grid'
+  DOM.identificationWorkflow.style.display = 'none';
+  Logger.log("Seleção de vertical reiniciada.", "info");
 }
 // ===== Navegação =====
 function toggleSidebar(open) {
@@ -554,30 +625,22 @@ function handleFiles(files) {
   Logger.log(`Imagem carregada: ${file.name}`, "success");
 }
 
-function formatFileSize(bytes) {
-  if (bytes < 1024) return bytes + " bytes";
-  else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + " KB";
-  else return (bytes / 1048576).toFixed(1) + " MB";
-}
-
 async function processImageWithAI() {
-  if (!STATE.lastImageFile) {
-    Logger.log("Nenhuma imagem selecionada para análise.", "warning");
+  if (!STATE.lastImageFile || !STATE.selectedVertical) {
+    Logger.log("Nenhuma imagem ou vertical selecionada para análise.", "warning");
     return;
   }
 
-  // Pega o elemento do botão para facilitar a leitura
   const identifyButton = DOM.btnIdentify;
-
-  // --- INÍCIO DA MUDANÇA ---
-  // 1. Ativa o estado de carregamento ANTES de iniciar o processo
   setButtonLoadingState(identifyButton, true, 'Identificando...');
   updateAIStatus("Analisando imagem...", "processing");
-  // --- FIM DA MUDANÇA ---
 
   try {
     const formData = new FormData();
     formData.append("image", STATE.lastImageFile);
+    // --- MUDANÇA IMPORTANTE: Envia a vertical selecionada ---
+    formData.append("vertical", STATE.selectedVertical);
+    // ----------------------------------------------------
 
     const response = await fetch(`${CONFIG.BASE_URL}/vision/identify`, {
       method: "POST",
@@ -623,21 +686,17 @@ async function processImageWithAI() {
     }
 
     STATE.lastAIResult = result;
-    STATE.lastImageHash = result.image_hash; // Adicione esta linha
+    STATE.lastImageHash = result.image_hash;
     const confidencePercent = Math.round((result.confidence || 0) * 100);
     updateAIStatus(`Análise concluída (${confidencePercent}% confiança)`, "success");
-    fillFormWithAIResults(result);
+    fillFormWithAIResults(result); // Esta função agora será mais inteligente
     Logger.log(`Produto identificado: ${result.product?.title || "Desconhecido"}`, "success");
 
   } catch (error) {
     updateAIStatus("Falha na análise", "error");
     Logger.log(`Erro na identificação: ${error.message}`, "error");
-    showNotification(`Erro na análise: ${error.message}`, "error");
   } finally {
-    // --- INÍCIO DA MUDANÇA ---
-    // 2. Desativa o estado de carregamento DEPOIS que tudo terminou (sucesso ou falha)
     setButtonLoadingState(identifyButton, false);
-    // --- FIM DA MUDANÇA ---
   }
 }
 function updateAIStatus(message, status) {
@@ -659,94 +718,63 @@ function updateAIStatus(message, status) {
 
 // frontend/assets/js/script.js
 
+// Em script.js
 function fillFormWithAIResults(result) {
-  // Função auxiliar para definir o valor e a classe de um campo
-  // frontend/assets/js/script.js - dentro da função fillFormWithAIResults
-
-  // Substitua a função setFieldValue por esta versão final
-  const setFieldValue = (element, value, confidence) => {
-    if (!element) return;
-    const formGroup = element.closest('.form-group');
-
-    // Limpa estados anteriores
-    element.value = '';
-    element.className = element.className.replace(/\bai-.*\b/g, '');
-    if (formGroup) formGroup.className = formGroup.className.replace(/\bai-.*\b/g, '');
-
-    if (value !== null && value !== undefined && value !== "") {
-      element.value = value;
-
-      // Adiciona classes base
-      element.classList.add('ai-filled');
-      if (formGroup) formGroup.classList.add('ai-filled-group');
-
-      // Adiciona classes de confiança
-      if (confidence) {
-        if (confidence >= 0.95) { // Ex: Confiança da API Cosmos
-          element.classList.add('ai-high-confidence');
-          if (formGroup) formGroup.classList.add('ai-high-confidence');
-        } else if (confidence > 0.70) { // Ex: Inferência com logo
-          element.classList.add('ai-medium-confidence');
-          if (formGroup) formGroup.classList.add('ai-medium-confidence');
-        }
-      }
-
-      if (element.tagName === 'SELECT') {
-        // ... (lógica de seleção da option já implementada) ...
-        let optionFound = false;
-        for (let i = 0; i < element.options.length; i++) {
-          if (element.options[i].value === value) {
-            element.selectedIndex = i;
-            optionFound = true;
-            break;
-          }
-        }
-        if (!optionFound) {
-          element.value = 'Outros';
-        }
-      }
-    }
-  };
-
   const product = result.product || {};
-  const confidence = result.confidence || 0; // Pega a confiança geral
+  const vertical = product.vertical || 'supermercado';
+  const attributes = product.attributes || {};
 
-  // Passa a confiança para cada campo
-  setFieldValue(DOM.productName, product.title, confidence);
-  setFieldValue(DOM.productBrand, product.brand, confidence);
-  setFieldValue(DOM.productGTIN, product.gtin, confidence);
-  setFieldValue(DOM.productCategory, product.category, confidence);
-  setFieldValue(DOM.productNCM, product.ncm, confidence);
-  setFieldValue(DOM.productCEST, product.cest, confidence);
+  // Esconde o placeholder e todos os formulários
+  DOM.formPlaceholder.style.display = 'none';
+  DOM.productFormSupermarket.style.display = 'none';
+  DOM.productFormClothing.style.display = 'none';
 
-  const priceValue = product.price !== null ? product.price.toFixed(2) : '';
-  setFieldValue(DOM.productPrice, priceValue, confidence);
-
-  // Foca no primeiro campo vazio ou no preço
-  if (!DOM.productName.value) {
-    DOM.productName.focus();
-  } else if (!DOM.productPrice.value) {
-    DOM.productPrice.focus();
+  // Lógica para mostrar e preencher o formulário correto
+  if (vertical === 'vestuario') {
+    DOM.productFormClothing.style.display = 'block';
+    $('#productNameClothing').value = product.title || '';
+    $('#productBrandClothing').value = product.brand || '';
+    $('#productCategoryClothing').value = product.category || 'Vestuário';
+    $('#productPriceClothing').value = product.price ? product.price.toFixed(2) : '';
+    // Preenche os campos específicos de vestuário
+    $('#productSizeClothing').value = attributes.size || '';
+    $('#productColorClothing').value = attributes.color || '';
+    $('#productFabricClothing').value = attributes.fabric || '';
+    $('#productGenderClothing').value = attributes.gender || '';
+  } else { // Padrão para supermercado
+    DOM.productFormSupermarket.style.display = 'block';
+    $('#productNameSupermarket').value = product.title || '';
+    $('#productBrandSupermarket').value = product.brand || '';
+    $('#productGTINSupermarket').value = product.gtin || '';
+    $('#productCategorySupermarket').value = product.category || 'Alimentos';
+    $('#productNCMSupermarket').value = product.ncm || '';
+    $('#productCESTSupermarket').value = product.cest || '';
+    $('#productPriceSupermarket').value = product.price ? product.price.toFixed(2) : '';
   }
 }
 
+// Em script.js
 function resetIdentifyUI() {
   STATE.lastImageFile = null;
   STATE.lastAIResult = null;
+  STATE.lastImageHash = null; // Limpa o hash também
+
   DOM.imagePreview.style.display = "none";
   DOM.imagePreview.src = "";
   DOM.btnIdentify.disabled = true;
   DOM.btnRemoveImage.style.display = "none";
   DOM.uploadStatus.textContent = "Aguardando imagem...";
-  DOM.productForm.reset();
-  // --- ADIÇÃO IMPORTANTE ---
-  // Percorre todos os campos do formulário e remove a classe de destaque.
-  const formElements = DOM.productForm.querySelectorAll('input, select');
-  formElements.forEach(el => el.classList.remove('ai-filled'));
-  // --- FIM DA ADIÇÃO ---
+
+  // Limpa ambos os formulários e os esconde
+  DOM.productFormSupermarket.reset();
+  DOM.productFormClothing.reset();
+  DOM.productFormSupermarket.style.display = 'none';
+  DOM.productFormClothing.style.display = 'none';
+
+  // Mostra o placeholder novamente
+  DOM.formPlaceholder.style.display = 'block';
 
   updateAIStatus("Aguardando análise", "info");
-  Logger.log("Imagem removida", "info");
 }
 
 // ===== Gerenciamento de Estado de Loading =====
@@ -859,29 +887,56 @@ async function exportProducts(format = 'csv') {
   }
 }
 
+// Em script.js
+// Em frontend/assets/js/script.js
+
+// Em frontend/assets/js/script.js
+// SUBSTITUA A SUA FUNÇÃO 'saveProduct' POR ESTA:
+
 async function saveProduct(e) {
   e.preventDefault();
 
-  const productData = {
-    title: DOM.productName.value.trim(),
-    brand: DOM.productBrand.value.trim() || null,
-    gtin: DOM.productGTIN.value.trim() || null,
+  // Determina qual formulário está ativo (visível) no momento do clique
+  const activeFormId = DOM.productFormSupermarket.style.display === 'block'
+    ? 'supermercado'
+    : 'vestuario';
+
+  let productData = {
+    vertical: activeFormId, // Define a vertical com base no formulário ativo
     confidence: STATE.lastAIResult?.confidence || null,
-    image_hash: STATE.lastImageHash || null, // Adiciona o hash da imagem
-    category: DOM.productCategory.value.trim() || null,
-    price: DOM.productPrice.value ? parseFloat(DOM.productPrice.value.replace(',', '.')) : null,
-    ncm: DOM.productNCM.value.trim() || null,
-    cest: DOM.productCEST.value.trim() || null,
-    confidence: STATE.lastAIResult?.confidence || null
+    image_hash: STATE.lastImageHash || null
   };
 
+  // Coleta dados do formulário correto com base no que está visível
+  if (activeFormId === 'vestuario') {
+    productData.title = DOM.productNameClothing.value.trim();
+    productData.brand = DOM.productBrandClothing.value.trim() || null;
+    productData.category = DOM.productCategoryClothing.value || null;
+    productData.price = DOM.productPriceClothing.value ? parseFloat(DOM.productPriceClothing.value) : null;
+    productData.attributes = {
+      size: DOM.productSizeClothing.value.trim() || null,
+      color: DOM.productColorClothing.value.trim() || null,
+      fabric: DOM.productFabricClothing.value.trim() || null,
+      gender: DOM.productGenderClothing.value || null
+    };
+  } else { // 'supermercado'
+    productData.title = DOM.productNameSupermarket.value.trim();
+    productData.brand = DOM.productBrandSupermarket.value.trim() || null;
+    productData.gtin = DOM.productGTINSupermarket.value.trim() || null;
+    productData.category = DOM.productCategorySupermarket.value || null;
+    productData.ncm = DOM.productNCMSupermarket.value.trim() || null;
+    productData.cest = DOM.productCESTSupermarket.value.trim() || null;
+    productData.price = DOM.productPriceSupermarket.value ? parseFloat(DOM.productPriceSupermarket.value) : null;
+  }
+
+  // Validação do título no frontend para feedback imediato
   if (!productData.title) {
-    showNotification("O título do produto é obrigatório.", "error");
-    DOM.productName.focus();
+    showNotification("O título do produto não pode ser vazio.", "error");
     return;
   }
 
-  setLoadingState(DOM.productForm.querySelector('button[type="submit"]'), true, "Salvando...");
+  const submitButton = e.target.querySelector('button[type="submit"]');
+  setButtonLoadingState(submitButton, true, "Salvando...");
 
   try {
     const response = await fetch(`${CONFIG.BASE_URL}/products`, {
@@ -891,23 +946,23 @@ async function saveProduct(e) {
     });
 
     const result = await response.json();
-
     if (!response.ok) {
-      throw new Error(result.detail || result.message || `Erro ${response.status}`);
+      const errorMessage = result.detail || "Erro desconhecido ao salvar o produto.";
+      throw new Error(errorMessage);
     }
 
-    Logger.log(`Produto salvo: ${productData.title}`, "success");
     showNotification("Produto salvo com sucesso!", "success");
+    resetToVerticalSelection();
 
-    resetIdentifyUI();
+    // Atualiza os dados das outras telas
+    await loadDashboardData();
     await loadProducts();
-    showPage('products');
 
   } catch (error) {
     Logger.log(`Erro ao salvar produto: ${error.message}`, "error");
-    showNotification(`Erro ao salvar: ${error.message}`, "error");
+    showNotification(`Erro ao salvar produto: ${error.message}`, "error");
   } finally {
-    setLoadingState(DOM.productForm.querySelector('button[type="submit"]'), false, "Salvar Produto");
+    setButtonLoadingState(submitButton, false);
   }
 }
 

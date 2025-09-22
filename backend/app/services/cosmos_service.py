@@ -25,82 +25,50 @@ def extract_value(data, key, subkey=None):
         return str(value) if value is not None else ""
 
 
+# Em backend/app/services/cosmos_service.py
+
+# Em backend/app/services/cosmos_service.py
+
 def fetch_product_by_gtin(gtin: str) -> Optional[Dict]:
     """
-    Busca os dados de um produto na API do Cosmos usando o GTIN.
-    Retorna os dados já formatados para nosso uso.
+    Busca dados de um produto no Cosmos e retorna no formato padronizado.
     """
     if not COSMOS_API_KEY:
-        logger.error("❌ Chave da API Cosmos não configurada no arquivo .env")
-        logger.error(
-            "⚠️  Adicione COSMOS_API_KEY=sua_chave_aqui no arquivo backend/.env")
+        logger.error("Chave da API Cosmos não configurada.")
         return None
 
     url = f"{BASE_URL}/gtins/{gtin}.json"
-    headers = {
-        "X-Cosmos-Token": COSMOS_API_KEY,
-        "Content-Type": "application/json",
-        "User-Agent": "CadVisionApp/1.0"
-    }
+    headers = {"X-Cosmos-Token": COSMOS_API_KEY,
+               "User-Agent": "CadVisionApp/1.0"}
 
     try:
-        logger.info(f"🌐 Consultando Cosmos API: {url}")
-        logger.info(
-            f"🔑 Usando chave: {COSMOS_API_KEY[:10]}...{COSMOS_API_KEY[-5:]}")
-
         response = requests.get(url, headers=headers, timeout=15)
-        logger.info(f"📊 Status Code: {response.status_code}")
-
         if response.status_code == 200:
             product_data = response.json()
-            logger.info(f"✅ Resposta da Cosmos: {product_data}")
 
-            # Extrai dados usando a função auxiliar
-            description = extract_value(product_data, "description")
-            brand = extract_value(product_data, "brand", "name")
-            category = extract_value(product_data, "category")
-            ncm = extract_value(product_data, "ncm", "code")
-            cest = extract_value(product_data, "cest", "code")
+            category_obj = product_data.get("category", {})
+            category_name = category_obj.get(
+                "description", "") if isinstance(category_obj, dict) else ""
 
-            result = {
-                "description": description,
-                "brand": brand,
-                "category": category,
-                "ncm": ncm,
-                "cest": cest
+            base_data = {
+                "gtin": gtin,
+                # CORREÇÃO: Usar a 'description' do produto como 'title'
+                "title": product_data.get("description", ""),
+                "brand": product_data.get("brand", {}).get("name", ""),
+                "category": category_name,
+                "ncm": product_data.get("ncm", {}).get("code", ""),
+                "cest": product_data.get("cest", {}).get("code", ""),
+                "confidence": 0.99,
+                "vertical": "supermercado"
             }
 
-            logger.info(f"📦 Dados formatados: {result}")
-            return result
+            logger.info(f"📦 Dados formatados do Cosmos: {base_data}")
+            return {"base_data": base_data, "attributes": {}}
 
-        elif response.status_code == 404:
-            logger.warning(
-                f"❌ GTIN {gtin} não encontrado na base de dados do Cosmos")
-            return None
-
-        elif response.status_code in [401, 403]:
-            logger.error(
-                f"🔒 Erro de autenticação: Status {response.status_code}")
-            logger.error(
-                "⚠️  Verifique se a COSMOS_API_KEY está correta no arquivo .env")
-            return None
-
-        else:
-            logger.error(f"⚠️  Erro inesperado: Status {response.status_code}")
-            logger.error(f"📄 Resposta: {response.text}")
-            return None
-
-    except requests.exceptions.Timeout:
-        logger.error("⏰ Timeout ao consultar a API Cosmos")
-        return None
-    except requests.exceptions.ConnectionError:
-        logger.error("🌐 Erro de conexão - verifique sua internet")
+        # ... (resto do tratamento de erros)
         return None
     except requests.exceptions.RequestException as e:
-        logger.error(f"⚠️  Erro na requisição: {e}")
-        return None
-    except Exception as e:
-        logger.error(f"❌ Erro inesperado: {e}")
+        logger.error(f"Erro na requisição ao Cosmos: {e}")
         return None
 
     # Em backend/app/services/cosmos_service.py
