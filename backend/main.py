@@ -26,7 +26,6 @@ from fastapi.encoders import jsonable_encoder
 from app import models
 from app import database
 from app.services import vision_service, product_service
-from app.services.vision_service import add_product_to_catalog, add_reference_image_to_product
 from app.core.logging_config import setup_logging, log_structured_event
 
 from app.services.vector_search_service import get_image_embedding, add_image_to_index
@@ -80,113 +79,94 @@ API_PREFIX = "/api/v1"
 @app.post(
     f"{API_PREFIX}/vision/identify",
     response_model=models.IdentificationResult,
-    summary="Identifica um produto a partir de uma imagem",
+    summary="Identifica um produto a partir de uma ou duas imagens",
     tags=["Visão Computacional"]
 )
 async def identify_image(
     background_tasks: BackgroundTasks,
-    image: UploadFile = File(...,
-                             description="Imagem do produto para identificação (até 10MB)"),
-    vertical: str = Form(
-        "supermercado", description="A vertical do produto (ex: supermercado, vestuario)"),
-    db: sqlite3.Connection = Depends(database.get_db)
+    db: sqlite3.Connection = Depends(database.get_db),
+    vertical: str = Form(...),
+    tag_image: UploadFile = File(
+        ..., description="Imagem da etiqueta para extração de texto (OCR)."),
+    product_image: Optional[UploadFile] = File(
+        None, description="Imagem do produto inteiro para busca visual e catalogação.")
 ):
     """
-    Recebe uma imagem de produto e a vertical, executa o pipeline de IA e retorna
-    os dados estruturados do produto identificado.
+    Recebe a imagem da etiqueta e, opcionalmente, a do produto.
+    Executa o pipeline completo de IA e retorna os dados estruturados.
     """
     start_time = time.time()
-
     log_structured_event("vision/identify", "process_started", {
-        "vertical": vertical, "filename": image.filename, "content_type": image.content_type
+        "vertical": vertical,
+        "tag_image": tag_image.filename,
+        "product_image": product_image.filename if product_image else None
     })
 
-    # 1. Validação do arquivo
-    if not image.content_type or not image.content_type.startswith('image/'):
-        log_structured_event("vision/identify", "validation_failed", {
-                             "reason": "invalid_file_type", "content_type": image.content_type}, "ERROR")
+    # 1. Processa a imagem da etiqueta (obrigatória)
+    tag_image_bytes = await tag_image.read()
+    if not tag_image_bytes or len(tag_image_bytes) > 10 * 1024 * 1024:
         raise HTTPException(
-            status_code=400, detail="Tipo de arquivo inválido.")
+            status_code=400, detail="Imagem da etiqueta é inválida ou maior que 10MB.")
 
-    image_bytes = await image.read()
-    if len(image_bytes) > 10 * 1024 * 1024:  # 10MB
-        raise HTTPException(
-            status_code=400, detail="Imagem excede o tamanho máximo de 10MB.")
+    tag_image_hash = vision_service.get_cache_key(tag_image_bytes)
 
-    image_hash = vision_service.get_cache_key(image_bytes)
-    log_structured_event("vision/identify", "image_loaded",
-                         {"size_bytes": len(image_bytes), "hash": image_hash})
+    # 2. Processa a imagem do produto (opcional)
+    product_image_bytes = await product_image.read() if product_image else None
+    product_image_hash = None
+    if product_image_bytes:
+        if len(product_image_bytes) > 10 * 1024 * 1024:
+            raise HTTPException(
+                status_code=400, detail="Imagem do produto é maior que 10MB.")
+        product_image_hash = vision_service.get_cache_key(product_image_bytes)
 
-    # 2. Verificação de imagem duplicada
-    product_from_hash = database.find_product_by_image_hash(image_hash, db)
-    if product_from_hash:
-        log_structured_event("vision/identify", "cache_hit",
-                             {"image_hash": image_hash, "product_id": product_from_hash.get('id')})
-        identified_product = models.IdentifiedProduct(**product_from_hash)
-        return models.IdentificationResult(
-            success=True,
-            status="duplicate_found",
-            product=identified_product,
-            image_hash=image_hash,
-            confidence=identified_product.confidence or 1.0,
-            processing_time=round(time.time() - start_time, 2)
-        )
-
-    # 3. Extração com Vision API
-    log_structured_event("vision/identify", "vision_extraction_start", {})
-    vision_data = vision_service.extract_vision_data(image_bytes)
-    log_structured_event("vision/identify", "vision_extraction_complete", {
-        "success": vision_data.get("success"),
-        "text_length": len(vision_data.get('raw_text', '')),
-        "gtin_found": bool(vision_data.get('gtin'))
-    })
-
+    # 3. Extrai dados textuais APENAS da imagem da etiqueta
+    log_structured_event(
+        "vision/identify", "text_extraction_start", {"hash": tag_image_hash})
+    vision_data = vision_service.extract_vision_data(tag_image_bytes)
     if not vision_data.get("success"):
-        log_structured_event("vision/identify", "vision_extraction_failed",
-                             {"reason": "no_readable_data"}, "ERROR")
         raise HTTPException(
-            status_code=422, detail="Não foi possível extrair dados legíveis da imagem.")
+            status_code=422, detail="Não foi possível extrair dados legíveis da etiqueta.")
 
-    # 4. Análise inteligente
+    # 4. Análise inteligente, agora com ambas as imagens
     log_structured_event(
         "vision/identify", "intelligent_analysis_start", {"vertical": vertical})
     try:
         product_info = product_service.intelligent_text_analysis(
-            vision_data=vision_data, db=db, vertical=vertical)
-        log_structured_event("vision/identify", "intelligent_analysis_complete", {
-            "title": product_info.get('title'), "brand": product_info.get('brand')
-        })
+            vision_data=vision_data,
+            # Passa a imagem do produto para a busca visual
+            product_image_bytes=product_image_bytes,
+            db=db,
+            vertical=vertical
+        )
     except Exception as e:
-        log_structured_event(
-            "vision/identify", "intelligent_analysis_failed", {"error": str(e)}, "ERROR")
+        logger.error(f"Erro na análise inteligente: {e}", exc_info=True)
         raise HTTPException(
-            status_code=500, detail="Erro na análise do produto.")
+            status_code=500, detail=f"Erro na análise do produto: {e}")
 
-    # 5. Preparar resposta
+    # 5. Prepara a resposta
     processing_time = round(time.time() - start_time, 2)
     identified_product = models.IdentifiedProduct(**product_info)
 
+    # O hash retornado para o frontend é o da imagem do PRODUTO, para ser usado na catalogação.
+    # Se não houver imagem de produto, usa-se o da etiqueta.
+    final_image_hash_for_saving = product_image_hash or tag_image_hash
+
+    # O log de processamento é sempre sobre a imagem que passou pelo OCR
     background_tasks.add_task(
         database.log_processing,
-        image_hash=image_hash,
+        image_hash=tag_image_hash,
         processing_time=processing_time,
         success=True,
         confidence=identified_product.confidence,
         error_message=None
     )
 
-    log_structured_event("vision/identify", "process_completed", {
-        "processing_time": processing_time, "product_title": product_info.get('title')
-    })
-
     return models.IdentificationResult(
         success=True,
         status="newly_identified",
         product=identified_product,
-        image_hash=image_hash,
+        image_hash=final_image_hash_for_saving,  # Hash para o frontend usar ao salvar
         raw_text=vision_data.get('raw_text', ''),
-        detected_logos=[logo.get('description')
-                        for logo in vision_data.get('detected_logos', [])],
         confidence=identified_product.confidence,
         processing_time=processing_time
     )

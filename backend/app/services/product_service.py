@@ -7,7 +7,9 @@ from typing import Dict, Optional
 from app.services.cosmos_service import fetch_product_by_gtin
 from app.services.search_service import search_web_for_product
 from app.services.advanced_inference_service import run_advanced_inference, extract_gtin_from_context
-from app.services.vision_service import find_product_by_visual_search
+from app.services.vector_search_service import get_image_embedding, find_match_in_vector_search
+# Garanta que este import esteja lá
+from app.services.vision_service import extract_vision_data
 from app.database import get_product_by_id
 from datetime import datetime
 # Em uma implementação de produção, você usaria uma biblioteca cliente de busca.
@@ -78,17 +80,21 @@ def _normalize_category(category_name: Optional[str]) -> str:
 
 # Em backend/app/services/product_service.py
 
-def intelligent_text_analysis(vision_data: Dict, db: sqlite3.Connection, vertical: str) -> Dict:
+def intelligent_text_analysis(vision_data: Dict, product_image_bytes: Optional[bytes], db: sqlite3.Connection, vertical: str) -> Dict:
     """
-    Executa o pipeline de análise completo, com busca visual como primeira etapa para vestuário.
+    Executa o pipeline de análise completo, usando a Vertex AI Vector Search para vestuário.
     """
     # --- ETAPA 1: TENTATIVA DE BUSCA VISUAL (LÓGICA DA AULA 3) ---
-    if vertical == 'vestuario':
-        logger.info("Iniciando Etapa 1 (Busca Visual).")
-        image_bytes = vision_data.get('original_image_bytes')
+    if vertical == 'vestuario' and product_image_bytes:
+        logger.info("Iniciando Etapa 1 (Vertex AI Vector Search).")
 
-        if image_bytes:
-            visual_match = find_product_by_visual_search(image_bytes)
+        # Primeiro, transformamos a imagem do produto em uma "assinatura visual" (vetor)
+        embedding = get_image_embedding(product_image_bytes)
+
+        if embedding:
+            # Agora, procuramos por essa assinatura no nosso índice
+            visual_match = find_match_in_vector_search(embedding)
+
             if visual_match:
                 product_sku = visual_match.get("product_id")
                 # Busca o produto completo no NOSSO banco de dados usando o SKU
@@ -97,9 +103,9 @@ def intelligent_text_analysis(vision_data: Dict, db: sqlite3.Connection, vertica
 
                 if product_data:
                     logger.info(
-                        f"Sucesso! Produto SKU {product_sku} encontrado via busca visual.")
+                        f"Sucesso! Produto SKU {product_sku} encontrado via Vector Search.")
                     product_data['confidence'] = visual_match.get('confidence')
-                    # Retorna os dados do produto encontrado visualmente e encerra a função
+                    # Encontramos! A função termina aqui, retornando os dados do produto já cadastrado.
                     return product_data
 
     # --- ETAPAS DE FALLBACK (SE A BUSCA VISUAL FALHAR OU NÃO FOR VESTUÁRIO) ---
@@ -109,11 +115,13 @@ def intelligent_text_analysis(vision_data: Dict, db: sqlite3.Connection, vertica
     detected_gtin = vision_data.get('gtin')
     processed_data = None
 
+    # Tenta a Via Rápida com GTIN para verticais que não são de vestuário
     if vertical != 'vestuario' and detected_gtin:
         logger.info(
             f"Iniciando Etapa 2 (Via Rápida - GTIN) com GTIN: {detected_gtin}.")
         processed_data = fetch_product_by_gtin(detected_gtin)
 
+    # Se a Via Rápida falhou ou não foi usada, parte para a Inferência com IA
     if not processed_data:
         logger.info(
             "Via Rápida falhou ou não aplicável. Iniciando Etapa 3 (Inferência da IA).")
@@ -161,7 +169,6 @@ def intelligent_text_analysis(vision_data: Dict, db: sqlite3.Connection, vertica
         final_product_data['attributes'] = attributes
 
     # Aplica a função de validação e limpeza antes de retornar.
-    # Esta função centraliza toda a lógica de fallback de título, priorização de preço, etc.
     final_product_data = _post_process_and_validate_data(
         final_product_data, vision_data)
 

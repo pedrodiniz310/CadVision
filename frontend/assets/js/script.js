@@ -685,6 +685,7 @@ function handleDrop(e) {
   handleFiles(files);
 }
 
+// SUBSTITUA a sua função handleFiles por esta:
 function handleFiles(files, type) {
   if (!files || files.length === 0) return;
   const file = files[0];
@@ -700,7 +701,6 @@ function handleFiles(files, type) {
   let statusElement;
   let statusPrefix;
 
-  // Define qual variável de estado e qual elemento de status usar
   if (type === 'tag') {
     fileStateProperty = 'lastTagFile';
     statusElement = DOM.uploadStatusTag;
@@ -717,12 +717,8 @@ function handleFiles(files, type) {
 
   STATE[fileStateProperty] = file;
 
-  // ATUALIZAÇÃO IMPORTANTE: Verifica se o elemento de status existe antes de usá-lo
   if (statusElement) {
     statusElement.textContent = `${statusPrefix} ${file.name}`;
-  } else {
-    // Para supermercado, ainda usamos o preview geral
-    DOM.uploadStatus.textContent = `${statusPrefix} ${file.name}`;
   }
 
   // Mostra a pré-visualização APENAS para o fluxo de supermercado
@@ -737,85 +733,9 @@ function handleFiles(files, type) {
 
   DOM.btnIdentify.disabled = !(STATE.lastTagFile || STATE.lastImageFile);
   DOM.btnRemoveImage.style.display = "inline-flex";
-
   Logger.log(`Arquivo '${file.name}' carregado para a área '${type}'.`, 'info');
 }
 
-async function processImageWithAI() {
-  const fileToProcess = STATE.selectedVertical === 'vestuario' ? STATE.lastTagFile : STATE.lastImageFile;
-  if (!fileToProcess) {
-    showNotification("Por favor, envie a imagem da etiqueta para análise.", "error");
-    return;
-  }
-
-  const identifyButton = DOM.btnIdentify;
-  setButtonLoadingState(identifyButton, true, 'Identificando...');
-  updateAIStatus("Analisando imagem...", "processing");
-
-  try {
-    const formData = new FormData();
-    formData.append("image", STATE.lastImageFile);
-    // --- MUDANÇA IMPORTANTE: Envia a vertical selecionada ---
-    formData.append("vertical", STATE.selectedVertical);
-    // ----------------------------------------------------
-
-    const response = await fetch(`${CONFIG.BASE_URL}/vision/identify`, {
-      method: "POST",
-      body: formData
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.detail || result.message || `Erro ${response.status}`);
-    }
-    // --- INÍCIO DA NOVA LÓGICA PARA DUPLICATAS ---
-    // Em frontend/js/script.js, dentro de processImageWithAI
-
-    // --- INÍCIO DA LÓGICA CORRIGIDA PARA DUPLICATAS ---
-    if (result.status === "duplicate_found") {
-      // Chama o novo modal profissional e aguarda a resposta
-      const userWantsToLoad = await showConfirmModal({
-        title: "Imagem Duplicada",
-        message: "Esta imagem já foi processada e salva anteriormente.<br>Deseja carregar os dados encontrados?",
-        okText: "Sim, Carregar",
-        okClass: "btn-primary" // Botão verde para confirmar
-      });
-
-      if (userWantsToLoad) {
-        fillFormWithAIResults(result);
-        updateAIStatus("Dados carregados do histórico", "success");
-        Logger.log("Dados de imagem duplicada carregados.", "info");
-      } else {
-        updateAIStatus("Análise cancelada pelo usuário", "info");
-        Logger.log("Usuário cancelou o carregamento de dados duplicados.", "info");
-      }
-
-      // A função termina aqui, pois não há mais nada a fazer.
-      return;
-    }
-    // --- FIM DA LÓGICA CORRIGIDA ---
-    // --- FIM DA NOVA LÓGICA ---
-    if (result.success === false) {
-      updateAIStatus(result.error_message || "Falha na análise", "error");
-      Logger.log(`Análise falhou: ${result.error_message || "Erro desconhecido"}`, "error");
-      return; // A execução para aqui, mas o 'finally' ainda será chamado
-    }
-
-    STATE.lastAIResult = result;
-    STATE.lastImageHash = result.image_hash;
-    const confidencePercent = Math.round((result.confidence || 0) * 100);
-    updateAIStatus(`Análise concluída (${confidencePercent}% confiança)`, "success");
-    fillFormWithAIResults(result); // Esta função agora será mais inteligente
-    Logger.log(`Produto identificado: ${result.product?.title || "Desconhecido"}`, "success");
-
-  } catch (error) {
-    updateAIStatus("Falha na análise", "error");
-    Logger.log(`Erro na identificação: ${error.message}`, "error");
-  } finally {
-    setButtonLoadingState(identifyButton, false);
-  }
-}
 function updateAIStatus(message, status) {
   if (!DOM.aiStatus) return;
 
@@ -829,6 +749,80 @@ function updateAIStatus(message, status) {
 
   DOM.aiStatus.innerHTML = `<i class="fas fa-${icons[status] || 'info-circle'}"></i> ${message}`;
   DOM.aiStatus.className = `chip ${status}`;
+}
+
+async function processImageWithAI() {
+  const isVestuario = STATE.selectedVertical === 'vestuario';
+
+  // 1. Valida se a imagem obrigatória (etiqueta) foi enviada
+  const tagImage = isVestuario ? STATE.lastTagFile : STATE.lastImageFile;
+  if (!tagImage) {
+    showNotification("Por favor, envie a imagem da etiqueta para análise.", "error");
+    return;
+  }
+
+  // Alerta, mas não bloqueia, se a imagem do produto estiver faltando para vestuário
+  if (isVestuario && !STATE.lastProductFile) {
+    showNotification("Para melhor precisão, envie também a foto do produto.", "warning");
+  }
+
+  const identifyButton = DOM.btnIdentify;
+  setButtonLoadingState(identifyButton, true, 'Identificando...');
+  updateAIStatus("Analisando imagens...", "processing");
+
+  try {
+    // 2. Monta o FormData com todas as informações necessárias de uma vez
+    const formData = new FormData();
+    formData.append("vertical", STATE.selectedVertical);
+    formData.append("tag_image", tagImage);
+
+    // Anexa a imagem do produto inteiro (se for vestuário e existir)
+    if (isVestuario && STATE.lastProductFile) {
+      formData.append("product_image", STATE.lastProductFile);
+    }
+
+    // 3. Envia a requisição para o endpoint unificado de identificação
+    const response = await fetch(`${CONFIG.BASE_URL}/vision/identify`, {
+      method: "POST",
+      body: formData
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.detail || `Erro ${response.status}`);
+    }
+
+    // 4. Lida com a resposta (duplicata ou sucesso) como antes
+    if (result.status === "duplicate_found") {
+      const userWantsToLoad = await showConfirmModal({
+        title: "Imagem Duplicada",
+        message: "Esta imagem já foi processada e salva. Deseja carregar os dados?",
+        okText: "Sim, Carregar",
+        okClass: "btn-primary"
+      });
+      if (userWantsToLoad) {
+        fillFormWithAIResults(result);
+        updateAIStatus("Dados carregados do histórico", "success");
+      } else {
+        updateAIStatus("Análise cancelada", "info");
+      }
+      return; // Encerra a função aqui
+    }
+
+    STATE.lastAIResult = result;
+    // IMPORTANTE: Este hash agora é da IMAGEM DO PRODUTO (se existir), retornado pelo backend
+    STATE.lastImageHash = result.image_hash;
+
+    const confidencePercent = Math.round((result.product?.confidence || 0) * 100);
+    updateAIStatus(`Análise concluída (${confidencePercent}% confiança)`, "success");
+    fillFormWithAIResults(result);
+
+  } catch (error) {
+    updateAIStatus("Falha na análise", "error");
+    Logger.log(`Erro na identificação: ${error.message}`, "error");
+  } finally {
+    setButtonLoadingState(identifyButton, false);
+  }
 }
 
 // Em frontend/js/script.js
@@ -877,7 +871,6 @@ function fillFormWithAIResults(result) {
   }
 }
 
-// Em script.js
 // SUBSTITUA a sua função resetIdentifyUI por esta:
 function resetIdentifyUI() {
   STATE.lastImageFile = null;
@@ -890,7 +883,6 @@ function resetIdentifyUI() {
   if (DOM.fileInputTag) DOM.fileInputTag.value = '';
   if (DOM.fileInputProduct) DOM.fileInputProduct.value = '';
 
-  // Limpa a pré-visualização e todos os textos de status
   if (DOM.imagePreview) {
     DOM.imagePreview.style.display = "none";
     DOM.imagePreview.src = "";

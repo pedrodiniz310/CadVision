@@ -1,0 +1,60 @@
+2025-09-22 22:58:38 - root - INFO - [logging_config.py:51] - Logging configurado. Arquivo: C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\logs\cadvision_20250922_225835.log
+2025-09-22 22:58:38 - app - INFO - [logging_config.py:68] - EVENT: startup - DATA: {'timestamp': '2025-09-22T22:58:38.393596', 'service': 'app', 'event': 'startup', 'data': {'version': '1.1.0'}}
+2025-09-22 22:58:38 - app.database - INFO - [database.py:175] - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-22 22:58:38 - app - INFO - [logging_config.py:68] - EVENT: database_initialized - DATA: {'timestamp': '2025-09-22T22:58:38.397596', 'service': 'app', 'event': 'database_initialized', 'data': {}}
+2025-09-22 22:59:13 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-22T22:59:13.584070', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'vestuario', 'tag_image': 'Imagem do WhatsApp de 2025-09-21 à(s) 16.46.16_17ae13c9.jpg', 'product_image': 'Imagem do WhatsApp de 2025-09-22 à(s) 18.59.39_a2b1167e.jpg'}}
+2025-09-22 22:59:13 - vision/identify - INFO - [logging_config.py:68] - EVENT: text_extraction_start - DATA: {'timestamp': '2025-09-22T22:59:13.585071', 'service': 'vision/identify', 'event': 'text_extraction_start', 'data': {'hash': 'b2fc004d6c9b4e068ae9234462176855'}}
+2025-09-22 22:59:13 - app.services.vision_service - INFO - [vision_service.py:109] - Imagem aprimorada para OCR.
+2025-09-22 22:59:16 - app.services.vision_service - INFO - [vision_service.py:182] - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-22 22:59:16 - app.services.vision_service - INFO - [vision_service.py:277] - Texto bruto: '100% ALGODÃO
+DECOTE: 98% ALGODÃO
+2% ELASTANO
+FORNECEDOR: 84891
+Modelo: 1059827 - T. 20
+40
+P W
+P
+日
+Cor VERDE CLARO
+000000113667090314
+SKU: 11366709
+PO:288843' -> Texto limpo para análise: '100982848911059827204000000011366709031411366709288843'
+2025-09-22 22:59:16 - app.services.vision_service - WARNING - [vision_service.py:298] - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-22 22:59:16 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-22T22:59:16.796392', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'vestuario'}}
+2025-09-22 22:59:16 - app.services.product_service - INFO - [product_service.py:89] - Iniciando Etapa 1 (Vertex AI Vector Search).
+2025-09-22 22:59:16 - app.services.vector_search_service - ERROR - [vector_search_service.py:62] - Erro ao gerar o embedding da imagem: module 'google.cloud.aiplatform' has no attribute 'ImageModel'
+2025-09-22 22:59:16 - app.services.product_service - INFO - [product_service.py:112] - Busca visual falhou ou não aplicável. Prosseguindo com a análise de texto/GTIN.
+2025-09-22 22:59:16 - app.services.product_service - INFO - [product_service.py:126] - Via Rápida falhou ou não aplicável. Iniciando Etapa 3 (Inferência da IA).
+2025-09-22 22:59:19 - ai_service - INFO - [logging_config.py:68] - EVENT: json_parsed_successfully - DATA: {'timestamp': '2025-09-22T22:59:19.461260', 'service': 'ai_service', 'event': 'json_parsed_successfully', 'data': {'title_extracted': 'Camiseta Gola V', 'brand_extracted': None, 'category_extracted': 'Camisetas'}}
+2025-09-22 22:59:19 - app.services.advanced_inference_service - WARNING - [advanced_inference_service.py:41] - IA retornou um GTIN inválido ('000000113667090314'). Descartando o valor.
+2025-09-22 22:59:19 - app.services.product_service - INFO - [product_service.py:137] - Produto pré-identificado: Camiseta Gola V
+2025-09-22 22:59:19 - app.services.product_service - INFO - [product_service.py:141] - Iniciando Etapa de Enriquecimento com Busca na Web (RAG).
+2025-09-22 23:00:13 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-22T23:00:13.966455', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'vestuario', 'tag_image': 'Imagem do WhatsApp de 2025-09-21 à(s) 16.46.16_17ae13c9.jpg', 'product_image': 'Imagem do WhatsApp de 2025-09-22 à(s) 18.59.39_a2b1167e.jpg'}}
+2025-09-22 23:00:13 - vision/identify - INFO - [logging_config.py:68] - EVENT: text_extraction_start - DATA: {'timestamp': '2025-09-22T23:00:13.967438', 'service': 'vision/identify', 'event': 'text_extraction_start', 'data': {'hash': 'b2fc004d6c9b4e068ae9234462176855'}}
+2025-09-22 23:00:14 - app.services.vision_service - INFO - [vision_service.py:109] - Imagem aprimorada para OCR.
+2025-09-22 23:00:17 - app.services.vision_service - INFO - [vision_service.py:182] - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-22 23:00:17 - app.services.vision_service - INFO - [vision_service.py:277] - Texto bruto: '100% ALGODÃO
+DECOTE: 98% ALGODÃO
+2% ELASTANO
+FORNECEDOR: 84891
+Modelo: 1059827 - T. 20
+40
+P W
+P
+日
+Cor VERDE CLARO
+000000113667090314
+SKU: 11366709
+PO:288843' -> Texto limpo para análise: '100982848911059827204000000011366709031411366709288843'
+2025-09-22 23:00:17 - app.services.vision_service - WARNING - [vision_service.py:298] - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-22 23:00:17 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-22T23:00:17.479751', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'vestuario'}}
+2025-09-22 23:00:17 - app.services.product_service - INFO - [product_service.py:89] - Iniciando Etapa 1 (Vertex AI Vector Search).
+2025-09-22 23:00:17 - app.services.vector_search_service - ERROR - [vector_search_service.py:62] - Erro ao gerar o embedding da imagem: module 'google.cloud.aiplatform' has no attribute 'ImageModel'
+2025-09-22 23:00:17 - app.services.product_service - INFO - [product_service.py:112] - Busca visual falhou ou não aplicável. Prosseguindo com a análise de texto/GTIN.
+2025-09-22 23:00:17 - app.services.product_service - INFO - [product_service.py:126] - Via Rápida falhou ou não aplicável. Iniciando Etapa 3 (Inferência da IA).
+2025-09-22 23:00:19 - ai_service - INFO - [logging_config.py:68] - EVENT: json_parsed_successfully - DATA: {'timestamp': '2025-09-22T23:00:19.878136', 'service': 'ai_service', 'event': 'json_parsed_successfully', 'data': {'title_extracted': 'Camiseta Gola Redonda', 'brand_extracted': None, 'category_extracted': 'Camisetas'}}
+2025-09-22 23:00:19 - app.services.advanced_inference_service - WARNING - [advanced_inference_service.py:41] - IA retornou um GTIN inválido ('000000113667090314'). Descartando o valor.
+2025-09-22 23:00:19 - app.services.product_service - INFO - [product_service.py:137] - Produto pré-identificado: Camiseta Gola Redonda
+2025-09-22 23:00:19 - app.services.product_service - INFO - [product_service.py:141] - Iniciando Etapa de Enriquecimento com Busca na Web (RAG).
+2025-09-22 23:05:11 - app - INFO - [logging_config.py:68] - EVENT: shutdown - DATA: {'timestamp': '2025-09-22T23:05:11.154884', 'service': 'app', 'event': 'shutdown', 'data': {}}
+2025-09-22 23:05:11 - main - INFO - [main.py:48] - Encerrando aplicação CadVision API.

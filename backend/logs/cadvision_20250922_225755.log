@@ -1,0 +1,6 @@
+2025-09-22 22:57:58 - root - INFO - [logging_config.py:51] - Logging configurado. Arquivo: C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\logs\cadvision_20250922_225755.log
+2025-09-22 22:57:58 - fastapi - ERROR - [utils.py:120] - Form data requires "python-multipart" to be installed. 
+You can install "python-multipart" with: 
+
+pip install python-multipart
+

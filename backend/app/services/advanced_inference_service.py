@@ -5,6 +5,7 @@ import re
 from typing import Dict, Any, List
 import logging
 from app.core.logging_config import log_structured_event
+from app.services.vision_service import validate_gtin
 
 # Configurar logging
 logger = logging.getLogger(__name__)
@@ -23,8 +24,8 @@ else:
 
 def run_advanced_inference(vision_data: Dict, search_results: List[Dict], vertical: str) -> Dict:
     """
-    Orquestra o processo de inferência inicial para extrair dados da imagem.
-    É o ponto de entrada principal para a identificação via IA, agora ciente da vertical.
+    Orquestra o processo de inferência e adiciona uma camada de validação
+    para os dados extraídos pela IA.
     """
     ocr_text = vision_data.get('raw_text', '')
     logos = [logo['description']
@@ -33,17 +34,26 @@ def run_advanced_inference(vision_data: Dict, search_results: List[Dict], vertic
     extracted_data = extract_product_info(
         ocr_text, logos, search_results, vertical)
 
+    # --- INÍCIO DA REDE DE SEGURANÇA ---
+    # Valida o GTIN retornado pela IA. Se for inválido, descarta.
+    gtin_from_ai = extracted_data.get("gtin")
+    if gtin_from_ai and not validate_gtin(str(gtin_from_ai)):
+        logger.warning(
+            f"IA retornou um GTIN inválido ('{gtin_from_ai}'). Descartando o valor.")
+        extracted_data["gtin"] = None  # Define como nulo se for inválido
+    # --- FIM DA REDE DE SEGURANÇA ---
+
     # Retorna uma estrutura padronizada com dados base e atributos específicos
     base_data = {
-        'sku': extracted_data.get("sku"),  # NOVO CAMPO
-        'gtin': extracted_data.get("gtin"),
+        'sku': extracted_data.get("sku"),
+        'gtin': extracted_data.get("gtin"),  # Agora este valor é confiável
         'title': extracted_data.get("title"),
         'brand': extracted_data.get("brand"),
-        'department': extracted_data.get("department"),  # NOVO CAMPO
+        'department': extracted_data.get("department"),
         'category': _normalize_category(extracted_data.get("category")),
-        'subcategory': extracted_data.get("subcategory"),  # NOVO CAMPO
+        'subcategory': extracted_data.get("subcategory"),
         'price': extracted_data.get("price") or vision_data.get('price'),
-        'confidence': 0.95,  # Confiança base da IA
+        'confidence': 0.95,
         'vertical': vertical
     }
 
@@ -55,7 +65,7 @@ def run_advanced_inference(vision_data: Dict, search_results: List[Dict], vertic
             'fabric': extracted_data.get("fabric"),
             'gender': extracted_data.get("gender")
         }
-    else:  # Default para 'supermercado'
+    else:
         base_data['ncm'] = extracted_data.get("ncm")
         base_data['cest'] = extracted_data.get("cest")
 

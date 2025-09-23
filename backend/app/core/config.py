@@ -52,14 +52,6 @@ if not GOOGLE_SEARCH_ENGINE_ID:
 else:
     logger.info("GOOGLE_SEARCH_ENGINE_ID configurado corretamente")
 
-# ID do Product Set para a busca visual
-GOOGLE_PRODUCT_SET_ID = os.environ.get("GOOGLE_PRODUCT_SET_ID")
-
-if not GOOGLE_PRODUCT_SET_ID:
-    logger.warning("GOOGLE_PRODUCT_SET_ID não encontrada no ambiente. A busca visual não funcionará.")
-else:
-    logger.info("GOOGLE_PRODUCT_SET_ID configurada corretamente.")
-
 
 # --- Configurações da Vertex AI Vector Search ---
 GOOGLE_PROJECT_ID = os.environ.get("GOOGLE_PROJECT_ID")
