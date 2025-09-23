@@ -206,7 +206,7 @@ function cacheDOMElements() {
     "vertical-selector", "select-supermercado", "select-vestuario",
     "identification-workflow", "btnBackToVertical", "form-placeholder",
     "dropArea", "fileInput", "imagePreview", "btnIdentify", "btnRemoveImage",
-    "uploadStatus", "aiStatus",
+    "uploadStatus", "aiStatus", "tagImagePreview", "productImagePreview", // <-- ADICIONE ESTES DOIS
 
     // Página de Configurações
     "apiUrl", "btnSaveSettings",
@@ -567,40 +567,43 @@ function handleFiles(files, type) {
     return showNotification("Arquivo muito grande (máx. 10MB).", "error");
   }
 
-  // 2. Lógica inteligente para saber ONDE salvar o arquivo e ONDE mostrar o status
-  let fileStateProperty;
-  let statusElement;
-  let statusPrefix;
+  let fileStateProperty, statusElement, statusPrefix, previewElement;
 
   if (type === 'tag') {
     fileStateProperty = 'lastTagFile';
     statusElement = DOM.uploadStatusTag;
     statusPrefix = 'Etiqueta:';
+    previewElement = DOM.tagImagePreview; // <-- Define o elemento de preview
   } else if (type === 'product') {
     fileStateProperty = 'lastProductFile';
     statusElement = DOM.uploadStatusProduct;
     statusPrefix = 'Produto:';
+    previewElement = DOM.productImagePreview; // <-- Define o elemento de preview
   } else { // 'single' para Supermercado
     fileStateProperty = 'lastImageFile';
     statusElement = DOM.uploadStatus;
     statusPrefix = 'Imagem:';
+    previewElement = DOM.imagePreview; // <-- Define o elemento de preview
   }
 
-  // 3. Atualiza o estado da aplicação com o arquivo correto
   STATE[fileStateProperty] = file;
+  if (statusElement) statusElement.textContent = `${statusPrefix} ${file.name}`;
 
-  // 4. Atualiza a interface com o nome do arquivo no local correto
-  if (statusElement) {
-    statusElement.textContent = `${statusPrefix} ${file.name}`;
+  // LÓGICA PARA EXIBIR A MINIATURA
+  if (previewElement) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      previewElement.src = e.target.result;
+      previewElement.style.display = "block";
+    };
+    reader.readAsDataURL(file);
   }
 
-  // 5. Habilita os botões
-  // O botão de identificar só é habilitado se tivermos a imagem da etiqueta (ou a única do supermercado)
   DOM.btnIdentify.disabled = !(STATE.lastTagFile || STATE.lastImageFile);
   DOM.btnRemoveImage.style.display = "inline-flex";
-
   Logger.log(`Arquivo '${file.name}' carregado para a área '${type}'.`, 'info');
 }
+
 
 
 // Em script.js
@@ -886,6 +889,14 @@ function resetIdentifyUI() {
   if (DOM.imagePreview) {
     DOM.imagePreview.style.display = "none";
     DOM.imagePreview.src = "";
+  }
+  if (DOM.tagImagePreview) {
+    DOM.tagImagePreview.style.display = "none";
+    DOM.tagImagePreview.src = "";
+  }
+  if (DOM.productImagePreview) {
+    DOM.productImagePreview.style.display = "none";
+    DOM.productImagePreview.src = "";
   }
   if (DOM.uploadStatus) DOM.uploadStatus.textContent = "Aguardando imagem...";
   if (DOM.uploadStatusTag) DOM.uploadStatusTag.textContent = "";
@@ -1328,25 +1339,28 @@ function renderProducts() {
         </thead>
         <tbody>
           ${STATE.products.map(product => {
-    // Cria a string de categorização completa
     const fullCategory = [product.department, product.category, product.subcategory]
-      .filter(Boolean) // Remove itens nulos ou vazios
+      .filter(Boolean)
       .join(' > ');
 
     return `
               <tr id="product-row-${product.id}">
-                <td data-label="Produto" class="product-title">
-                  ${escapeHtml(product.title)}
-                  ${product.confidence ? `<span class="badge badge-primary">${Math.round(product.confidence * 100)}%</span>` : ''}
-                </td>
+                <td data-label="Produto" class="product-title">${escapeHtml(product.title)}</td>
                 <td data-label="SKU" class="mono">${escapeHtml(product.sku || 'N/A')}</td>
                 <td data-label="Marca">${escapeHtml(product.brand || 'N/A')}</td>
                 <td data-label="Categorização">${escapeHtml(fullCategory || 'N/A')}</td>
                 <td data-label="GTIN/EAN" class="mono">${escapeHtml(product.gtin || 'N/A')}</td>
                 <td data-label="Cadastrado em">${new Date(product.created_at).toLocaleDateString('pt-BR')}</td>
-                <td class="actions">
-                  </td>
-              </tr>
+                
+                <td class="actions" data-label="Ações">
+                  <button class="btn btn-secondary btn-sm btn-edit" data-id="${product.id}" title="Editar Produto">
+                    <i class="fas fa-pencil-alt"></i>
+                  </button>
+                  <button class="btn btn-danger btn-sm btn-delete" data-id="${product.id}" data-title="${escapeHtml(product.title)}" title="Excluir Produto">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+                </tr>
             `;
   }).join('')}
         </tbody>
@@ -1354,28 +1368,7 @@ function renderProducts() {
     </div>`;
 
   DOM.productsContainer.innerHTML = tableHTML;
-  setupProductEventListeners();
-}
-
-function setupProductEventListeners() {
-  // Adiciona o evento de clique para todos os botões de editar
-  $$('.btn-edit').forEach(button => {
-    button.addEventListener('click', (e) => {
-      // Pega o ID diretamente do atributo data-id do botão
-      const productId = e.currentTarget.dataset.id;
-      openEditModal(productId);
-    });
-  });
-
-  // Adiciona o evento de clique para todos os botões de deletar
-  $$('.btn-delete').forEach(button => {
-    button.addEventListener('click', (e) => {
-      // Pega o ID e o Título diretamente dos atributos do botão
-      const productId = e.currentTarget.dataset.id;
-      const productTitle = e.currentTarget.dataset.title;
-      deleteProduct(productId, productTitle);
-    });
-  });
+  setupProductEventListeners(); // Esta função já existe e fará os botões funcionarem!
 }
 
 function escapeHtml(text) {

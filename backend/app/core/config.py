@@ -57,6 +57,7 @@ else:
 GOOGLE_PROJECT_ID = os.environ.get("GOOGLE_PROJECT_ID")
 GOOGLE_INDEX_ID = os.environ.get("GOOGLE_INDEX_ID")
 GOOGLE_INDEX_ENDPOINT_ID = os.environ.get("GOOGLE_INDEX_ENDPOINT_ID")
+GOOGLE_INDEX_PUBLIC_DOMAIN = os.environ.get("GOOGLE_INDEX_PUBLIC_DOMAIN")
 
 if not GOOGLE_PROJECT_ID:
     logger.warning("GOOGLE_PROJECT_ID não encontrado no ambiente.")
@@ -72,6 +73,15 @@ if not GOOGLE_INDEX_ENDPOINT_ID:
     logger.warning("GOOGLE_INDEX_ENDPOINT_ID não encontrado no ambiente.")
 else:
     logger.info("GOOGLE_INDEX_ENDPOINT_ID configurado.")
+if not GOOGLE_INDEX_PUBLIC_DOMAIN: # <-- ADICIONE ESTE BLOCO
+    logger.warning("GOOGLE_INDEX_PUBLIC_DOMAIN não encontrado no ambiente.")
+else:
+    logger.info("GOOGLE_INDEX_PUBLIC_DOMAIN configurado.")
+    
+    
+# Setando a região do Google Cloud, com valor padrão
+GOOGLE_CLOUD_REGION = os.environ.get("GOOGLE_CLOUD_REGION", "southamerica-east1")
+logger.info(f"Região do Google Cloud configurada: {GOOGLE_CLOUD_REGION}")
 
 # Caminhos para arquivos
 GOOGLE_KEY_PATH = BACKEND_DIR / "keys" / "vision.json"

@@ -1,0 +1,36 @@
+2025-09-23 00:35:44 - root - INFO - [logging_config.py:51] - Logging configurado. Arquivo: C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\logs\cadvision_20250923_003540.log
+2025-09-23 00:35:44 - app - INFO - [logging_config.py:68] - EVENT: startup - DATA: {'timestamp': '2025-09-23T00:35:44.615308', 'service': 'app', 'event': 'startup', 'data': {'version': '1.1.0'}}
+2025-09-23 00:35:44 - app.database - INFO - [database.py:175] - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-23 00:35:44 - app - INFO - [logging_config.py:68] - EVENT: database_initialized - DATA: {'timestamp': '2025-09-23T00:35:44.619309', 'service': 'app', 'event': 'database_initialized', 'data': {}}
+2025-09-23 00:36:09 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-23T00:36:09.572839', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'vestuario', 'tag_image': 'Imagem do WhatsApp de 2025-09-21 à(s) 16.46.16_17ae13c9.jpg', 'product_image': 'Imagem do WhatsApp de 2025-09-22 à(s) 18.59.39_a2b1167e.jpg'}}
+2025-09-23 00:36:09 - vision/identify - INFO - [logging_config.py:68] - EVENT: text_extraction_start - DATA: {'timestamp': '2025-09-23T00:36:09.573839', 'service': 'vision/identify', 'event': 'text_extraction_start', 'data': {'hash': 'b2fc004d6c9b4e068ae9234462176855'}}
+2025-09-23 00:36:09 - app.services.vision_service - INFO - [vision_service.py:109] - Imagem aprimorada para OCR.
+2025-09-23 00:36:13 - app.services.vision_service - INFO - [vision_service.py:182] - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-23 00:36:13 - app.services.vision_service - INFO - [vision_service.py:277] - Texto bruto: '100% ALGODÃO
+DECOTE: 98% ALGODÃO
+2% ELASTANO
+FORNECEDOR: 84891
+Modelo: 1059827 - T. 20
+40
+P W
+P
+日
+Cor VERDE CLARO
+000000113667090314
+SKU: 11366709
+PO:288843' -> Texto limpo para análise: '100982848911059827204000000011366709031411366709288843'
+2025-09-23 00:36:13 - app.services.vision_service - WARNING - [vision_service.py:298] - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-23 00:36:13 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-23T00:36:13.239738', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'vestuario'}}
+2025-09-23 00:36:13 - app.services.product_service - INFO - [product_service.py:89] - Iniciando Etapa 1 (Vertex AI Vector Search).
+2025-09-23 00:36:13 - app.services.vector_search_service - INFO - [vector_search_service.py:48] - Gerando embedding via API REST...
+2025-09-23 00:36:15 - app.services.vector_search_service - INFO - [vector_search_service.py:54] - Vetor (embedding) da imagem gerado com sucesso via API REST.
+2025-09-23 00:36:15 - app.services.vector_search_service - INFO - [vector_search_service.py:105] - Consultando a Vector Search no endpoint público: 52434059.southamerica-east1-992285647932.vdb.vertexai.goog...
+2025-09-23 00:36:16 - app.services.vector_search_service - INFO - [vector_search_service.py:116] - Nenhuma correspondência encontrada na Vector Search.
+2025-09-23 00:36:16 - app.services.product_service - INFO - [product_service.py:112] - Busca visual falhou ou não aplicável. Prosseguindo com a análise de texto/GTIN.
+2025-09-23 00:36:16 - app.services.product_service - INFO - [product_service.py:126] - Via Rápida falhou ou não aplicável. Iniciando Etapa 3 (Inferência da IA).
+2025-09-23 00:36:18 - ai_service - ERROR - [logging_config.py:70] - EVENT: extraction_failed - DATA: {'timestamp': '2025-09-23T00:36:18.079306', 'service': 'ai_service', 'event': 'extraction_failed', 'data': {'error': '400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"\ndomain: "googleapis.com"\nmetadata {\n  key: "service"\n  value: "generativelanguage.googleapis.com"\n}\n, locale: "en-US"\nmessage: "API key not valid. Please pass a valid API key."\n]', 'error_type': 'InvalidArgument'}}
+2025-09-23 00:36:18 - ai_service - WARNING - [logging_config.py:72] - EVENT: using_fallback_response - DATA: {'timestamp': '2025-09-23T00:36:18.080306', 'service': 'ai_service', 'event': 'using_fallback_response', 'data': {'fallback_data': {'title': 'Produto Não Identificado', 'brand': '', 'category': 'Outros', 'gtin': '', 'price': None}}}
+2025-09-23 00:36:18 - app.services.product_service - INFO - [product_service.py:137] - Produto pré-identificado: Produto Não Identificado
+2025-09-23 00:36:18 - app.services.product_service - INFO - [product_service.py:141] - Iniciando Etapa de Enriquecimento com Busca na Web (RAG).
+2025-09-23 00:37:01 - app - INFO - [logging_config.py:68] - EVENT: shutdown - DATA: {'timestamp': '2025-09-23T00:37:01.527255', 'service': 'app', 'event': 'shutdown', 'data': {}}
+2025-09-23 00:37:01 - main - INFO - [main.py:48] - Encerrando aplicação CadVision API.
