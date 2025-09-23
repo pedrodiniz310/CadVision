@@ -144,8 +144,14 @@ async def identify_image(
             status_code=500, detail=f"Erro na análise do produto: {e}")
 
     # 5. Prepara a resposta
-    processing_time = round(time.time() - start_time, 2)
-    identified_product = models.IdentifiedProduct(**product_info)
+    processing_time = product_info.get("metadata", {}).get("processing_time_seconds", round(time.time() - start_time, 2))
+
+    # CORREÇÃO: Desempacota o dicionário 'base_data' que está dentro de 'product_info'
+    base_data = product_info.get("base_data", {})
+    if not base_data:
+        raise HTTPException(status_code=500, detail="A análise do produto retornou dados base vazios.")
+
+    identified_product = models.IdentifiedProduct(**base_data)
 
     # O hash retornado para o frontend é o da imagem do PRODUTO, para ser usado na catalogação.
     # Se não houver imagem de produto, usa-se o da etiqueta.

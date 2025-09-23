@@ -271,43 +271,6 @@ def log_processing(image_hash: str, processing_time: float, success: bool,
         return False
 
 
-def get_product_by_gtin(gtin: str) -> Optional[Dict]:
-    """Recupera um produto pelo GTIN."""
-    try:
-        with get_db_connection() as conn:
-            cur = conn.cursor()
-            cur.execute("SELECT * FROM products WHERE gtin = ?", (gtin,))
-            row = cur.fetchone()
-            return dict(row) if row else None
-    except sqlite3.Error as e:
-        logger.error(f"Erro ao buscar produto por GTIN: {e}")
-        return None
-
-
-def get_known_brands() -> List[Dict]:
-    """Recupera todas as marcas conhecidas."""
-    try:
-        with get_db_connection() as conn:
-            cur = conn.cursor()
-            cur.execute("SELECT * FROM known_brands ORDER BY name")
-            return [dict(row) for row in cur.fetchall()]
-    except sqlite3.Error as e:
-        logger.error(f"Erro ao buscar marcas conhecidas: {e}")
-        return []
-
-
-def get_categories() -> List[Dict]:
-    """Recupera todas as categorias."""
-    try:
-        with get_db_connection() as conn:
-            cur = conn.cursor()
-            cur.execute("SELECT * FROM product_categories ORDER BY name")
-            return [dict(row) for row in cur.fetchall()]
-    except sqlite3.Error as e:
-        logger.error(f"Erro ao buscar categorias: {e}")
-        return []
-
-
 def get_processing_stats() -> Dict[str, Any]:
     """Recupera estatísticas de processamento."""
     try:

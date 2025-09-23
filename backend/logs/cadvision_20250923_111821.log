@@ -1,0 +1,89 @@
+2025-09-23 11:18:25 - root - INFO - [logging_config.py:51] - Logging configurado. Arquivo: C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\logs\cadvision_20250923_111821.log
+2025-09-23 11:18:25 - app - INFO - [logging_config.py:68] - EVENT: startup - DATA: {'timestamp': '2025-09-23T11:18:25.783106', 'service': 'app', 'event': 'startup', 'data': {'version': '1.1.0'}}
+2025-09-23 11:18:25 - app.database - INFO - [database.py:175] - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-23 11:18:25 - app - INFO - [logging_config.py:68] - EVENT: database_initialized - DATA: {'timestamp': '2025-09-23T11:18:25.786089', 'service': 'app', 'event': 'database_initialized', 'data': {}}
+2025-09-23 11:18:55 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-23T11:18:55.649783', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'vestuario', 'tag_image': 'Imagem do WhatsApp de 2025-09-21 à(s) 16.46.16_17ae13c9.jpg', 'product_image': 'Imagem do WhatsApp de 2025-09-22 à(s) 18.59.39_a2b1167e.jpg'}}
+2025-09-23 11:18:55 - vision/identify - INFO - [logging_config.py:68] - EVENT: text_extraction_start - DATA: {'timestamp': '2025-09-23T11:18:55.649783', 'service': 'vision/identify', 'event': 'text_extraction_start', 'data': {'hash': 'b2fc004d6c9b4e068ae9234462176855'}}
+2025-09-23 11:18:55 - app.services.vision_service - INFO - [vision_service.py:109] - Imagem aprimorada para OCR.
+2025-09-23 11:18:58 - app.services.vision_service - INFO - [vision_service.py:182] - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-23 11:18:58 - app.services.vision_service - INFO - [vision_service.py:277] - Texto bruto: '100% ALGODÃO
+DECOTE: 98% ALGODÃO
+2% ELASTANO
+FORNECEDOR: 84891
+Modelo: 1059827 - T. 20
+40
+P W
+P
+日
+Cor VERDE CLARO
+000000113667090314
+SKU: 11366709
+PO:288843' -> Texto limpo para análise: '100982848911059827204000000011366709031411366709288843'
+2025-09-23 11:18:58 - app.services.vision_service - WARNING - [vision_service.py:298] - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-23 11:18:58 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-23T11:18:58.414029', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'vestuario'}}
+2025-09-23 11:18:58 - product_analysis - INFO - [logging_config.py:68] - EVENT: pipeline_started - DATA: {'timestamp': '2025-09-23T11:18:58.414029', 'service': 'product_analysis', 'event': 'pipeline_started', 'data': {'vertical': 'vestuario', 'has_image': True, 'has_gtin': True}}
+2025-09-23 11:18:58 - app.services.vector_search_service - INFO - [vector_search_service.py:48] - Gerando embedding via API REST...
+2025-09-23 11:19:01 - app.services.vector_search_service - INFO - [vector_search_service.py:54] - Vetor (embedding) da imagem gerado com sucesso via API REST.
+2025-09-23 11:19:01 - app.services.vector_search_service - INFO - [vector_search_service.py:105] - Consultando a Vector Search no endpoint público: 52434059.southamerica-east1-992285647932.vdb.vertexai.goog...
+2025-09-23 11:19:02 - app.services.vector_search_service - INFO - [vector_search_service.py:116] - Nenhuma correspondência encontrada na Vector Search.
+2025-09-23 11:19:02 - inference_start - INFO - [logging_config.py:68] - EVENT: processing_started - DATA: {'timestamp': '2025-09-23T11:19:02.584773', 'service': 'inference_start', 'event': 'processing_started', 'data': {'vertical': 'vestuario', 'ocr_length': 156, 'logos_count': 0, 'search_results': 0}}
+2025-09-23 11:19:04 - ai_extraction - INFO - [logging_config.py:68] - EVENT: extraction_success - DATA: {'timestamp': '2025-09-23T11:19:04.884970', 'service': 'ai_extraction', 'event': 'extraction_success', 'data': {'title': None, 'brand': None, 'has_gtin': True}}
+2025-09-23 11:19:04 - app.services.advanced_inference_service - WARNING - [advanced_inference_service.py:134] - GTIN inválido descartado: '000000113667090314'
+2025-09-23 11:19:04 - inference_error - ERROR - [logging_config.py:70] - EVENT: processing_failed - DATA: {'timestamp': '2025-09-23T11:19:04.884970', 'service': 'inference_error', 'event': 'processing_failed', 'data': {'error': "'NoneType' object has no attribute 'strip'", 'processing_time_seconds': 2.300197}}
+2025-09-23 11:19:04 - product_analysis - INFO - [logging_config.py:68] - EVENT: pipeline_completed - DATA: {'timestamp': '2025-09-23T11:19:04.885969', 'service': 'product_analysis', 'event': 'pipeline_completed', 'data': {'source': 'ai_inference', 'processing_time': 6.47194, 'final_title': 'Produto 100% Algodão Decote: 98% Algodão', 'final_confidence': 0.7}}
+2025-09-23 11:19:04 - main - ERROR - [main.py:496] - Erro não tratado na rota http://127.0.0.1:8000/api/v1/vision/identify: 1 validation error for IdentifiedProduct
+title
+  Field required [type=missing, input_value={'base_data': {'sku': Non...69', 'confidence': 0.7}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 29, in __call__
+    await responder(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 130, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 46, in __call__
+    await self.app(scope, receive, self.send_with_compression)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 78, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 75, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 308, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 219, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 148, in identify_image
+    identified_product = models.IdentifiedProduct(**product_info)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentifiedProduct
+title
+  Field required [type=missing, input_value={'base_data': {'sku': Non...69', 'confidence': 0.7}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-09-23 11:28:53 - app - INFO - [logging_config.py:68] - EVENT: shutdown - DATA: {'timestamp': '2025-09-23T11:28:53.901031', 'service': 'app', 'event': 'shutdown', 'data': {}}
+2025-09-23 11:28:53 - main - INFO - [main.py:48] - Encerrando aplicação CadVision API.

@@ -1,0 +1,91 @@
+2025-09-23 11:43:56 - root - INFO - [logging_config.py:51] - Logging configurado. Arquivo: C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\logs\cadvision_20250923_114352.log
+2025-09-23 11:43:56 - app - INFO - [logging_config.py:68] - EVENT: startup - DATA: {'timestamp': '2025-09-23T11:43:56.082357', 'service': 'app', 'event': 'startup', 'data': {'version': '1.1.0'}}
+2025-09-23 11:43:56 - app.database - INFO - [database.py:175] - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-23 11:43:56 - app - INFO - [logging_config.py:68] - EVENT: database_initialized - DATA: {'timestamp': '2025-09-23T11:43:56.085334', 'service': 'app', 'event': 'database_initialized', 'data': {}}
+2025-09-23 11:44:29 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-23T11:44:29.699060', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'supermercado', 'tag_image': 'Imagem do WhatsApp de 2025-09-21 à(s) 16.55.18_f0d95880.jpg', 'product_image': None}}
+2025-09-23 11:44:29 - vision/identify - INFO - [logging_config.py:68] - EVENT: text_extraction_start - DATA: {'timestamp': '2025-09-23T11:44:29.699060', 'service': 'vision/identify', 'event': 'text_extraction_start', 'data': {'hash': '38ceac3abdacce8a3823a368661fbcb4'}}
+2025-09-23 11:44:29 - app.services.vision_service - INFO - [vision_service.py:109] - Imagem aprimorada para OCR.
+2025-09-23 11:44:34 - app.services.vision_service - INFO - [vision_service.py:182] - Vision API: Texto extraído (217 chars), Logos: 1, Labels: 5
+2025-09-23 11:44:34 - app.services.vision_service - INFO - [vision_service.py:277] - Texto bruto: 'Nestle
+PALTOLI
+KitKat
+NOVA FÓRMULA**
+PESO LÍQ.41,5 g
+WAR RECHEADO COBERTO COM CHOCOLATE AO LEITE
+@kitkathrasil
+M AÇÚCAR
+ADICIONADO
+GORDURA
+SATURADA
+ECO
+PRE
+ESPECIAL
+QUANDO CO
+NÃO PROMOCI SEM ILUSTRATIVA
+A VERSÃO
+OUTO.' -> Texto limpo para análise: '415'
+2025-09-23 11:44:34 - app.services.vision_service - WARNING - [vision_service.py:298] - Nenhum GTIN válido encontrado no texto limpo: '415'
+2025-09-23 11:44:34 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-23T11:44:34.424584', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'supermercado'}}
+2025-09-23 11:44:34 - product_analysis - INFO - [logging_config.py:68] - EVENT: pipeline_started - DATA: {'timestamp': '2025-09-23T11:44:34.424584', 'service': 'product_analysis', 'event': 'pipeline_started', 'data': {'vertical': 'supermercado', 'has_image': False, 'has_gtin': True}}
+2025-09-23 11:44:34 - inference_start - INFO - [logging_config.py:68] - EVENT: processing_started - DATA: {'timestamp': '2025-09-23T11:44:34.424584', 'service': 'inference_start', 'event': 'processing_started', 'data': {'vertical': 'supermercado', 'ocr_length': 217, 'logos_count': 1, 'search_results': 0}}
+2025-09-23 11:44:37 - ai_extraction - INFO - [logging_config.py:68] - EVENT: extraction_success - DATA: {'timestamp': '2025-09-23T11:44:37.259009', 'service': 'ai_extraction', 'event': 'extraction_success', 'data': {'title': 'KitKat Chocolate ao Leite 41,5g', 'brand': 'Nestlé', 'has_gtin': True}}
+2025-09-23 11:44:37 - inference_success - INFO - [logging_config.py:68] - EVENT: processing_completed - DATA: {'timestamp': '2025-09-23T11:44:37.260008', 'service': 'inference_success', 'event': 'processing_completed', 'data': {'processing_time_seconds': 2.835424, 'title_extracted': 'KitKat Chocolate ao Leite 41,5g', 'brand_extracted': 'Nestlé', 'has_gtin': False}}
+2025-09-23 11:44:37 - app.services.search_service - INFO - [search_service.py:30] - Buscando na web com a query: 'Nestlé KitKat Chocolate ao Leite 41,5g GTIN NCM'
+2025-09-23 11:44:38 - app.services.search_service - ERROR - [search_service.py:43] - Erro na chamada da API de busca: 400 Client Error: Bad Request for url: https://www.googleapis.com/customsearch/v1?key=AIzaSyCdd04h0C23skF29bF-wXXDGgg18-7XHGk&cx=f3d209a7af04e43b2&q=Nestl%C3%A9+KitKat+Chocolate+ao+Leite+41%2C5g+GTIN+NCM&num=3
+2025-09-23 11:44:38 - product_analysis - INFO - [logging_config.py:68] - EVENT: pipeline_completed - DATA: {'timestamp': '2025-09-23T11:44:38.202245', 'service': 'product_analysis', 'event': 'pipeline_completed', 'data': {'source': 'ai_inference', 'processing_time': 3.777661, 'final_title': 'Kitkat Chocolate Ao Leite 41,5G', 'final_confidence': 0.85}}
+2025-09-23 11:44:38 - main - ERROR - [main.py:496] - Erro não tratado na rota http://127.0.0.1:8000/api/v1/vision/identify: 1 validation error for IdentifiedProduct
+title
+  Field required [type=missing, input_value={'base_data': {'sku': Non...5', 'confidence': 0.85}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 29, in __call__
+    await responder(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 130, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 46, in __call__
+    await self.app(scope, receive, self.send_with_compression)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 78, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 75, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 308, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 219, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 148, in identify_image
+    identified_product = models.IdentifiedProduct(**product_info)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for IdentifiedProduct
+title
+  Field required [type=missing, input_value={'base_data': {'sku': Non...5', 'confidence': 0.85}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-09-23 14:37:49 - app - INFO - [logging_config.py:68] - EVENT: shutdown - DATA: {'timestamp': '2025-09-23T14:37:49.271154', 'service': 'app', 'event': 'shutdown', 'data': {}}
+2025-09-23 14:37:49 - main - INFO - [main.py:48] - Encerrando aplicação CadVision API.

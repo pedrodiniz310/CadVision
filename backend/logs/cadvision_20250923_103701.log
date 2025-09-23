@@ -1,0 +1,88 @@
+2025-09-23 10:37:07 - root - INFO - [logging_config.py:51] - Logging configurado. Arquivo: C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\logs\cadvision_20250923_103701.log
+2025-09-23 10:37:07 - app - INFO - [logging_config.py:68] - EVENT: startup - DATA: {'timestamp': '2025-09-23T10:37:07.695112', 'service': 'app', 'event': 'startup', 'data': {'version': '1.1.0'}}
+2025-09-23 10:37:07 - app.database - INFO - [database.py:175] - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-23 10:37:07 - app - INFO - [logging_config.py:68] - EVENT: database_initialized - DATA: {'timestamp': '2025-09-23T10:37:07.708090', 'service': 'app', 'event': 'database_initialized', 'data': {}}
+2025-09-23 10:38:38 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-23T10:38:38.287920', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'vestuario', 'tag_image': 'Imagem do WhatsApp de 2025-09-21 à(s) 16.46.16_17ae13c9.jpg', 'product_image': 'Imagem do WhatsApp de 2025-09-22 à(s) 18.59.39_a2b1167e.jpg'}}
+2025-09-23 10:38:38 - vision/identify - INFO - [logging_config.py:68] - EVENT: text_extraction_start - DATA: {'timestamp': '2025-09-23T10:38:38.288938', 'service': 'vision/identify', 'event': 'text_extraction_start', 'data': {'hash': 'b2fc004d6c9b4e068ae9234462176855'}}
+2025-09-23 10:38:38 - app.services.vision_service - INFO - [vision_service.py:109] - Imagem aprimorada para OCR.
+2025-09-23 10:38:42 - app.services.vision_service - INFO - [vision_service.py:182] - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-23 10:38:42 - app.services.vision_service - INFO - [vision_service.py:277] - Texto bruto: '100% ALGODÃO
+DECOTE: 98% ALGODÃO
+2% ELASTANO
+FORNECEDOR: 84891
+Modelo: 1059827 - T. 20
+40
+P W
+P
+日
+Cor VERDE CLARO
+000000113667090314
+SKU: 11366709
+PO:288843' -> Texto limpo para análise: '100982848911059827204000000011366709031411366709288843'
+2025-09-23 10:38:42 - app.services.vision_service - WARNING - [vision_service.py:298] - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-23 10:38:42 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-23T10:38:42.280243', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'vestuario'}}
+2025-09-23 10:38:42 - app.services.product_service - INFO - [product_service.py:89] - Iniciando Etapa 1 (Vertex AI Vector Search).
+2025-09-23 10:38:42 - app.services.vector_search_service - INFO - [vector_search_service.py:48] - Gerando embedding via API REST...
+2025-09-23 10:38:45 - app.services.vector_search_service - INFO - [vector_search_service.py:54] - Vetor (embedding) da imagem gerado com sucesso via API REST.
+2025-09-23 10:38:45 - app.services.vector_search_service - INFO - [vector_search_service.py:105] - Consultando a Vector Search no endpoint público: 52434059.southamerica-east1-992285647932.vdb.vertexai.goog...
+2025-09-23 10:38:47 - app.services.vector_search_service - INFO - [vector_search_service.py:116] - Nenhuma correspondência encontrada na Vector Search.
+2025-09-23 10:38:47 - app.services.product_service - INFO - [product_service.py:112] - Busca visual falhou ou não aplicável. Prosseguindo com a análise de texto/GTIN.
+2025-09-23 10:38:47 - app.services.product_service - INFO - [product_service.py:126] - Via Rápida falhou ou não aplicável. Iniciando Etapa 3 (Inferência da IA).
+2025-09-23 10:38:50 - ai_service - INFO - [logging_config.py:68] - EVENT: json_parsed_successfully - DATA: {'timestamp': '2025-09-23T10:38:50.804408', 'service': 'ai_service', 'event': 'json_parsed_successfully', 'data': {'title_extracted': 'Blusa Feminina Modelo 1059827', 'brand_extracted': None, 'category_extracted': 'Blusas'}}
+2025-09-23 10:38:50 - app.services.advanced_inference_service - WARNING - [advanced_inference_service.py:41] - IA retornou um GTIN inválido ('000000113667090314'). Descartando o valor.
+2025-09-23 10:38:50 - app.services.product_service - INFO - [product_service.py:137] - Produto pré-identificado: Blusa Feminina Modelo 1059827
+2025-09-23 10:38:50 - app.services.product_service - INFO - [product_service.py:141] - Iniciando Etapa de Enriquecimento com Busca na Web (RAG).
+2025-09-23 10:44:51 - main - ERROR - [main.py:496] - Erro não tratado na rota http://127.0.0.1:8000/api/v1/products/export?sort=newest&format=excel: No module named 'openpyxl'
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 29, in __call__
+    await responder(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 130, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\gzip.py", line 46, in __call__
+    await self.app(scope, receive, self.send_with_compression)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 78, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\starlette\routing.py", line 75, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 308, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\fastapi\routing.py", line 219, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 370, in export_products
+    df.to_excel(stream, index=False)
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pandas\util\_decorators.py", line 333, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pandas\core\generic.py", line 2436, in to_excel
+    formatter.write(
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pandas\io\formats\excel.py", line 943, in write
+    writer = ExcelWriter(
+             ^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\venv\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 57, in __init__
+    from openpyxl.workbook import Workbook
+ModuleNotFoundError: No module named 'openpyxl'
+2025-09-23 10:47:39 - app - INFO - [logging_config.py:68] - EVENT: shutdown - DATA: {'timestamp': '2025-09-23T10:47:39.558898', 'service': 'app', 'event': 'shutdown', 'data': {}}
+2025-09-23 10:47:39 - main - INFO - [main.py:48] - Encerrando aplicação CadVision API.

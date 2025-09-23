@@ -5,7 +5,11 @@ from typing import Optional, Dict, List
 from google.cloud import aiplatform
 from google.oauth2 import service_account
 from google.auth.transport.requests import Request
-from app.core.config import GOOGLE_PROJECT_ID, GOOGLE_INDEX_ID, GOOGLE_INDEX_ENDPOINT_ID, GOOGLE_KEY_PATH, GOOGLE_CLOUD_REGION, GOOGLE_INDEX_PUBLIC_DOMAIN
+from app.core.config import (
+    GOOGLE_PROJECT_ID, GOOGLE_INDEX_ID, GOOGLE_INDEX_ENDPOINT_ID,
+    GOOGLE_KEY_PATH, GOOGLE_CLOUD_REGION, GOOGLE_INDEX_PUBLIC_DOMAIN,
+    GOOGLE_DEPLOYED_INDEX_ID  # <-- IMPORTADO
+)
 
 logger = logging.getLogger(__name__)
 
@@ -78,21 +82,21 @@ def add_image_to_index(sku_id: str, image_embedding: List[float]):
 
 def find_match_in_vector_search(image_embedding: List[float]) -> Optional[Dict]:
     """Consulta o índice via API REST para encontrar a imagem mais similar."""
-    if not vertex_ai_client_initialized or not GOOGLE_INDEX_ENDPOINT_ID or not GOOGLE_INDEX_PUBLIC_DOMAIN:
+    # Verificação atualizada
+    if not all([vertex_ai_client_initialized, GOOGLE_INDEX_ENDPOINT_ID, GOOGLE_INDEX_PUBLIC_DOMAIN, GOOGLE_DEPLOYED_INDEX_ID]):
         logger.error(
             "Não é possível consultar: Cliente não inicializado ou IDs/Domínio ausentes.")
         return None
 
     try:
-        # --- A CORREÇÃO CRÍTICA ESTÁ AQUI ---
-        # Usamos o domínio público dedicado do endpoint
         endpoint_url = f"https://{GOOGLE_INDEX_PUBLIC_DOMAIN}/v1/projects/{GOOGLE_PROJECT_ID}/locations/{GOOGLE_CLOUD_REGION}/indexEndpoints/{GOOGLE_INDEX_ENDPOINT_ID}:findNeighbors"
 
-        # O ID da implantação que descobrimos anteriormente
-        deployed_index_id = "idx_vestuario_implantado_v_1758595018034"
+        # --- ALTERADO ---
+        # O ID da implantação agora vem do arquivo de configuração
+        # deployed_index_id = "idx_vestuario_implantado_v_1758595018034" # REMOVIDO
 
         request_body = {
-            "deployedIndexId": deployed_index_id,
+            "deployedIndexId": GOOGLE_DEPLOYED_INDEX_ID,  # USADO AQUI
             "queries": [
                 {"datapoint": {"featureVector": image_embedding, "neighborCount": 1}}
             ]

@@ -554,54 +554,67 @@ function setupEventListeners() {
   });
 }
 
-// SUBSTITUA a sua função handleFiles por esta:
+// frontend/assets/js/script.js - CORRIGIR A FUNÇÃO handleFiles
+
 function handleFiles(files, type) {
   if (!files || files.length === 0) return;
   const file = files[0];
 
-  // 1. Validações (mantidas)
+  // Validações
   if (!CONFIG.SUPPORTED_FORMATS.includes(file.type)) {
-    return showNotification("Formato de arquivo não suportado.", "error");
+    return showNotification("Formato não suportado. Use JPEG, PNG ou WebP.", "error");
   }
   if (file.size > CONFIG.MAX_FILE_SIZE) {
-    return showNotification("Arquivo muito grande (máx. 10MB).", "error");
+    return showNotification(`Arquivo muito grande. Máximo: ${formatFileSize(CONFIG.MAX_FILE_SIZE)}`, "error");
   }
 
-  let fileStateProperty, statusElement, statusPrefix, previewElement;
+  // Determinar elementos corretos para cada tipo
+  let previewElement, statusElement;
 
-  if (type === 'tag') {
-    fileStateProperty = 'lastTagFile';
-    statusElement = DOM.uploadStatusTag;
-    statusPrefix = 'Etiqueta:';
-    previewElement = DOM.tagImagePreview; // <-- Define o elemento de preview
-  } else if (type === 'product') {
-    fileStateProperty = 'lastProductFile';
-    statusElement = DOM.uploadStatusProduct;
-    statusPrefix = 'Produto:';
-    previewElement = DOM.productImagePreview; // <-- Define o elemento de preview
-  } else { // 'single' para Supermercado
-    fileStateProperty = 'lastImageFile';
-    statusElement = DOM.uploadStatus;
-    statusPrefix = 'Imagem:';
-    previewElement = DOM.imagePreview; // <-- Define o elemento de preview
+  switch (type) {
+    case 'tag':
+      previewElement = DOM.tagImagePreview;
+      statusElement = DOM.uploadStatusTag;
+      STATE.lastTagFile = file;
+      break;
+    case 'product':
+      previewElement = DOM.productImagePreview;
+      statusElement = DOM.uploadStatusProduct;
+      STATE.lastProductFile = file;
+      break;
+    default: // 'single'
+      previewElement = DOM.imagePreview;
+      statusElement = DOM.uploadStatus;
+      STATE.lastImageFile = file;
   }
 
-  STATE[fileStateProperty] = file;
-  if (statusElement) statusElement.textContent = `${statusPrefix} ${file.name}`;
+  // Atualizar status
+  if (statusElement) {
+    statusElement.textContent = `${file.name} (${formatFileSize(file.size)})`;
+    statusElement.style.color = 'var(--success)';
+  }
 
-  // LÓGICA PARA EXIBIR A MINIATURA
+  // Exibir preview
   if (previewElement) {
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = function (e) {
       previewElement.src = e.target.result;
       previewElement.style.display = "block";
+      previewElement.classList.add("fade-in");
+
+      // Adicionar efeito visual
+      previewElement.onload = function () {
+        this.style.opacity = "1";
+      };
     };
     reader.readAsDataURL(file);
   }
 
-  DOM.btnIdentify.disabled = !(STATE.lastTagFile || STATE.lastImageFile);
+  // Habilitar botão de identificação
+  DOM.btnIdentify.disabled = false;
   DOM.btnRemoveImage.style.display = "inline-flex";
-  Logger.log(`Arquivo '${file.name}' carregado para a área '${type}'.`, 'info');
+
+  showNotification("Imagem carregada com sucesso!", "success");
 }
 
 
@@ -1024,6 +1037,39 @@ async function exportProducts(format = 'csv') {
   }
 }
 
+function validateAndFormatFormData(vertical) {
+  const errors = [];
+
+  if (vertical === 'supermercado') {
+    const price = DOM.productPriceSupermarket.value;
+    if (price) {
+      const priceNum = parseFloat(price.replace(',', '.'));
+      if (isNaN(priceNum) || priceNum <= 0) {
+        errors.push('Preço deve ser um número positivo');
+        DOM.productPriceSupermarket.style.borderColor = 'var(--error)';
+      } else {
+        // Formata para 2 casas decimais
+        DOM.productPriceSupermarket.value = priceNum.toFixed(2).replace('.', ',');
+      }
+    }
+
+    // Validação de GTIN
+    const gtin = DOM.productGTINSupermarket.value;
+    if (gtin && !/^\d{8,14}$/.test(gtin.replace(/\D/g, ''))) {
+      errors.push('GTIN deve ter entre 8 e 14 dígitos');
+      DOM.productGTINSupermarket.style.borderColor = 'var(--error)';
+    }
+  }
+
+  // Validação de título (campo obrigatório)
+  const titleField = vertical === 'vestuario' ? DOM.productNameClothing : DOM.productNameSupermarket;
+  if (!titleField.value.trim()) {
+    errors.push('Título do produto é obrigatório');
+    titleField.style.borderColor = 'var(--error)';
+  }
+
+  return errors;
+}
 
 function validateProductForm(vertical) {
   let isValid = true;
@@ -1306,6 +1352,24 @@ async function loadProducts(page = 1) {
   }
 }
 
+function setupProductEventListeners() {
+  // Adiciona o evento de clique para todos os botões de editar
+  $$('.btn-edit').forEach(button => {
+    button.addEventListener('click', (e) => {
+      const productId = e.currentTarget.dataset.id;
+      openEditModal(productId);
+    });
+  });
+
+  // Adiciona o evento de clique para todos os botões de deletar
+  $$('.btn-delete').forEach(button => {
+    button.addEventListener('click', (e) => {
+      const productId = e.currentTarget.dataset.id;
+      const productTitle = e.currentTarget.dataset.title;
+      deleteProduct(productId, productTitle);
+    });
+  });
+}
 // Em frontend/js/script.js
 
 function renderProducts() {

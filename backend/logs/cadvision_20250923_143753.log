@@ -1,0 +1,66 @@
+2025-09-23 14:37:57 - root - INFO - [logging_config.py:51] - Logging configurado. Arquivo: C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\logs\cadvision_20250923_143753.log
+2025-09-23 14:37:57 - app - INFO - [logging_config.py:68] - EVENT: startup - DATA: {'timestamp': '2025-09-23T14:37:57.749915', 'service': 'app', 'event': 'startup', 'data': {'version': '1.1.0'}}
+2025-09-23 14:37:57 - app.database - INFO - [database.py:175] - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-23 14:37:57 - app - INFO - [logging_config.py:68] - EVENT: database_initialized - DATA: {'timestamp': '2025-09-23T14:37:57.752917', 'service': 'app', 'event': 'database_initialized', 'data': {}}
+2025-09-23 14:38:50 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-23T14:38:50.515486', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'supermercado', 'tag_image': 'Imagem do WhatsApp de 2025-09-21 à(s) 16.55.18_f0d95880.jpg', 'product_image': None}}
+2025-09-23 14:38:50 - vision/identify - INFO - [logging_config.py:68] - EVENT: text_extraction_start - DATA: {'timestamp': '2025-09-23T14:38:50.516504', 'service': 'vision/identify', 'event': 'text_extraction_start', 'data': {'hash': '38ceac3abdacce8a3823a368661fbcb4'}}
+2025-09-23 14:38:50 - app.services.vision_service - INFO - [vision_service.py:109] - Imagem aprimorada para OCR.
+2025-09-23 14:38:53 - app.services.vision_service - INFO - [vision_service.py:182] - Vision API: Texto extraído (217 chars), Logos: 1, Labels: 5
+2025-09-23 14:38:53 - app.services.vision_service - INFO - [vision_service.py:277] - Texto bruto: 'Nestle
+PALTOLI
+KitKat
+NOVA FÓRMULA**
+PESO LÍQ.41,5 g
+WAR RECHEADO COBERTO COM CHOCOLATE AO LEITE
+@kitkathrasil
+M AÇÚCAR
+ADICIONADO
+GORDURA
+SATURADA
+ECO
+PRE
+ESPECIAL
+QUANDO CO
+NÃO PROMOCI SEM ILUSTRATIVA
+A VERSÃO
+OUTO.' -> Texto limpo para análise: '415'
+2025-09-23 14:38:53 - app.services.vision_service - WARNING - [vision_service.py:298] - Nenhum GTIN válido encontrado no texto limpo: '415'
+2025-09-23 14:38:53 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-23T14:38:53.050803', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'supermercado'}}
+2025-09-23 14:38:53 - product_analysis - INFO - [logging_config.py:68] - EVENT: pipeline_started - DATA: {'timestamp': '2025-09-23T14:38:53.050803', 'service': 'product_analysis', 'event': 'pipeline_started', 'data': {'vertical': 'supermercado', 'has_image': False, 'has_gtin': True}}
+2025-09-23 14:38:53 - inference_start - INFO - [logging_config.py:68] - EVENT: processing_started - DATA: {'timestamp': '2025-09-23T14:38:53.051805', 'service': 'inference_start', 'event': 'processing_started', 'data': {'vertical': 'supermercado', 'ocr_length': 217, 'logos_count': 1, 'search_results': 0}}
+2025-09-23 14:38:55 - ai_extraction - INFO - [logging_config.py:68] - EVENT: extraction_success - DATA: {'timestamp': '2025-09-23T14:38:55.840512', 'service': 'ai_extraction', 'event': 'extraction_success', 'data': {'title': 'KitKat Wafer Recheado Coberto com Chocolate ao Leite 41,5g', 'brand': 'Nestlé', 'has_gtin': True}}
+2025-09-23 14:38:55 - inference_success - INFO - [logging_config.py:68] - EVENT: processing_completed - DATA: {'timestamp': '2025-09-23T14:38:55.840512', 'service': 'inference_success', 'event': 'processing_completed', 'data': {'processing_time_seconds': 2.788707, 'title_extracted': 'KitKat Wafer Recheado Coberto com Chocolate ao Leite 41,5g', 'brand_extracted': 'Nestlé', 'has_gtin': False}}
+2025-09-23 14:38:55 - app.services.search_service - INFO - [search_service.py:30] - Buscando na web com a query: 'Nestlé KitKat Wafer Recheado Coberto com Chocolate ao Leite 41,5g GTIN NCM'
+2025-09-23 14:38:56 - app.services.search_service - ERROR - [search_service.py:43] - Erro na chamada da API de busca: 400 Client Error: Bad Request for url: https://www.googleapis.com/customsearch/v1?key=AIzaSyCdd04h0C23skF29bF-wXXDGgg18-7XHGk&cx=f3d209a7af04e43b2&q=Nestl%C3%A9+KitKat+Wafer+Recheado+Coberto+com+Chocolate+ao+Leite+41%2C5g+GTIN+NCM&num=3
+2025-09-23 14:38:56 - product_analysis - INFO - [logging_config.py:68] - EVENT: pipeline_completed - DATA: {'timestamp': '2025-09-23T14:38:56.774411', 'service': 'product_analysis', 'event': 'pipeline_completed', 'data': {'source': 'ai_inference', 'processing_time': 3.723608, 'final_title': 'Kitkat Wafer Recheado Coberto Com Chocolate Ao Leite 41,5G', 'final_confidence': 0.85}}
+2025-09-23 14:39:38 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-23T14:39:38.367633', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'vestuario', 'tag_image': 'Imagem do WhatsApp de 2025-09-21 à(s) 16.46.16_17ae13c9.jpg', 'product_image': 'Imagem do WhatsApp de 2025-09-22 à(s) 18.59.39_a2b1167e.jpg'}}
+2025-09-23 14:39:38 - vision/identify - INFO - [logging_config.py:68] - EVENT: text_extraction_start - DATA: {'timestamp': '2025-09-23T14:39:38.368634', 'service': 'vision/identify', 'event': 'text_extraction_start', 'data': {'hash': 'b2fc004d6c9b4e068ae9234462176855'}}
+2025-09-23 14:39:38 - app.services.vision_service - INFO - [vision_service.py:109] - Imagem aprimorada para OCR.
+2025-09-23 14:39:40 - app.services.vision_service - INFO - [vision_service.py:182] - Vision API: Texto extraído (156 chars), Logos: 0, Labels: 0
+2025-09-23 14:39:40 - app.services.vision_service - INFO - [vision_service.py:277] - Texto bruto: '100% ALGODÃO
+DECOTE: 98% ALGODÃO
+2% ELASTANO
+FORNECEDOR: 84891
+Modelo: 1059827 - T. 20
+40
+P W
+P
+日
+Cor VERDE CLARO
+000000113667090314
+SKU: 11366709
+PO:288843' -> Texto limpo para análise: '100982848911059827204000000011366709031411366709288843'
+2025-09-23 14:39:40 - app.services.vision_service - WARNING - [vision_service.py:298] - Nenhum GTIN válido encontrado no texto limpo: '100982848911059827204000000011366709031411366709288843'
+2025-09-23 14:39:40 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-23T14:39:40.637130', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'vestuario'}}
+2025-09-23 14:39:40 - product_analysis - INFO - [logging_config.py:68] - EVENT: pipeline_started - DATA: {'timestamp': '2025-09-23T14:39:40.637130', 'service': 'product_analysis', 'event': 'pipeline_started', 'data': {'vertical': 'vestuario', 'has_image': True, 'has_gtin': True}}
+2025-09-23 14:39:40 - app.services.vector_search_service - INFO - [vector_search_service.py:52] - Gerando embedding via API REST...
+2025-09-23 14:39:45 - app.services.vector_search_service - INFO - [vector_search_service.py:58] - Vetor (embedding) da imagem gerado com sucesso via API REST.
+2025-09-23 14:39:45 - app.services.vector_search_service - INFO - [vector_search_service.py:109] - Consultando a Vector Search no endpoint público: 52434059.southamerica-east1-992285647932.vdb.vertexai.goog...
+2025-09-23 14:39:47 - app.services.vector_search_service - INFO - [vector_search_service.py:120] - Nenhuma correspondência encontrada na Vector Search.
+2025-09-23 14:39:47 - inference_start - INFO - [logging_config.py:68] - EVENT: processing_started - DATA: {'timestamp': '2025-09-23T14:39:47.050436', 'service': 'inference_start', 'event': 'processing_started', 'data': {'vertical': 'vestuario', 'ocr_length': 156, 'logos_count': 0, 'search_results': 0}}
+2025-09-23 14:39:49 - ai_extraction - INFO - [logging_config.py:68] - EVENT: extraction_success - DATA: {'timestamp': '2025-09-23T14:39:49.639577', 'service': 'ai_extraction', 'event': 'extraction_success', 'data': {'title': None, 'brand': None, 'has_gtin': True}}
+2025-09-23 14:39:49 - app.services.advanced_inference_service - WARNING - [advanced_inference_service.py:134] - GTIN inválido descartado: '000000113667090314'
+2025-09-23 14:39:49 - inference_error - ERROR - [logging_config.py:70] - EVENT: processing_failed - DATA: {'timestamp': '2025-09-23T14:39:49.639577', 'service': 'inference_error', 'event': 'processing_failed', 'data': {'error': "'NoneType' object has no attribute 'strip'", 'processing_time_seconds': 2.589141}}
+2025-09-23 14:39:49 - product_analysis - INFO - [logging_config.py:68] - EVENT: pipeline_completed - DATA: {'timestamp': '2025-09-23T14:39:49.640596', 'service': 'product_analysis', 'event': 'pipeline_completed', 'data': {'source': 'ai_inference', 'processing_time': 9.003466, 'final_title': 'Produto 100% Algodão Decote: 98% Algodão', 'final_confidence': 0.7}}
+2025-09-23 14:41:50 - app - INFO - [logging_config.py:68] - EVENT: shutdown - DATA: {'timestamp': '2025-09-23T14:41:50.968428', 'service': 'app', 'event': 'shutdown', 'data': {}}
+2025-09-23 14:41:50 - main - INFO - [main.py:48] - Encerrando aplicação CadVision API.
