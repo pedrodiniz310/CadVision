@@ -119,110 +119,41 @@ def enhance_image_for_ocr(image_bytes: bytes) -> bytes:
 
 def extract_vision_data(image_bytes: bytes) -> Dict:
     """
-    Extrai texto, logos e outros dados de uma imagem usando a API do Google Vision.
+    Extrai texto, logos e labels de uma imagem usando a API do Google Vision.
+    Esta é a versão final e simplificada.
     """
-    # Linha de verificação de cache removida daqui
-
     if not vision_client:
         logger.warning("Serviço do Vision não está disponível.")
-        return {'raw_text': "", 'detected_logos': [], 'success': False}
+        return {'raw_text': "", 'detected_logos': [], 'detected_labels': [], 'success': False}
 
     try:
-        # Primeiro tenta com imagem original
         image = vision.Image(content=image_bytes)
-
-        # Se não obter bons resultados, tenta com imagem processada
-        enhanced_image_bytes = enhance_image_for_ocr(image_bytes)
-        enhanced_image = vision.Image(content=enhanced_image_bytes)
-
-        # Faz detecções em paralelo
+        
+        # Faz detecções
         text_response = vision_client.text_detection(image=image)
         logo_response = vision_client.logo_detection(image=image)
         label_response = vision_client.label_detection(image=image)
 
-        # Verifica se há erros nas respostas
-        if text_response.error.message:
-            logger.error(
-                f"Erro na API Vision (texto): {text_response.error.message}")
-        if logo_response.error.message:
-            logger.error(
-                f"Erro na API Vision (logo): {logo_response.error.message}")
-
         # Processa texto
-        raw_text = ""
-        full_text_annotation = ""
-
-        if text_response.text_annotations:
-            raw_text = text_response.text_annotations[0].description.strip()
-            full_text_annotation = str(text_response.full_text_annotation)
+        raw_text = text_response.text_annotations[0].description.strip() if text_response.text_annotations else ""
 
         # Processa logos
-        detected_logos = []
-        if logo_response.logo_annotations:
-            detected_logos = [
-                {
-                    'description': logo.description,
-                    'score': logo.score
-                }
-                for logo in logo_response.logo_annotations
-            ]
+        detected_logos = [{'description': logo.description, 'score': logo.score} for logo in logo_response.logo_annotations]
 
-        # Processa labels (categorias)
-        detected_labels = []
-        if label_response.label_annotations:
-            detected_labels = [
-                {
-                    'description': label.description,
-                    'score': label.score,
-                    'topicality': label.topicality
-                }
-                for label in label_response.label_annotations
-            ]
+        # Processa labels
+        detected_labels = [{'description': label.description, 'score': label.score} for label in label_response.label_annotations]
 
-        logger.info(
-            f"Vision API: Texto extraído ({len(raw_text)} chars), "
-            f"Logos: {len(detected_logos)}, Labels: {len(detected_labels)}"
-        )
-
-        # Extrai informações estruturadas
-        gtin = extract_gtin_from_text(raw_text)
-        brand = extract_brand_from_data(raw_text, detected_logos)
-        price = extract_price_from_text(raw_text)
-        category = detect_category(raw_text, detected_labels)
-
-        result = {
+        logger.info(f"Vision API: Texto extraído ({len(raw_text)} chars), Logos: {len(detected_logos)}, Labels: {len(detected_labels)}")
+        
+        return {
             'raw_text': raw_text,
-            'full_text_annotation': full_text_annotation,
             'detected_logos': detected_logos,
             'detected_labels': detected_labels,
-            'gtin': gtin,
-            'brand': brand,
-            'price': price,
-            'category': category,
-            'success': len(raw_text) > 10 or len(detected_logos) > 0 or len(detected_labels) > 0
+            'success': bool(raw_text or detected_logos or detected_labels)
         }
-
-        # Linha de armazenamento em cache removida daqui
-
-        return result
-
-    except GoogleAPICallError as e:
-        logger.error(f"Erro de API do Google Vision: {e}")
-    except RetryError as e:
-        logger.error(f"Erro de repetição na API do Google Vision: {e}")
     except Exception as e:
         logger.error(f"Erro durante a extração de dados do Vision: {e}")
-
-    return {
-        'raw_text': "",
-        'detected_logos': [],
-        'detected_labels': [],
-        'gtin': "",
-        'brand': "",
-        'price': None,
-        'category': "",
-        'success': False
-    }
+        return {'raw_text': "", 'detected_logos': [], 'detected_labels': [], 'success': False}
 
 
 def clean_text(text: str) -> str:
@@ -239,65 +170,6 @@ def clean_text(text: str) -> str:
     text = re.sub(r'[^\w\s.,;:!?@#$%&*()\-+]', '', text)
 
     return text
-
-
-def validate_gtin(gtin: str) -> bool:
-    """
-    Valida um código GTIN usando o algoritmo de dígito verificador.
-    """
-    if not gtin or not gtin.isdigit():
-        return False
-
-    # GTIN pode ter 8, 12, 13 ou 14 dígitos
-    if len(gtin) not in [8, 12, 13, 14]:
-        return False
-
-    # Calcula dígito verificador
-    total = 0
-    for i, digit in enumerate(reversed(gtin[:-1])):
-        weight = 3 if i % 2 == 0 else 1
-        total += int(digit) * weight
-
-    check_digit = (10 - (total % 10)) % 10
-    return check_digit == int(gtin[-1])
-
-
-def extract_gtin_from_text(text: str) -> str:
-    """
-    Extrai GTIN do texto com validação de dígito verificador.
-    """
-    if not text:
-        return ""
-
-    # --- LINHA DA CORREÇÃO ---
-    # Remove todos os caracteres que não são dígitos (espaços, letras, etc.)
-    cleaned_text = re.sub(r'\D', '', text)
-    # -------------------------
-
-    logger.info(
-        f"Texto bruto: '{text}' -> Texto limpo para análise: '{cleaned_text}'")
-
-    # Padrões para GTIN (8, 12, 13, 14 dígitos)
-    # Agora eles vão funcionar no texto limpo
-    patterns = [
-        r'(\d{13})',   # GTIN-13 (EAN) - Prioridade
-        r'(\d{12})',   # GTIN-12 (UPC)
-        r'(\d{14})',   # GTIN-14
-        r'(\d{8})'     # GTIN-8
-    ]
-
-    for pattern in patterns:
-        # Busca todas as possíveis sequências no texto limpo
-        matches = re.findall(pattern, cleaned_text)
-        for gtin_candidate in matches:
-            # Valida cada candidato com o dígito verificador
-            if validate_gtin(gtin_candidate):
-                logger.info(f"GTIN validado com sucesso: {gtin_candidate}")
-                return gtin_candidate
-
-    logger.warning(
-        f"Nenhum GTIN válido encontrado no texto limpo: '{cleaned_text}'")
-    return ""
 
 
 def extract_brand_from_data(text: str, logos: List) -> str:

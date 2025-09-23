@@ -1,0 +1,28 @@
+2025-09-23 16:25:41 - root - INFO - [logging_config.py:51] - Logging configurado. Arquivo: C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\logs\cadvision_20250923_162537.log
+2025-09-23 16:25:41 - app - INFO - [logging_config.py:68] - EVENT: startup - DATA: {'timestamp': '2025-09-23T16:25:41.521653', 'service': 'app', 'event': 'startup', 'data': {'version': '1.1.0'}}
+2025-09-23 16:25:41 - app.database - INFO - [database.py:175] - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-23 16:25:41 - app - INFO - [logging_config.py:68] - EVENT: database_initialized - DATA: {'timestamp': '2025-09-23T16:25:41.524653', 'service': 'app', 'event': 'database_initialized', 'data': {}}
+2025-09-23 16:26:03 - vision/identify - INFO - [logging_config.py:68] - EVENT: process_started - DATA: {'timestamp': '2025-09-23T16:26:03.011943', 'service': 'vision/identify', 'event': 'process_started', 'data': {'vertical': 'supermercado', 'tag_image': 'arroz.png', 'product_image': None}}
+2025-09-23 16:26:03 - vision/identify - INFO - [logging_config.py:68] - EVENT: text_extraction_start - DATA: {'timestamp': '2025-09-23T16:26:03.012942', 'service': 'vision/identify', 'event': 'text_extraction_start', 'data': {'hash': '9735f967a30f6b9887213a5c52d0ae21'}}
+2025-09-23 16:26:04 - app.services.vision_service - INFO - [vision_service.py:146] - Vision API: Texto extraído (24 chars), Logos: 0, Labels: 10
+2025-09-23 16:26:04 - vision/identify - INFO - [logging_config.py:68] - EVENT: intelligent_analysis_start - DATA: {'timestamp': '2025-09-23T16:26:04.147940', 'service': 'vision/identify', 'event': 'intelligent_analysis_start', 'data': {'vertical': 'supermercado'}}
+2025-09-23 16:26:04 - product_analysis - INFO - [logging_config.py:68] - EVENT: pipeline_started - DATA: {'timestamp': '2025-09-23T16:26:04.148959', 'service': 'product_analysis', 'event': 'pipeline_started', 'data': {'vertical': 'supermercado'}}
+2025-09-23 16:26:04 - product_analysis - INFO - [logging_config.py:68] - EVENT: attempting_strategy - DATA: {'timestamp': '2025-09-23T16:26:04.148959', 'service': 'product_analysis', 'event': 'attempting_strategy', 'data': {'strategy': 'AI_INFERENCE'}}
+2025-09-23 16:26:04 - advanced_inference - INFO - [logging_config.py:68] - EVENT: processing_started - DATA: {'timestamp': '2025-09-23T16:26:04.148959', 'service': 'advanced_inference', 'event': 'processing_started', 'data': {'vertical': 'supermercado'}}
+2025-09-23 16:26:04 - app.services.advanced_inference_service - INFO - [advanced_inference_service.py:38] - Inicializando o modelo GenerativeModel (gemini-1.5-pro-latest)...
+2025-09-23 16:26:04 - app.services.advanced_inference_service - INFO - [advanced_inference_service.py:41] - Modelo GenerativeModel inicializado com sucesso.
+2025-09-23 16:26:07 - advanced_inference - INFO - [logging_config.py:68] - EVENT: processing_completed - DATA: {'timestamp': '2025-09-23T16:26:07.146291', 'service': 'advanced_inference', 'event': 'processing_completed', 'data': {'title': 'Arroz Integral', 'gtin': '7896006700122', 'processing_time': 3.0}}
+2025-09-23 16:26:07 - main - ERROR - [main.py:142] - Erro na análise inteligente: 'ProductAnalysisPipeline' object has no attribute '_is_result_sufficient'
+Traceback (most recent call last):
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\main.py", line 134, in identify_image
+    product_info = product_service.intelligent_text_analysis(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\app\services\product_service.py", line 263, in intelligent_text_analysis
+    return pipeline.analyze_product(vision_data, product_image_bytes, vertical)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\app\services\product_service.py", line 138, in analyze_product
+    if not self._is_result_sufficient(final_result):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ProductAnalysisPipeline' object has no attribute '_is_result_sufficient'
+2025-09-23 16:27:22 - app - INFO - [logging_config.py:68] - EVENT: shutdown - DATA: {'timestamp': '2025-09-23T16:27:22.208422', 'service': 'app', 'event': 'shutdown', 'data': {}}
+2025-09-23 16:27:22 - main - INFO - [main.py:48] - Encerrando aplicação CadVision API.

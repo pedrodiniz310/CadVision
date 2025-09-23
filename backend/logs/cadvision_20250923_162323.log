@@ -1,0 +1,4 @@
+2025-09-23 16:23:27 - root - INFO - [logging_config.py:51] - Logging configurado. Arquivo: C:\Users\Pedro Diniz\Documents\CadVision\CadVision_app\backend\logs\cadvision_20250923_162323.log
+2025-09-23 16:23:27 - app - INFO - [logging_config.py:68] - EVENT: startup - DATA: {'timestamp': '2025-09-23T16:23:27.489715', 'service': 'app', 'event': 'startup', 'data': {'version': '1.1.0'}}
+2025-09-23 16:23:27 - app.database - INFO - [database.py:175] - Banco de dados inicializado com sucesso (com novo schema).
+2025-09-23 16:23:27 - app - INFO - [logging_config.py:68] - EVENT: database_initialized - DATA: {'timestamp': '2025-09-23T16:23:27.493714', 'service': 'app', 'event': 'database_initialized', 'data': {}}
